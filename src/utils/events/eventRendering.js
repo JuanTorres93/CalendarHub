@@ -23,7 +23,6 @@ function renderMonthEvents(allEvents){
     
     const monthlyBoxes = document.querySelectorAll(".box-grid")
 
-    //ore prando gli eventi generati ripetuti(non sono salvati nel localStorage)
     monthlyBoxes.forEach(box =>{
      const container = box.querySelector(".monthly-events-container")
      const allDayContainer = box.querySelector(".event-allDay-container");
@@ -42,44 +41,77 @@ function renderMonthEvents(allEvents){
 
         return aTotal - bTotal
         });
-       eventOfDay.forEach(event =>{
-  
-        if(event.allDay){
-          const eventElement = createElement(
-           allDayContainer,
-           "monthly-event",
-           `<span>Oggi:</span> <p>${event.title}</p>`,
-           "div",
-           {
-            html: true,
-            dataset: {id: event.id}
-           }
-          );
-         eventElement.classList.add(`event-${event.color}`)
-         eventElement.classList.add("render-allDay")
-          if(event.urgent){
-            eventElement.classList.add("event-urgent")  
-          }
-        }else{
-           const eventElement =  createElement(
-            container, 
-              `monthly-event`,
-              `<span class="icon-month">${event.icon}</span> <span class="title-month">${event.title}</span> `,
-              "div",
-              {
-                html: true,
-                dataset: {id: event.id}
-              }
+
+   eventOfDay.forEach(event => {
+    let eventElement;
+
+    if (event.allDay) {
+        eventElement = createElement(
+            allDayContainer,
+            "monthly-event",
+            "",
+            "div",
+            {
+                dataset: { id: event.id }
+            }
+        );
+
+        createElement(
+            eventElement,
+            null,
+            "Oggi:",
+            "span"
+        );
+
+        createElement(
+            eventElement,
+            null,
+            event.title,
+            "p"
+        );
+
+        eventElement.classList.add("render-allDay");
+    } else {
+        eventElement = createElement(
+            container,
+            "monthly-event",
+            "",
+            "div",
+            {
+                dataset: { id: event.id }
+            }
+        );
+
+        createElement(
+            eventElement,
+            "icon-month",
+            event.icon,
+            "span"
+        );
+
+        createElement(
+            eventElement,
+            "title-month",
+            event.title,
+            "span"
+        );
+
+        if (event.isOccurrence) {
+            createElement(
+                eventElement,
+                "repeat-icon",
+                "🔗",
+                "small"
             );
-    eventElement.classList.add(`event-${event.color}`)
-    if(event.urgent){
-        eventElement.classList.add("event-urgent")  
+        }
     }
-    if(event.isOccurrence){
-      eventElement.innerHTML=`<span class="icon-month">${event.icon}</span> <span class="title-month">${event.title}</span> <small class="repeat-icon" >🔗</small>  `
-    }};
-   
-    });
+
+    eventElement.classList.add(`event-${event.color}`);
+
+    if (event.urgent) {
+        eventElement.classList.add("event-urgent");
+    }
+});
     }); 
 }
 
@@ -143,75 +175,138 @@ export function renderWeeklyEvents(allEvents){
     const allDayEvents = eventOfDay.filter(event => event.allDay);
     const timedEvents = eventOfDay.filter(event => !event.allDay);
 
-    allDayEvents.forEach( event => {
-    
-        const eventElement = createElement(
-          allDayContainer,
-          allDayClass,
-           `<span class="all-event-start-text">Oggi:</span> <p><span >${event.icon}</span>${event.title}</p>`,
-           "div",
-           {
-            html: true,
-            dataset: {id: event.id}
-           }
-        )
-        eventElement.classList.add(`event-${event.color}`)   
-        if(event.urgent){
-          eventElement.classList.add("event-urgent")  
+allDayEvents.forEach(event => {
+    const eventElement = createElement(
+        allDayContainer,
+        allDayClass,
+        "",
+        "div",
+        {
+            dataset: { id: event.id }
         }
-      
-    })
-      timedEvents.forEach(event=>{
+    );
 
-        const eventElement = createElement(
-          container, 
-          eventClass,
-          `<span class="render-time">
-          ${event.from}
-          </span> 
-          <p class="render-title">
-          <span >${event.icon}</span> ${event.title}
-          </p>`,
-          "div",
-          {
-            html: true,
-            dataset: {id: event.id}
-          }
-        )
-        const start = timeToMinutes(event.from)
-        const end = timeToMinutes(event.to) 
-        const top = start * heightXMinute
-        const eventHeight = (end - start) * heightXMinute
-        
-        // console.log("start", start, "end", end)
-        const overlaps = timedEvents.filter( other =>{
-          const aStart = timeToMinutes(event.from)
-          const aEnd = timeToMinutes(event.to)
-          const bStart = timeToMinutes(other.from)
-          const bEnd = timeToMinutes(other.to) 
-          return aStart < bEnd && bStart < aEnd
-        })
-        
-        const overlapIndex = overlaps.findIndex(other =>{
-          
-          return other.id === event.id
-        })
-        const width = 95 / overlaps.length
-        const left = overlapIndex * width
-        
-        eventElement.classList.add(`event-${event.color}`)     
-        eventElement.style.top = `${top}px`
-        eventElement.style.height =`${eventHeight}px` 
-        eventElement.style.width = `${width}%`
-        eventElement.style.left =`${left}%`
-        
-        if(event.urgent){
-          eventElement.classList.add("event-urgent")  
-        }
-        if(event.isOccurrence){
-      eventElement.innerHTML=`<span >${event.icon}</span> <span>${event.title}</span> <small class="repeat-icon-alt" >🔗</small>  `
+    createElement(
+        eventElement,
+        "all-event-start-text",
+        "Oggi:",
+        "span"
+    );
+
+    const titleContainer = createElement(
+        eventElement,
+        null,
+        "",
+        "p"
+    );
+
+    createElement(
+        titleContainer,
+        null,
+        event.icon,
+        "span"
+    );
+
+    titleContainer.appendChild(
+        document.createTextNode(event.title)
+    );
+
+    eventElement.classList.add(`event-${event.color}`);
+
+    if (event.urgent) {
+        eventElement.classList.add("event-urgent");
     }
-      })
+});
+      timedEvents.forEach(event => {
+    const eventElement = createElement(
+        container,
+        eventClass,
+        "",
+        "div",
+        {
+            dataset: { id: event.id }
+        }
+    );
+
+    if (event.isOccurrence) {
+        createElement(
+            eventElement,
+            null,
+            event.icon,
+            "span"
+        );
+
+        createElement(
+            eventElement,
+            null,
+            event.title,
+            "span"
+        );
+
+        createElement(
+            eventElement,
+            "repeat-icon-alt",
+            "🔗",
+            "small"
+        );
+    } else {
+        createElement(
+            eventElement,
+            "render-time",
+            event.from,
+            "span"
+        );
+
+        const titleContainer = createElement(
+            eventElement,
+            "render-title",
+            "",
+            "p"
+        );
+
+        createElement(
+            titleContainer,
+            null,
+            event.icon,
+            "span"
+        );
+
+        titleContainer.appendChild(
+            document.createTextNode(` ${event.title}`)
+        );
+    }
+
+    const start = timeToMinutes(event.from);
+    const end = timeToMinutes(event.to);
+    const top = start * heightXMinute;
+    const eventHeight = (end - start) * heightXMinute;
+
+    const overlaps = timedEvents.filter(other => {
+        const aStart = timeToMinutes(event.from);
+        const aEnd = timeToMinutes(event.to);
+        const bStart = timeToMinutes(other.from);
+        const bEnd = timeToMinutes(other.to);
+
+        return aStart < bEnd && bStart < aEnd;
+    });
+
+    const overlapIndex = overlaps.findIndex(other => {
+        return other.id === event.id;
+    });
+
+    const width = 95 / overlaps.length;
+    const left = overlapIndex * width;
+
+    eventElement.classList.add(`event-${event.color}`);
+    eventElement.style.top = `${top}px`;
+    eventElement.style.height = `${eventHeight}px`;
+    eventElement.style.width = `${width}%`;
+    eventElement.style.left = `${left}%`;
+
+    if (event.urgent) {
+        eventElement.classList.add("event-urgent");
+    }
+});
   }
 
 

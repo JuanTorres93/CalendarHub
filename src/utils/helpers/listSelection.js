@@ -19,5 +19,3 @@ export function handleOutSideClick(selector, list, className){
         }
     })
 }
-
-// export function handleOutSideClick

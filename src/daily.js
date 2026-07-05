@@ -49,13 +49,13 @@ function createDailyGrid(currentview){
     if(j === 0){
         dayClass = "first"
     } else {
-        dayClass = null;
+        dayClass = "";
     }
     dailyName.insertAdjacentHTML("afterbegin", `
         
-                    <li class="day-box ${dayClass}" data-time=${hour}> 
+                    <li class="day-box ${dayClass}" data-time="${hour}"> 
                     </li>
-                    <li class="day-half-box" data-time=${halfHour}> 
+                    <li class="day-half-box" data-time="${halfHour}"> 
                     </li> 
                 
         `)

@@ -1,8 +1,6 @@
 
 import dayjs from "./day.js";
 
-
-//la soluzione è fare gestire sia inizializzazione data e salvataggio data a globalDate, per poi chiamare il metodo all'interno del miniCalendario
 const globalDate = {
     date: null,
 
@@ -23,9 +21,5 @@ const globalDate = {
 globalDate.init()
 
 
-
 export default globalDate
 
-
-///importare qui la logica per creare il formato europeo da integrare nel calendario
-// https://day.js.org/docs/en/plugin/locale-data

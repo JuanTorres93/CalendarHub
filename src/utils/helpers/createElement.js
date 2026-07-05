@@ -48,8 +48,6 @@ export function createMessage(message, container, father, type){
 
      alert.style.top = `${top - alertHeight*0.5}px`
     alert.style.left = `${left}px`
-    
-    
 
 }
 

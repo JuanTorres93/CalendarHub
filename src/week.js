@@ -22,7 +22,7 @@ export default function createWeekGrid (currentview) {
        if (i === 0) {
         midnight = "midnight";
        } else {
-        midnight = null;
+        midnight = "";
        };
         list.insertAdjacentHTML("afterbegin", `
                     <li class="time-lable ${midnight}">
@@ -85,7 +85,7 @@ weekDaysRow.insertAdjacentHTML("beforeend", `
  
     day.insertAdjacentHTML("beforeend", `
         <li class="week-box" data-time="${hour}"></li>
-        <li class="week-half-box" data-time=${halfHour}></li>
+        <li class="week-half-box" data-time="${halfHour}"></li>
         `)
 };
 }) 
