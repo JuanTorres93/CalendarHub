@@ -78,6 +78,15 @@ The project is designed as a long-term architecture-focused application rather t
 
 ## 🚀 Current Version
 
+### v0.9.2 — Security and rendering refactor
+
+- Fixed stored DOM XSS risks in calendar event rendering.
+- Reworked the event information banner to render user content safely.
+- Fixed unsafe ToDo item title rendering.
+- Replaced unnecessary dynamic HTML rendering with DOM and text APIs.
+- Hardened event draft rehydration with an explicit field allowlist.
+- Refactored custom repeat date rendering.
+
 ### v0.9.1 – Dependency setup refactor and info banner fix
 
 Version 0.9.1 improves the internal project setup and fixes a contextual UI positioning issue.

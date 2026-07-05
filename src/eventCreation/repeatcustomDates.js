@@ -14,6 +14,39 @@ import { header } from "../utils/helpers/dom/eventModalDom.js"
 
 let listOfDates = []
 
+function renderCustomDateItem(date) {
+    const item = createElement(
+        customList,
+        "custom-date-item",
+        "",
+        "li",
+        {
+            dataset: { day: date }
+        }
+    );
+
+    createElement(
+        item,
+        null,
+        formatDate(date),
+        "span"
+    );
+
+    createElement(
+        item,
+        "remove-custom-date",
+        "x",
+        "button",
+        {
+            attributes: {
+                type: "button"
+            }
+        }
+    );
+
+    return item;
+}
+
 export function validateAndReturnCustomDate(date){
     const initialDate = header.firstElementChild.dataset.day
     const isNotValid = dateValidator(initialDate, date)
@@ -22,21 +55,11 @@ export function validateAndReturnCustomDate(date){
         return createMessage("La data deve essere successiva all'evento", customContainer, repeatContainer)
     } else {
         if(date && !listOfDates.includes(date)){
-        const li = createElement(
-            customList,
-             "custom-date-item",
-             `<span>${formatDate(date)}</span>
-              <button type="button" class="remove-custom-date">x</button>`,
-             "li",
-             {
-                html : true,
-                dataset: {day : date}
-             }
-             
-             )
+            
+        const li = renderCustomDateItem(date);
+
          listOfDates.push(li.dataset.day)   
          syncCustomDatesDraft()
-         console.log(listOfDates)
     }
     }
 
@@ -74,17 +97,7 @@ export function hydrateCustomDates(dates){
   customList.innerHTML = ""
 
   dates.forEach(date => {
-    createElement(
-      customList,
-      "custom-date-item",
-      `<span>${formatDate(date)}</span>
-       <button type="button" class="remove-custom-date">x</button>`,
-      "li",
-      {
-        html: true,
-        dataset: { day: date }
-      }
-    )
+  renderCustomDateItem(date);
   })
 
   syncCustomDatesDraft()
