@@ -151,19 +151,71 @@ function getOptionButtons(isRepeatedEvent){
     colorClass = selectedEvent.color
     selectedCurrentID = currentEvent.dataset.id
 
-    infoSection.innerHTML= `
-    <div class="info-title">
-     <span text-background>${selectedEvent.icon}</span> <h2> ${selectedEvent.title}</h2>
-    </div>
-    ${
-      selectedEvent.allDay
-        ? `<p class="time-row">Tutto il giorno</p>`
-        : `<p class="time-row">${selectedEvent.from} - ${selectedEvent.to}</p>`
-    }
-    ${selectedEvent.description ? `<p>${selectedEvent.description}</p>` : ""}
-    ${selectedEvent.urgent ? `<p>Urgente!</p>` : ""}
-     ${isRepeatedEvent ? `<p>🔗 Evento ripetuto</p>` : ""}
-      `;
+  infoSection.replaceChildren();
+
+  const infoTitle = createElement(
+      infoSection,
+      "info-title",
+      "",
+      "div"
+  );
+
+  createElement(
+      infoTitle,
+      null,
+      selectedEvent.icon,
+      "span",
+      {
+          attributes: {
+              "text-background": ""
+          }
+      }
+  );
+
+  createElement(
+      infoTitle,
+      null,
+      selectedEvent.title,
+      "h2"
+  );
+
+  const timeText = selectedEvent.allDay
+      ? "Tutto il giorno"
+      : `${selectedEvent.from} - ${selectedEvent.to}`;
+
+  createElement(
+      infoSection,
+      "time-row",
+      timeText,
+      "p"
+  );
+
+  if (selectedEvent.description) {
+      createElement(
+          infoSection,
+          null,
+          selectedEvent.description,
+          "p"
+      );
+}
+
+if (selectedEvent.urgent) {
+    createElement(
+        infoSection,
+        null,
+        "Urgente!",
+        "p"
+    );
+}
+
+if (isRepeatedEvent) {
+    createElement(
+        infoSection,
+        null,
+        "🔗 Evento ripetuto",
+        "p"
+    );
+}
   }
 
 function finalizeBannerAction(message, banner){
