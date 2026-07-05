@@ -239,7 +239,7 @@ function handleTodoItemActions(e) {
 }
 
 function renderTodoItem(todoItem) {
-    createElement(
+    const todoElement = createElement(
         toDoItemsContainer,
         "todo-item",
         `<button type="button" class="check-btn ${todoItem.completed ? "checked" : ""}" aria-label="Completa attività">
@@ -249,7 +249,7 @@ function renderTodoItem(todoItem) {
             </svg>
         </button>
 
-        <strong class="title-item">${todoItem.title}</strong>
+        <strong class="title-item"></strong>
 
         <button type="button" class="delete-item-todo-btn show-delete" aria-label="Elimina attività">
             <svg viewBox="0 0 24 24" class="todo-delete-icon">
@@ -265,7 +265,10 @@ function renderTodoItem(todoItem) {
             html: true,
             dataset: { id: todoItem.id }
         }
-    )
+    );
+    const titleElement = todoElement.querySelector(".title-item");
+
+    titleElement.textContent = todoItem.title;
 }
 
 function handleCreateItems(){

@@ -4,13 +4,12 @@ import { renderColorList, renderNotificationList, renderIconsList } from "../uti
 import { openMiniCalendar } from "../miniCalendar/miniCalendar.js";
 import { updateEventDraft, validatorEventDraft } from "../utils/events/eventDraft.js";
 import { formatDate } from "../utils/events/eventsUI.js";
-import createElement from "../utils/helpers/createElement.js";
 import createCaroseul from "../utils/events/createLists.js";
 import { createMessage } from "../utils/helpers/createElement.js";
 import { nowTarget } from "../utils/isNow.js"
 import { renderEvents } from "../utils/events/eventRendering.js";
 import { getEvents, saveEventsInLocalStorage } from "../utils/events/eventStorage.js";
-import { separateHourFromMinute, setTimeUIAndDraft} from "../utils/helpers/timeHelper.js";
+import { setTimeUIAndDraft} from "../utils/helpers/timeHelper.js";
 import openModal from "./eventModal.js";
 import { initRepeatEvents, forceResetRepeatModalState } from "./repeatEvent.js";
 import {handleListSelection, handleOutSideClick} from "../utils/helpers/listSelection.js";
@@ -89,6 +88,20 @@ const outsideDropdowns = [
     dropdown: listedTimeTo,
     className: "show-menù"
   }
+];
+
+const EVENT_DRAFT_FIELDS = [
+    "title",
+    "date",
+    "from",
+    "to",
+    "description",
+    "icon",
+    "color",
+    "urgent",
+    "allDay",
+    "repeat",
+    "notification"
 ];
 
 let formMode = "create";
@@ -196,9 +209,9 @@ export function preCompiler(e){
     const {date, time} = getData(e)
     const endTime = dayjs(time, "HH:mm").add(1, "hour").format("HH:mm")
 
-    header.firstElementChild.innerHTML = formatDate(date)
+    header.firstElementChild.textContent = formatDate(date)
     header.firstElementChild.dataset.day = date
-    header.firstElementChild.nextElementSibling.innerHTML = time
+    header.firstElementChild.nextElementSibling.textContent = time
 
      setTimeUIAndDraft(timeDraft, "from", time)
      setTimeUIAndDraft(timeDraft, "to", endTime)
@@ -211,10 +224,19 @@ export function preCompilerEdit(event, mode){
      formMode = mode;
      renderModeTextInfo(formMode, event.title)
  
-    Object.entries(event).forEach(([key, value]) =>{
-        if(key === "id" || key === "isOccurrence" || key === "seriesId" || key === "originalEventId") return
-        eventDraft[key] = value
-    })
+    resetEventDraft();
+
+    EVENT_DRAFT_FIELDS.forEach(field => {
+        if (!Object.hasOwn(event, field)) return;
+
+        const value = event[field];
+
+        eventDraft[field] =
+            field === "repeat" && value !== null
+                ? structuredClone(value)
+                : value;
+    });
+
     editingEventId = event.id  
 
     if(mode === "edit-single-occurrence"){
@@ -228,12 +250,11 @@ export function preCompilerEdit(event, mode){
         // structuredClone(event.repeat) crea un clone dell'elemento
         originalRepeatSnapshot = structuredClone(event.repeat);
         originalSeriesDate = event.date;
-        console.log(event.date, originalRepeatSnapshot )
     }
    
-    header.firstElementChild.innerHTML = formatDate(event.date)
+    header.firstElementChild.textContent = formatDate(event.date)
     header.firstElementChild.dataset.day = event.date  //risolve il miniCalendario data iniziale
-    header.firstElementChild.nextElementSibling.innerHTML = event.from
+    header.firstElementChild.nextElementSibling.textContent = event.from
 
     iconBtn.innerText = event.icon;
     inputTitle.value = event.title;
