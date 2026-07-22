@@ -59,7 +59,6 @@ import {
         currentDailyDisplay.textContent = showDailyDate;
         currentYearDisplay.textContent = year;
     }
-//questo metodo wrappa tutte le funzioni
     syncAll(e){
         createMonthGrid(this.date, monthGrid, config.main);
         createWeekGrid(this.date);
