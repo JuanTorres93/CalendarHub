@@ -1,9 +1,7 @@
 import dayjs from "./day.js";
-import globalDate from "./state.js";
 import createElement from "./utils/helpers/createElement.js"
 import { weekGrid } from "./utils/helpers/dom/mainCalendarDom.js";
 
-let currentview = globalDate.date;
 
 export default function createWeekGrid (currentview) {
     weekGrid.innerHTML= "";
@@ -34,15 +32,13 @@ export default function createWeekGrid (currentview) {
 
     for(let j = 0 ; j < 7; j++){
         let weekNumber, dayClass, firstColoumn;
-        
-        //  weekNumber = parseInt(monday) + j ;
         let firstDayOfWeek = currentview.weekday(j );
         let days = firstDayOfWeek.format("dddd"); 
         let dataDay = firstDayOfWeek.format("YYYY-MM-DD");
         weekNumber = firstDayOfWeek.format("DD");
         let shrinkDays = days.substring(0,3);
        
-       if (dataDay === globalDate.date.format("YYYY-MM-DD")){
+       if (dataDay === currentview.format("YYYY-MM-DD")){
         dayClass = "is-today"
        } else {
         dayClass = "normal-week"

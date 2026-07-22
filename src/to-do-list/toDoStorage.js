@@ -42,12 +42,12 @@ export function saveTodo(todos){
 }
 
 export function getTodoFromLocalStorage(){
-    const storedTodo = localStorage.getItem("todoEvents")
-    if(!storedTodo) return []
-        try {
-            const parsedTodo = JSON.parse(storedTodo)
+    try {
+        const storedTodo = localStorage.getItem("todoEvents")
+        if(!storedTodo) return []
+        const parsedTodo = JSON.parse(storedTodo)
 
-            if(!Array.isArray(parsedTodo))return [];
+        if(!Array.isArray(parsedTodo))return [];
 
             return parsedTodo.filter((todo, index) => {
                 const isValid = isValidTodoList(todo)

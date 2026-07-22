@@ -1,9 +1,6 @@
 import dayjs from "./day.js";
-import globalDate from "./state.js";
 import createElement from "./utils/helpers/createElement.js";
 import { dayGrid } from "./utils/helpers/dom/mainCalendarDom.js";
-
-let currentview = globalDate.date;
 
 function createDailyGrid(currentview){
     dayGrid.innerHTML = "";

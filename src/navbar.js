@@ -42,8 +42,8 @@ function initDefaultView(){
 }
 
 function bindNavEvents(){
-        allOverlays.forEach(overlay => {
-        overlay.addEventListener("click", ()=>openMiniCalendar("normal"))
+        allOverlays.forEach(overlayElement => {
+        overlayElement.addEventListener("click", ()=>openMiniCalendar("normal"))
         })
         currentYearDisplay.addEventListener("click", (e)=> openMiniCalendar("normal", null, "normal", e.currentTarget))
         monthBtn.addEventListener("click", () => {
@@ -64,10 +64,11 @@ function bindNavEvents(){
          isNow()
         })
         reset.addEventListener("click", function(){
-          localStorage.removeItem("userDate");
           overlay.setDate(dayjs())
         })
-        newTodoBtn.addEventListener("click", openTodo)
+        newTodoBtn.addEventListener("click", () => {
+                openTodo(overlay.date.format("YYYY-MM-DD"))
+        })
         tutorialBtn.addEventListener("click", resetTutorial )
 }
 

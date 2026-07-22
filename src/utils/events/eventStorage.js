@@ -3,10 +3,12 @@ import {createMessage} from "../helpers/createElement.js"
 import { modalEvents } from "../helpers/dom/eventModalDom.js";
  
  export function getEvents(){
-    const storedEvents = localStorage.getItem("calendarEvents");
-    if(!storedEvents)return [];
+   
+   try{
+      const storedEvents = localStorage.getItem("calendarEvents");
 
-    try{
+      if(!storedEvents)return [];
+
         const parsedEvents = JSON.parse(storedEvents)
 
         if(!Array.isArray(parsedEvents))return [];
@@ -22,8 +24,8 @@ import { modalEvents } from "../helpers/dom/eventModalDom.js";
     });
 
     } catch(error){
-        console.error("invalid calendarEvents in localSotrage", error);
-        return [] //deve ritornare sempre un array che se no con l'errore esplode tutto
+        console.error("Unable to read calendar events from localStorage:", error);
+        return []
         
     }
  }

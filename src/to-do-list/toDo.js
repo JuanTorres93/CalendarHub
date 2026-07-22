@@ -23,7 +23,6 @@ import {
          resetToDoItemsValues
          } from "./toDoDraft.js"
 
-import globalDate from "../state.js"
 import { 
     saveTodo,
      getTodoFromLocalStorage,
@@ -38,6 +37,7 @@ import { handleOutsideContextualMenuClick } from "./todoBadgeActions.js"
 
 const EMPTY_TODO_MESSAGE = "Nessuna attività"
 let activeTodoList = null;
+let todoContextDate = null;
 
 function cleanActiveTodoUi(){
     addNewItemContainer.classList.remove("show-add-new-item")
@@ -46,7 +46,7 @@ function cleanActiveTodoUi(){
     toDoProgress.innerText = EMPTY_TODO_MESSAGE
 }
 
-export function openTodo(){
+export function openTodo(date){
     const viewportWidth = window.innerWidth
     createList.classList.add("show-modal")
     todoLayer.classList.add("show-modal")
@@ -54,12 +54,18 @@ export function openTodo(){
     let toDoPosition = viewportWidth/2 - toDoWidth/2
     
     createList.style.left = `${toDoPosition}px`
+
+    if(date){
+        todoContextDate = date
+    }
+    
 }
 
 export function getSelectedTodo(todoId){
     const todos = getTodoFromLocalStorage()
     const currentTodo = todos.find(todo => todo.id === todoId)
     if (!currentTodo) return
+    
     openTodo()
     rehydrateTodoList(currentTodo)
 }
@@ -68,6 +74,7 @@ function rehydrateTodoList(todo){
     const todos = getTodoFromLocalStorage()
 
     activeTodoList = todo.id;
+    todoContextDate = todo.date;
 
     cleanActiveTodoUi()
 
@@ -101,7 +108,7 @@ function renderTodoHeader(fullDate) {
 }
 
 function initHeader(){
-    const currentDay = globalDate.date.format("YYYY-MM-DD")
+    const currentDay = todoContextDate
 
     renderTodoHeader(currentDay)
     initTodoDraft(currentDay) 
@@ -119,6 +126,7 @@ function closeToDoList(){
     createList.classList.remove("show-modal")
     cleanActiveTodoUi()
     activeTodoList = null
+    todoContextDate = null
 }
 
 function handleCreateTodoList(){
