@@ -381,20 +381,7 @@ margin-left: 0.5rem;
     margin: 0;
     box-shadow: var(--light-shadow);
 }
-.missing-info-alert{
-    position: absolute;
-    z-index: 1001;
-    width: fit-content;
-    top : "";
-    left: "";
-    transform: translateY(-50%);
-    font-size: 1.5rem;
-    padding: 0.2rem 1rem 0;
-    background-color: var(--background);
-    color: var(--textModal);
-    box-shadow: var(--light-shadow);
-    border-radius: 5px;
-}
+
 /*************event reepeat module*************************/
 #event-repeat{
     position: relative;
