@@ -150,12 +150,26 @@ export const tutorialSlides = [
     title: "Riaprire una lista salvata",
     text: "Premendo sull’icona della ToDo List si apre un menu con le liste presenti per quella giornata. Cliccando su una lista salvata, potrai riaprirla, modificarla, completare attività, eliminarle o cancellare l’intera lista."
   },
+  // ---------------- NOTIFICHE ----------------
+
+  {
+    chapter: "Notifiche",
+    image: tutorialImage("slide-22.png"),
+    title: "Attivare le notifiche",
+    text: "Premi il pulsante con la campanella sbarrata nella barra superiore per attivare le notifiche. Al primo utilizzo, il browser potrebbe chiederti di concedere il permesso. Quando le notifiche sono attive, l’icona cambia e CalendarHub potrà ricordarti gli eventi secondo l’anticipo selezionato."
+  },
+  {
+    chapter: "Notifiche",
+    image: tutorialImage("slide-23.png"),
+    title: "Disattivare le notifiche",
+    text: "Premi nuovamente il pulsante con la campanella per disattivare le notifiche di CalendarHub. La preferenza viene salvata automaticamente. Le notifiche funzionano principalmente mentre CalendarHub è aperto e il supporto può variare sui dispositivi mobili."
+  },
 
   // ---------------- FINE ----------------
 
   {
     chapter: "Fine",
-    image: tutorialImage("slide-22.png"),
+    image: tutorialImage("slide-24.png"),
     title: "Fine del tutorial",
     text: "Hai completato la guida! 🎉 Ora sei pronto per usare CalendarHub ed esplorare tutte le funzionalità disponibili. Per rivedere il tutorial premi il pulsante dedicato in alto!"
   }
