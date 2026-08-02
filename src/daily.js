@@ -15,7 +15,7 @@ function createDailyGrid(currentview){
     const list = createElement(div, "day-list", null, "ul")
     dailyHeader.insertAdjacentHTML("afterbegin", `
         <div class="daily-current-header">
-            <h1>${dailyDate}</h1>
+            <h2>${dailyDate}</h2>
         </div>
         `)
 

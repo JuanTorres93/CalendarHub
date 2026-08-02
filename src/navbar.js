@@ -23,7 +23,6 @@ import {
 
 let currentState = 0;
 
-///decido la schermata da visualizzare in base all'index che passo alla funzione, nel forEach mi serve anche il secono parametro che accetta cosi che posso settare l'index corretto. questo secondo parametro poi lo passo al toggle, perchè? perchè toggle accetta due parametri, il primo è il token dove, che è la stringa della classe, il secondo è il paramentro force. è un booleano, che lo trasforma in un one-way-only operator, cioe  che la classe sarà solo tolta e non aggiunta e viceversa. quindi si puo utilizzare per indicare quale classe deve essere toccata
 function switchView(index){
         const gridView = [monthView, weekView, dayView]
         const overlays = [...displayOverlays]

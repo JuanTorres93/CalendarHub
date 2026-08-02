@@ -171,14 +171,16 @@ function createMiniCalendar(newDate){
     const monthBtn = createElement(btnsCont, "mini-month-btn", `${miniMonth}`, "button",
         {
             attributes : {
-                type : "button"
+                type : "button",
+                 "aria-label": `Seleziona mese. Mese corrente: ${miniMonth}`
             }
         }
     )
     const yearBtn = createElement(btnsCont, "mini-year-btn", `${miniYear}`, "button",
         {
             attributes : {
-                type : "button"
+                type : "button",
+                "aria-label": `Seleziona anno. Anno corrente: ${miniYear}`
             }
         }
     )
@@ -208,8 +210,6 @@ function createMiniCalendar(newDate){
      )
      
         createMonthGrid(newDate, gridCalendar, config.mini)
-        // monthlist(onDatePartSelect)
-        // yearList(onDatePartSelect)
         selectDays()
 
        cancelBtn.addEventListener("click", cancelMiniCalendar);

@@ -1,11 +1,12 @@
 import { config } from "./utils/config/config.js";
+import dayjs from "./day.js";
 
  function createMonthGrid (currentView, gridType, gridConfig) { 
-        const giorniMese = currentView.daysInMonth(); //giorni del mese totale
+        const giorniMese = currentView.daysInMonth(); 
         const primoGiorno = currentView.date(1);
         const firstDayIndex = currentView.startOf("month").weekday()
         const ultimoGiorno = currentView.endOf("month")
-        const lastDayPrevMonth = primoGiorno.subtract(1, "day"); //questo metodo, sottrae il tempo
+        const lastDayPrevMonth = primoGiorno.subtract(1, "day"); 
         const firstDayNextMonth = ultimoGiorno.add(1, "day") ;
         
         gridType.innerHTML = "";
@@ -36,11 +37,16 @@ import { config } from "./utils/config/config.js";
                 dayClass = `${gridConfig.colorOffset}`;
             } else {
                 dayNumber = i - firstDayIndex + 1 ;
-                dataDayID = primoGiorno.date(dayNumber).format("YYYY-MM-DD"); //funziona perchè primo giorno partendo da 1 reitera ogni volta
+                dataDayID = primoGiorno.date(dayNumber).format("YYYY-MM-DD"); 
                  if(dataDayID === currentView.format("YYYY-MM-DD"))
                     {dayClass =`${gridConfig.today} ${gridConfig.colorBox}`
                     }else{dayClass=`${gridConfig.colorBox}`
                     }};
+
+            const accessibleDate = dayjs(dataDayID).format(
+            "D MMMM YYYY"
+            );
+            
        secondRow.insertAdjacentHTML("beforeend", `
         <div 
             class="${gridConfig.boxGrid} ${dayClass}"
@@ -54,6 +60,7 @@ import { config } from "./utils/config/config.js";
                     class="${gridConfig.numberBox}"
                     data-day="${dataDayID}"
                     data-action="select-date"
+                    aria-label="Seleziona ${accessibleDate}"
                     >
                     ${dayNumber}
                 </button>

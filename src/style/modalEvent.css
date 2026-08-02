@@ -105,32 +105,7 @@ margin-left: 0.5rem;
     gap: 0.5rem;
 }
 
-.tutorial {
-    display: none; 
-    position: absolute;
-    
-    width: 12rem;
-    border: 1px solid black;
-    text-align: center;
-    border-radius: 5px;
-    
-    background-color: black;
-    color: var(--textModal);
-    opacity: 0.9;
-    z-index: 400;
-}
-.desc{
-  top: -4dvh;
-  left: -150%;
-}
-.category{
-    top: -2dvh;
-    left: -40%;
-}
-.mini-calendar-tut{
-    top: -5vh;
-    left: -40%;
-}
+
 .description-area{
     position: absolute;
     display: none;
@@ -467,6 +442,7 @@ margin-left: 0.5rem;
 .current-mode-secondary-message {
   display: block;
   margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
   font-size: 0.75rem;
   line-height: 1.2;
    font-family: "Joti One", serif;

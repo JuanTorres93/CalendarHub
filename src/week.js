@@ -37,6 +37,9 @@ export default function createWeekGrid (currentview) {
         let dataDay = firstDayOfWeek.format("YYYY-MM-DD");
         weekNumber = firstDayOfWeek.format("DD");
         let shrinkDays = days.substring(0,3);
+        const accessibleDate = firstDayOfWeek.format(
+        "dddd D MMMM YYYY"
+      );
        
        if (dataDay === currentview.format("YYYY-MM-DD")){
         dayClass = "is-today"
@@ -46,7 +49,7 @@ export default function createWeekGrid (currentview) {
      
    weekHeaderRow.insertAdjacentHTML("beforeend", `
   <div class="week-day-display" data-day="${dataDay}">
-    <button type="button" class="header-btn">
+    <button type="button" class="header-btn" aria-label="Seleziona ${accessibleDate}">
       <span class="day-label">${weekNumber}</span>
       <br><br>
       <span 
