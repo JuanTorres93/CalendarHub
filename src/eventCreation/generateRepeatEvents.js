@@ -9,12 +9,11 @@ export function getRepeatedEvents(){
         return event.repeat !== null
     })
 
-    // console.log(repeated)
     repeated.forEach(event => {
         if (event.repeat.type === "daily"){
             const getDates = generateDailyDates(event)
             const newEvents = createRepeatedEvents(event, getDates)
-            arrayOfevents.push(...newEvents) //usare lo spread operator mi appiattisce tutti gli aaray in unico blocco, prima ad esempio avevo più array separati (potevo usare anche flat())
+            arrayOfevents.push(...newEvents) 
         }
         if(event.repeat.type === "monthly"){
             const getDates = generateMonthlyDates(event)
@@ -39,9 +38,8 @@ function helperGenerateDates(event, type){
         const begin = dayjs(event.date)
         const interval = event.repeat.interval
         let sameOrBefore = begin.isSameOrBefore(event.repeat.until) 
-      //parto da interval e non da 0, così skippo direttamente il giorno inziale se no si ripete
         for( let i = interval; sameOrBefore; i += interval ){
-            sameOrBefore = begin.add(i, type).isSameOrBefore(event.repeat.until) //ritorna true finche la data non supera a quella finale
+            sameOrBefore = begin.add(i, type).isSameOrBefore(event.repeat.until)
              const dates = begin.add(i, type).format("YYYY-MM-DD")
              if(!sameOrBefore) break
             const exceptions = event.repeat.exceptions
@@ -79,7 +77,6 @@ function generateWeeklyDates(event){
         }
        return arrayOfDates
  } else {
-    //qua non devo partire da interval, se no rompe la settimana corta, tanto ho il before che mi protegge
         for(let i = 0; sameOrBefore; i += interval){
             sameOrBefore = begin.add(i, "week").isSameOrBefore(event.repeat.until) 
              const dates = begin.add(i, "week")
@@ -89,7 +86,6 @@ function generateWeeklyDates(event){
              event.repeat.weekdays.forEach((item) => {
                 const candidate = dates.day(item)
                 const candidateDate = candidate.format("YYYY-MM-DD")
-                //non si puo usare iol continue dentro forEach perchè funziona solo nei loop veri, forEach usa una callback. infatti basta il return di quell'elemento.
                   if (exceptions.includes(candidateDate)) return
                if(
                 begin.isBefore(candidate) &&
@@ -121,7 +117,7 @@ function createRepeatedEvents(baseEvent, dates){
             ...baseEvent,
             id: `${baseEvent.repeat.seriesId}-${date}`,
             originalEventId: baseEvent.id,
-            seriesId: baseEvent.repeat.seriesId, //lo metto per comodità
+            seriesId: baseEvent.repeat.seriesId, 
             isOccurrence: true,
             date
         }

@@ -10,7 +10,6 @@ export function nowTarget(target, type, nowType, targetTime){
         now = targetTime
     }
         target.forEach((hour) => {
-        // console.log(hour.dataset.time) //cosi accedo al dataset
         if ( hour.dataset.time === now ){
             if(type === "day"){
                 hour.classList.add("today");

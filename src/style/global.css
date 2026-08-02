@@ -50,11 +50,45 @@ button {
   cursor: pointer;
 }
 
+.missing-info-alert{
+    position: absolute;
+    z-index: 1001;
+    width: fit-content;
+    top : "";
+    left: "";
+    transform: translateY(-50%);
+    font-size: 1rem;
+    padding: 0.2rem 1rem 0;
+    background-color: var(--background);
+    color: var(--textModal);
+    box-shadow: var(--light-shadow);
+    border-radius: 9px;
+}
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+  border: 0;
+}
 
 @media screen and (min-width: 992px) {
-body {
- max-width: 1200px;
- margin: 0 auto;
+  body {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .missing-info-alert{
+      font-size: 1.4rem;
+  }
 }
+
+@media screen and (max-width: 380px) {
+    .missing-info-alert{
+      font-size: 0.8rem;
+  }
 }

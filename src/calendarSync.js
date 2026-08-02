@@ -1,8 +1,7 @@
 import createMonthGrid from "./month.js";
 import createWeekGrid from "./week.js";
 import createDailyGrid from "./daily.js";
-import globalDate from "./state.js";
-import { isNow } from "./utils/isNow.js";
+
 import dayjs from "./day.js";
 import { config } from "./utils/config/config.js";
 import { handleOpenCreate } from "./eventCreation/eventLogic.js";
@@ -32,8 +31,7 @@ import {
 
  class CalendarLogic {
     constructor () {
-        this.state = globalDate
-        this.date = globalDate.date;
+        this.date = dayjs();
         this.currentMonth = this.date.month() +1;
         this.currentWeek = this.date.isoWeek();
         this.firstOfWeek = this.date.weekday(1);
@@ -41,10 +39,9 @@ import {
         this.showedMonth = this.currentMonth - 1;  
         this.dayOfYear = this.date.dayOfYear() ;    
     }
-    //qui accedo all'oggetto usiamo lo stesso argomento da passare al metodo setDate di questa classe, e al metodo globaldate, la nuova data sarà decisa dal valore che passeremo come argomento che modifica entrambi, questa ora la passo a miniCalendar
+  
     setDate(newDate){
-        this.state.setDate(newDate)
-        this.date = this.state.date
+        this.date = newDate
         this.syncAll()
     };
     updateOverlayDisplay(){
@@ -59,7 +56,7 @@ import {
         currentDailyDisplay.textContent = showDailyDate;
         currentYearDisplay.textContent = year;
     }
-    syncAll(e){
+    syncAll(){
         createMonthGrid(this.date, monthGrid, config.main);
         createWeekGrid(this.date);
         createDailyGrid(this.date);
@@ -88,11 +85,10 @@ import {
     }
     prevWeek(){
         this.date = this.date.subtract(1, "week");
-        this.currentWeek--; //scendo iso per calcolo anno
+        this.currentWeek--; 
         if(this.currentWeek < 1){
             this.year--;
         }
-      console.log(this.date)
     }
     nextWeek(){
         this.date = this.date.add(1, "week");
@@ -130,8 +126,7 @@ import {
 
     highLightDay(){
         const highLight = document.querySelectorAll(".day-name");
-       
-       //highLight ritorna una nodeList non dimenticare
+
        highLight.forEach((day)=>{
         day.classList.remove("is-today")
         if(day.dataset.day === this.date.format("YYYY-MM-DD")){
@@ -152,10 +147,8 @@ function highlightDayMonth(button) {
     const selectedDate = button.dataset.day;
     if (!selectedDate) return;
     overlay.setDate(dayjs(selectedDate));
-//non serve syncAll anche qua perchè viene chiamato da setdate
 }
 
-//qua dentro fermo anche la propagazione del render del evento
 function handleMonthGridClick(e){
     const eventElement = e.target.closest(".monthly-event");
     if (eventElement) {
@@ -203,7 +196,6 @@ function handleMonthGridClick(e){
 
 function highLightWeek(e){
  let highLight = e.target.parentElement.dataset.day
-    // anche qua non serve syncAll, basta passargli setDate che chiama poi syncAll
     overlay.setDate(dayjs(highLight))
 }
 function OpenModalWeek (e){
@@ -328,6 +320,5 @@ function bindCalendarEvents(){
 
 export default function initCalendar(){
     bindCalendarEvents()
-    //in questo modo faccio partire la costruzione della griglia del mese senza dover chiamare la stessa funzione a parte, nell'init principale in index 
     overlay.syncAll()
 }

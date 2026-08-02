@@ -4,8 +4,6 @@
     flex-direction: column;
     gap: 0.2rem;
     padding: 0.1rem;
-    /* white-space: nowrap; */
-    /* width: max-content; */
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 100px; 
@@ -20,9 +18,7 @@
   color: var(--textModal);
   z-index: 30;
   cursor: pointer;
-  /* background: white; */
   border-radius: 4px;
-  /* padding: 0.1rem; */
   box-shadow: var(--light-shadow);
 
   height: 1rem;
@@ -165,10 +161,8 @@ font-size: 0.8rem;
 .repeat-icon-alt{
   position: absolute;
   right: 0.2rem;
-  top: 65%;
+  bottom: 0;
   transform: translateY(-50%);
-
-  
 }
 
 @media screen and (min-width:992px) {

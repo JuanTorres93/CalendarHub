@@ -1,9 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar</title>
+    <title>CalendarHub | Calendario, eventi e attività</title>
+
+    <meta
+        name="description"
+        content="CalendarHub è un calendario digitale per organizzare eventi, appuntamenti, attività e liste To-do attraverso viste mensili, settimanali e giornaliere."
+    > 
+    <meta name="application-name" content="CalendarHub">
+    <meta name="author" content="Manuel Cappai">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#111111">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="it_IT">
+    <meta property="og:site_name" content="CalendarHub">
+    <meta
+        property="og:title"
+        content="CalendarHub | Calendario, eventi e attività"
+    >
+    <meta
+        property="og:description"
+        content="Organizza eventi, appuntamenti e liste To-do con viste mensili, settimanali e giornaliere, eventi ricorrenti e notifiche."
+    >
+    <meta
+        property="og:url"
+        content="https://manuelcappai94.github.io/CalendarHub/"
+    >
+    <meta
+        property="og:image"
+        content="https://manuelcappai94.github.io/CalendarHub/images/calendarhub-og.png"
+    >
+    <meta
+        property="og:image:alt"
+        content="Anteprima dell'applicazione CalendarHub"
+    >
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta
+        name="twitter:title"
+        content="CalendarHub | Calendario, eventi e attività"
+    >
+    <meta
+        name="twitter:description"
+        content="Organizza eventi, appuntamenti e liste To-do con viste mensili, settimanali e giornaliere."
+     >
+    <meta
+        name="twitter:image"
+        content="https://manuelcappai94.github.io/CalendarHub/images/calendarhub-og.png"
+    >
+
+    <meta
+        name="twitter:image:alt"
+        content="Anteprima dell'applicazione CalendarHub"
+    >
+    <link rel="icon" type="image/ico" href="./images/favicon.ico">
+    <link
+        rel="canonical"
+        href="https://manuelcappai94.github.io/CalendarHub/"
+    >
+
     
     <link rel="stylesheet" href="./src/style/global.css">
     <link rel="stylesheet" href="./src/style/navbar.css">
@@ -23,10 +83,10 @@
 <body >
   <div class="loader-layer">
     <div class="loader-box">
-        <h1 class="loader-text">
+        <p class="loader-text">
             CARICAMENTO IN CORSO
-        </h1>
-                <span class="loader-spinner">
+        </p>
+          <span class="loader-spinner" aria-hidden="true">
             <svg 
                 xmlns="http://www.w3.org/2000/svg" 
                 width="50" 
@@ -51,8 +111,8 @@
         </span>
     </div>
   </div>
-  <div id="prev-layer"></div>
-  <div id="next-layer"></div>
+  <div id="prev-layer" aria-hidden="true"></div>
+  <div id="next-layer" aria-hidden="true"></div>
  
   <nav id="navbar" aria-label="Navigazione calendario">
     <div id="first-layer">
@@ -68,8 +128,8 @@
                   type="button"
                   aria-label="Apri mini calendario"
                   aria-haspopup="dialog"
-                   aria-expanded="false"
-                  ></button>
+                >
+            </button>
         </div>
     </div>
 
@@ -89,7 +149,6 @@
                  type="button"
                  aria-label="Apri mini calendario"
                  aria-haspopup="dialog"
-                 aria-expanded="false"
                  ></button>
             <button class="right-arrow" type="button" aria-label="Mese successivo">
                   <img
@@ -118,7 +177,6 @@
                 type="button"
                 aria-label="Apri mini calendario"
                 aria-haspopup="dialog"
-                aria-expanded="false"
             ></button>
 
             <button class="right-arrow" type="button" aria-label="Settimana successiva">
@@ -147,7 +205,6 @@
                 type="button"
                 aria-label="Apri mini calendario"
                 aria-haspopup="dialog"
-                aria-expanded="false"
             ></button>
 
             <button class="right-arrow" type="button" aria-label="Giorno successivo">
@@ -212,38 +269,100 @@
                     <path d="M12 17h.01"/>
                 </svg>
             </button>
+            <button
+                type="button"
+                class="notifications-permission-btn"
+                aria-label="Attiva notifiche"
+                aria-pressed="false"
+                >
+                <svg
+                    data-notification-icon="off"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" width="24" 
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-bell-off-icon lucide-bell-off"
+                >
+                    <path d="M10.268 21a2 2 0 0 0 3.464 0"/>
+                    <path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742"/>
+                    <path d="m2 2 20 20"/>
+                    <path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05"/>
+                </svg>
+
+                <svg 
+                    data-notification-icon="on"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-bell-ring-icon lucide-bell-ring"
+                >
+                    <path d="M10.268 21a2 2 0 0 0 3.464 0"/>
+                 
+                    <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/>
+                  
+                </svg>
+            </button>
         </div>
     </div>
 </nav>
 
- <section id="month-carousel">
-    <div id="month-body" class="month-view ">
-    <div class="month-structure">
-</div>
-</section>
-<section class="week-carousel">
- <div id="week-body" class="week-view">
-    <article id="list-week">
-        <div id="full-week-view">
-        </div>
+ <main id="calendar-main">
+    <h1 class="visually-hidden">CalendarHub</h1>
+  <section
+     id="month-carousel"
+     aria-label="Vista mensile del calendario"
+     >
+    <div 
+        id="month-body"
+        class="month-view">
+      <div class="month-structure"></div>
     </div>
-    </article>
-</section>
-<section id="day-corousel" >
-    <div id="day-body" class="day-view ">
-        <article id="list-day">
-        <div id="full-day-view">
-            </div>
-        </div>
-    </article>
-</div>
-</section>
+  </section>
+
+  <section
+     class="week-carousel"
+     aria-label="Vista settimanale del calendario"
+     >
+    <div id="week-body" class="week-view">
+      <div id="list-week">
+        <div id="full-week-view"></div>
+      </div>
+    </div>
+  </section>
+
+  <section
+     id="day-corousel"
+     aria-label="Vista giornaliera del calendario"
+     >
+    <div id="day-body" class="day-view">
+      <div id="list-day">
+        <div id="full-day-view"></div>
+      </div>
+    </div>
+  </section>
+</main>
     
 <!-- /////////////////////to do list//////////////////////////////////// -->
- <div class="todo-layer"></div>
-<section class="todo-panel">
+ <div class="todo-layer" aria-hidden="true"></div>
+<section
+     class="todo-panel"
+     role="dialog"
+     aria-labelledby="todo-panel-title"
+     >
     <div class="todo-header">
-        <p class="title-main-todo">To-do List</p>
+        <h2 id="todo-panel-title" class="title-main-todo">To-do List</h2>
 
         <button type="button" class="close-todo-btn" aria-label="Chiudi To-do List">
             ✕
@@ -265,8 +384,13 @@
     <section data-id="list-id" class="to-do-container">
         <header class="to-do-title ">
             <p data-day="2025-10-11" class="date-to-do">10-11</p>
-            <input class="todo-input-title" placeholder="inserisci un titolo"></input>
-
+            <input
+             class="todo-input-title"
+              placeholder="inserisci un titolo"
+              type="text"
+              aria-label="Titolo della lista"
+              >
+     
             <button type="button" class="delete-list-btn" aria-label="Elimina lista">
                 <svg viewBox="0 0 24 24" class="todo-delete-icon">
                         <path d="M3 6h18"></path>
@@ -277,14 +401,27 @@
                     </svg>
             </button>
         </header>
-        <section><p class="todo-progress">Nessuna Attività</p></section>
+        <section>
+            <p
+              class="todo-progress"
+               role="status"
+               aria-live="polite"
+            >
+                 Nessuna Attività
+            </p>
+        </section>
 
         <div class="todo-items-container">
 
         </div>
 
         <div class="add-todo-row">
-            <input type="text" class="todo-input" placeholder="Nuova attività...">
+            <input
+                 type="text"
+                  class="todo-input"
+                   placeholder="Nuova attività..."
+                   aria-label="Nuova attività"
+                   >
 
             <button type="button" class="add-todo-btn" aria-label="Aggiungi attività">
                 +
@@ -293,14 +430,40 @@
     </section>
 </section>
 
-<div class="mini-calendar-layer"></div>
-<section id="mini-calendar" class="day-select">
+<div class="mini-calendar-layer" aria-hidden="true"></div>
+<section 
+    id="mini-calendar"
+     class="day-select"
+     role="dialog"
+     aria-label="Seleziona una data"
+     >
     <div class="date-input">
-        <input type="text" class="input-day" placeholder="DD" maxlength="2">
-         <span class="slash">/</span>
-         <input type="text" class="input-month" placeholder="MM" maxlength="2">
-         <span class="slash">/</span>
-        <input type="text" class="input-year" placeholder="YYYY" maxlength="4">
+        <input
+            type="text"
+            class="input-day"
+            placeholder="DD"
+            maxlength="2"
+            inputmode="numeric"
+            aria-label="Giorno"
+            >
+         <span class="slash" aria-hidden="true">/</span>
+         <input
+            type="text"
+             class="input-month"
+            placeholder="MM"
+            maxlength="2"
+            inputmode="numeric"
+            aria-label="Mese"
+                >
+         <span class="slash" aria-hidden="true">/</span>
+        <input
+             type="text"
+              class="input-year"
+               placeholder="YYYY"
+                maxlength="4"
+                inputmode="numeric"
+                aria-label="Anno"
+                >
     </div>
     <article class="mini-calendar-container">
        
@@ -310,94 +473,226 @@
 
 <!-- -------------------event container-------------------------------------- -->
 
-<div class="modal-overlay"></div>
-<section class="event-container ">
-            <article class="current-event-mode">
-            <h3 class="modal-info-mode"></h3>
-            <small class="current-mode-secondary-message"></small>
-        </article>
+<div class="modal-overlay" aria-hidden="true"></div>
+
+<section 
+    class="event-container "
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="event-modal-title"
+    aria-describedby="event-modal-description"
+>
+    <header class="current-event-mode">
+        <h3 id="event-modal-title" class="modal-info-mode"></h3>
+        <p id="event-modal-description" class="current-mode-secondary-message"
+        ></p>
+    </header>
     <div class="event-form">
 
-        <article class="show-date">
+        <div class="show-date">
             <span data-day="" class="first-row-date"></span><span></span>
-        </article>
-        <article class="event-description">
+        </div>
+        <div class="event-description">
             <div id="icons">
-                <button id="icons-btn" type="button">
+                <button
+                 id="icons-btn"
+                  type="button"
+                   aria-label="Scegli icona evento"
+                   >
                     ✏️
                 </button>
                     <ul class="icons-list">
                     </ul>
             </div>
             <div id="title-container">
-                <input type="text" class="input-name" placeholder="Titolo">
+                <input
+                 type="text"
+                  class="input-name"
+                   placeholder="Titolo"
+                   aria-label="Titolo evento"
+                   >
             </div>
             <div id="description-container">
                 <p class="desc-text"> Descrivi :</p>
-                <button type="button" class="btn-description">📃</button>
-                    <section class="description-area" ><textarea class="description-area-text" maxlength="200" placeholder="Max 200 caratteri"></textarea> </section>
-                    <div class="tutorial desc "> aggiungi una descrizione!</div>
+                <button
+                 type="button"
+                  class="btn-description"
+                  aria-label="Mostra o nascondi descrizione"
+                  >📃
+                </button>
+                    <section class="description-area" >
+                        <textarea 
+                        class="description-area-text"
+                         maxlength="200"
+                          placeholder="Max 200 caratteri"
+                           aria-label="Descrizione evento"
+                          ></textarea>
+                    </section>
+                 
             </div>
-        </article>
+        </div>
             
-            <article class="category-selector">
+            <div class="category-selector">
                 <div class="category-container">
                     <p class="desc-text"> Categoria :</p> <div class="color-preview"></div>
-                    <button id="color-btn" type="button">🎨</button>
+                    <button
+                        id="color-btn"
+                        type="button"
+                        aria-label="Scegli colore categoria"
+                      >
+                      🎨
+                    </button>
                 </div>
                 
-                <div class="tutorial category "> Personalizza l'evento!</div>
-                    <ul class="color-list" ></ul>
-                    <div id="urgent-container">
-                        <p class="desc-text">Urgente :</p>
-                        <button id="urgent-btn" type="button" >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512">
-                                <!-- da aggiungere checked per spuntare -->
-                                <path class="checkBox " fill="none" stroke="currentColor" stroke-linecap="round"  stroke-linejoin="round" stroke-width="32" d="M352 176L217.6 336L160 272"/>
-                                <rect class="square-checkbox" width="384" height="384" x="64" y="64" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" rx="48" ry="48"/>
+                <ul class="color-list" ></ul>
+                <div id="urgent-container">
+                    <p class="desc-text">Urgente :</p>
+                    <button
+                        id="urgent-btn"
+                        type="button"
+                        aria-label="Contrassegna come urgente"
+                        aria-pressed="false"
+                       >
+                        <svg
+                         xmlns="http://www.w3.org/2000/svg"
+                          width="32" height="32"
+                           viewBox="0 0 512 512"
+                           > 
+                            <path
+                             class="checkBox "
+                              fill="none"
+                               stroke="currentColor"
+                                stroke-linecap="round"  stroke-linejoin="round"
+                                 stroke-width="32" d="M352 176L217.6 336L160 272"
+                                 />
+                            <rect
+                             class="square-checkbox"
+                              width="384"
+                               height="384"
+                                x="64"
+                                 y="64"
+                                  fill="none"
+                                   stroke="currentColor" 
+                                   stroke-linejoin="round"
+                                    stroke-width="32" rx="48" ry="48"
+                                    />
                             </svg>
                         </button>
                     </div>
-            </article>
+            </div>
         
-        <article id="row-date">
+        <div id="row-date">
             <div class="event-date">
-               <div class="tutorial mini-calendar-tut"> Seleziona una data</div>
+               
                  <p class="desc-text">Data :</p>
                 <div class="date-icon">
-                    <button type="button" class="mini-calendar-btn">📆</button>
+                    <button
+                      type="button"
+                      class="mini-calendar-btn"
+                      aria-label="Scegli data"
+                      aria-haspopup="dialog"
+                      >
+                      📆
+                    </button>
                 </div>  
             </div>
             <div id="all-day">
                  <p class="desc-text">Giornata Intera :</p>
-                <button id="all-day-btn" type="button">
-                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512">
-                                <!-- da aggiungere checked per spuntare -->
-                                <path class="checkBox" fill="none" stroke="currentColor" stroke-linecap="round"  stroke-linejoin="round" stroke-width="32" d="M352 176L217.6 336L160 272"/>
-                                <rect class="square-checkbox" width="384" height="384" x="64" y="64" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" rx="48" ry="48"/>
-                            </svg> 
+                <button
+                    id="all-day-btn"
+                    type="button"
+                    aria-label="Evento per l'intera giornata"
+                    aria-pressed="false"
+                  >
+                   <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 512 512"
+                       >
+                        <path
+                            class="checkBox"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="32"
+                            d="M352 176L217.6 336L160 272"
+                        />
+                        <rect
+                            class="square-checkbox"
+                            width="384"
+                            height="384"
+                            x="64"
+                            y="64"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linejoin="round"
+                            stroke-width="32" rx="48" ry="48"
+                        />
+                    </svg> 
                 </button> 
             </div>
-        </article>
-        <article id="row-time">
+        </div>
+        <div id="row-time">
             <div class="time-selection ">
                 <div id="da-time">
-                    <button type="button" class="listed-time from">⌛</button>
+                    <button
+                     type="button"
+                      class="listed-time from"
+                      aria-label="Seleziona ora di inizio"
+                      >
+                      ⌛
+                    </button>
                     <div class="time-input-group from">
-                    <input type="text" class="input-hour from" placeholder="13" maxlength="2">
-                    <span class="time-separator">:</span>
-                    <input type="text" class="input-minute from" placeholder="00" maxlength="2">
+                        <input
+                        type="text"
+                        class="input-hour from"
+                        placeholder="13"
+                        maxlength="2"
+                        inputmode="numeric"
+                        aria-label="Ora di inizio"
+                        >
+                        <span class="time-separator" aria-hidden="true">:</span>
+                        <input
+                            type="text"
+                            class="input-minute from"
+                            placeholder="00"
+                            maxlength="2"
+                            inputmode="numeric"
+                            aria-label="Minuti di inizio"
+                        >
                     </div>
                     <ul class="interactive-time-list from">
                     </ul>
                 </div>
 
                 <div id="a-time">
-                    <button type="button" class="listed-time to">⏳</button>
+                    <button
+                        type="button"
+                        class="listed-time to"
+                        aria-label="Seleziona ora di fine"
+                      >
+                      ⏳
+                    </button>
                     <div class="time-input-group to">
-                    <input type="text" class="input-hour to" placeholder="14" maxlength="2">
-                    <span class="time-separator">:</span>
-                    <input type="text" class="input-minute to" placeholder="30" maxlength="2">
+                        <input
+                            type="text"
+                            class="input-hour to"
+                            placeholder="14"
+                            maxlength="2"
+                            inputmode="numeric"
+                            aria-label="Ora di fine"
+                            >
+                        <span class="time-separator" aria-hidden="true">:</span>
+                        <input
+                            type="text"
+                            class="input-minute to"
+                            placeholder="30"
+                            maxlength="2"
+                            inputmode="numeric"
+                            aria-label="Minuti di fine"
+                        >
                     </div>
                     <ul class="interactive-time-list to">
                     </ul>
@@ -406,83 +701,155 @@
             </div>
             <div id="event-repeat">
                 <p class="desc-text">Ripeti :</p>
-                <button type="button" class="event-repeat-btn"> 
+                <button
+                    type="button"
+                     class="event-repeat-btn"
+                     aria-label="Configura ripetizione evento"
+                     aria-haspopup="dialog"
+                  > 
                     &#10227;
                 </button> 
             </div>
-        </article>
-        <article id="notification-row">
+        </div>
+        <div id="notification-row">
             <div class="notification-container">
                 <div class="notification-icon"> ⏰ </div>
-                <button type="button" class="notification-button">5 minuti prima</button> 
+                <button
+                    type="button"
+                    class="notification-button"
+                    aria-label="Scegli quando ricevere la notifica"
+                  >
+                  5 minuti prima
+                </button> 
                     <ul class="notification-list ">
                     </ul>        
             </div>
             <div id="save-event">
-                <button type="button" class="btn save-btn"> save </button> 
+                <button
+                    type="button"
+                    class="btn save-btn"
+                    aria-label="Salva evento"
+                  > 
+                  save 
+                </button> 
             </div>
             <div id="close-event">
-                <button type="button" class="btn close-btn"> chiudi </button> 
+                <button
+                    type="button"
+                    class="btn close-btn"
+                     aria-label="Chiudi finestra evento"
+                  > chiudi </button> 
             </div>
-        </article>
-        <article class="modal-repeat ">
-                    <section class="repeat-mode-container">
-                        <p>Scegli tipo di ripetizione : </p>
-                        <button type="button" class="repeat-mode-btn"></button>
-                        <ul class="repeat-mode-list ">
-                            <li class="repeat-mode-list-item" data-repeat-type="daily">Quotidiano</li>
-                            <li class="repeat-mode-list-item" data-repeat-type="weekly">Settimanale</li>
-                            <li class="repeat-mode-list-item" data-repeat-type="monthly">Mensile</li>
-                            <li class="repeat-mode-list-item" data-repeat-type="custom">Personalizzata</li>
-                        </ul>
-                    </section>
-                    <section class="repeat-intervall-container ">
-                        <!-- assente per data personalizzata -->
-                        <div class="intervall-text-container">
-                            <p class="static-intervall-text">Intervallo :</p>
-                            <input type="text" placeholder="1" class="intervall-input">
-                        </div>
-                        <p class="dinamic-interval-text">
-                            <!-- se tutti i giorni se intervallo = 1, ogni mese, ogni 2 mesi eccc, a seconda della modalità-->
-                             ogni 2 giorni
-                        </p>
-                    </section>
-                   <section class="weekly-repetion-container ">
-                    <!-- presente solo per ripetizione settimanale -->
-                        <p>Ripeti il:</p>
-                        <ul class="weekly-repetion-list">
+        </div>
+        <section 
+            class="modal-repeat "
+            role="dialog"
+            aria-labelledby="repeat-modal-title"
+            >
+            <h2
+                id="repeat-modal-title"
+                class="visually-hidden"
+            >
+                Configura ripetizione evento
+            </h2>
+            <div class="repeat-mode-container">
+                <p>Scegli tipo di ripetizione : </p>
+                <button
+                     type="button"
+                      class="repeat-mode-btn"
+                      aria-label="Scegli tipo di ripetizione"
+                      >
+                    </button>
+                <ul id="repeat-mode-options" class="repeat-mode-list ">
+                    <li class="repeat-mode-list-item" data-repeat-type="daily">Quotidiano</li>
+                    <li class="repeat-mode-list-item" data-repeat-type="weekly">Settimanale</li>
+                    <li class="repeat-mode-list-item" data-repeat-type="monthly">Mensile</li>
+                    <li class="repeat-mode-list-item" data-repeat-type="custom">Personalizzata</li>
+                </ul>
+            </div>
+            <div class="repeat-intervall-container ">
+                <div class="intervall-text-container">
+                    <p class="static-intervall-text">Intervallo :</p>
+                    <input
+                        type="text"
+                         placeholder="1"
+                        class="intervall-input"
+                        inputmode="numeric"
+                        aria-label="Intervallo di ripetizione"
+                        aria-describedby="dynamic-interval-description"
+                      >
+                </div>
+                <p 
+                    id="dynamic-interval-description"
+                    class="dinamic-interval-text"
+                    aria-live="polite"
+                >
+                        ogni 2 giorni
+                </p>
+                </div>
+                <div class="weekly-repetion-container ">
+                    <p>Ripeti il:</p>
+                    <ul
+                         class="weekly-repetion-list"
+                         aria-label="Giorni della settimana"
+                         >
                     
-                        </ul>
-                   </section>
-                   <section class="end-repeat-event-container ">
+                    </ul>
+                </div>
+                <div class="end-repeat-event-container ">
                     <div class="open-miniCalendar-repeation-container">
                         <p>Fino al: </p>
-                        <button class="open-miniCalendar-repeation" type="button">
+                        <button
+                            class="open-miniCalendar-repeation"
+                             type="button"
+                             aria-label="Seleziona data di fine ripetizione"
+                             aria-haspopup="dialog"
+                             >
                             📆
                         </button>
                     </div>
-                    <p class="end-repeation-event-date">
+                    <p 
+                        class="end-repeation-event-date"
+                        aria-live="polite"
+                        >
                         5 Marzo 2026 
                     </p>
-                   </section>
-                   <section class="custom-dates-container">
+                   </div>
+                   <div class="custom-dates-container">
                     <div class="open-custom-date-container">
                         <p>Date personalizzate:</p>
-                        <button class="open-miniCalendar-custom-date" type="button">
+                        <button
+                         class="open-miniCalendar-custom-date"
+                          type="button"
+                          aria-label="Aggiungi data personalizzata"
+                          aria-haspopup="dialog"
+                          >
                             📆
                         </button>
                     </div>
 
-                    <ul class="custom-dates-list">
+                    <ul class="custom-dates-list" aria-label="Date personalizzate selezionate">
          
                     </ul>
-                </section>
+                </div>
                     <div class="close-repeat">
-                        <button class="btn save-repeat" type="button">salva</button>
-                        <button class="btn cls-repeat" type="button">chiudi</button>
+                        <button
+                             class="btn save-repeat"
+                            type="button"
+                             aria-label="Salva impostazioni di ripetizione"
+                          >
+                          salva
+                        </button>
+                        <button
+                             class="btn cls-repeat"
+                              type="button"
+                              aria-label="Chiudi impostazioni di ripetizione"
+                              >
+                              chiudi
+                        </button>
                     </div>
-                </article>
-                <div class="repeat-overlay"></div>
+        </section>
+        <div class="repeat-overlay" aria-hidden="true"></div>
     </div>
 </section>
 

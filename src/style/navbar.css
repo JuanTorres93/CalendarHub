@@ -142,7 +142,7 @@
 }
 
 
-.tutorial-btn, .new-btn{
+.tutorial-btn, .new-btn, .notifications-permission-btn{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -158,6 +158,12 @@
     border-radius: 30px;
     cursor: pointer;
 }
+
+.notification-icon-hidden {
+  display: none;
+}
+
+
 
 @media screen and ( min-width: 992px){
 #navbar{
@@ -230,8 +236,6 @@
 
 
 .action-btns {
-   /* align-items: center; */
-   /* transform: translate(-13rem, -1.8rem); */
    justify-content: flex-start;
    gap: 1rem;
    transform: translateY(-1.7rem);
@@ -249,5 +253,12 @@
 }
 .reset:hover{
      transform: scale(1.2);
+}
+}
+
+@media screen and (max-width: 380px) {
+.tutorial-btn, .new-btn, .notifications-permission-btn{
+    width: 1.5rem;
+    height: 1.5rem;
 }
 }

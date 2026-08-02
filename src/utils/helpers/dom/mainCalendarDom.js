@@ -38,6 +38,14 @@ const actionBtns = secondRow.querySelector(".action-btns")
 const resetBtn = actionBtns.querySelector(".reset")
 const newTodoBtn = actionBtns.querySelector(".new-btn")
 const tutorialBtn = actionBtns.querySelector(".tutorial-btn")
+const notificationPermissionBtn = actionBtns.querySelector(".notifications-permission-btn")
+
+const notificationIconOff = notificationPermissionBtn.querySelector('[data-notification-icon="off"]')
+
+const notificationIconOn =
+  notificationPermissionBtn.querySelector(
+    '[data-notification-icon="on"]'
+  );
 
 const monthCarousel = document.getElementById("month-carousel")
 const monthBody = monthCarousel.querySelector("#month-body")
@@ -92,6 +100,10 @@ export {
     resetBtn,
     newTodoBtn,
     tutorialBtn,
+    notificationPermissionBtn,
+    
+    notificationIconOff,
+    notificationIconOn,
 
     monthCarousel,
     monthBody,

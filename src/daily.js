@@ -1,9 +1,6 @@
 import dayjs from "./day.js";
-import globalDate from "./state.js";
 import createElement from "./utils/helpers/createElement.js";
 import { dayGrid } from "./utils/helpers/dom/mainCalendarDom.js";
-
-let currentview = globalDate.date;
 
 function createDailyGrid(currentview){
     dayGrid.innerHTML = "";
@@ -18,7 +15,7 @@ function createDailyGrid(currentview){
     const list = createElement(div, "day-list", null, "ul")
     dailyHeader.insertAdjacentHTML("afterbegin", `
         <div class="daily-current-header">
-            <h1>${dailyDate}</h1>
+            <h2>${dailyDate}</h2>
         </div>
         `)
 

@@ -83,7 +83,12 @@ export function renderIconsList (){
             iconsList, 
             "icon-list-item",
             value,
-            "li"
+            "li",
+            {
+                attributes: {
+                    "aria-label": `Seleziona icona ${key}`
+                }
+            }
         )
     })
 }
@@ -98,8 +103,10 @@ export function renderColorList(){
               "li",
                 {
                     html : true,
-                    dataset : {color: color.value}
-                })
+                    dataset : {color: color.value},
+                    attributes : {"aria-label": `Seleziona colore ${color.name}`}
+                }
+            )
     })
 }
 
@@ -113,7 +120,10 @@ export function renderNotificationList(){
             item.name,
             "li",
             {
-                dataset : {notification : item.value}
+                dataset : {notification : item.value},
+                attributes : {
+                    "aria-label": `Imposta notifica: ${item.name}`
+                }
             }
         )
     })
@@ -131,7 +141,18 @@ ulContainer.forEach(ul => {
     ul.innerHTML = "";
 
     array.forEach((item)=>{
-        createElement(ul, "list-item", item, "li", {dataset : {time: item}} )
+        createElement(
+            ul,
+             "list-item",
+              item,
+               "li",
+                {
+                    dataset : {time: item},
+                    attributes: {
+                        "aria-label": `Seleziona ore ${item}`
+                    }
+                } 
+            )
     })
 })
 
@@ -156,6 +177,9 @@ export function createDayOfWeek(){
                 dataset : {
                     day: day.days,
                     dayIndex: day.index
+                },
+                attributes: {
+                    "aria-label": `Seleziona ${day.days}`
                 }
              }
             

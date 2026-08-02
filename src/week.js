@@ -1,9 +1,7 @@
 import dayjs from "./day.js";
-import globalDate from "./state.js";
 import createElement from "./utils/helpers/createElement.js"
 import { weekGrid } from "./utils/helpers/dom/mainCalendarDom.js";
 
-let currentview = globalDate.date;
 
 export default function createWeekGrid (currentview) {
     weekGrid.innerHTML= "";
@@ -34,15 +32,16 @@ export default function createWeekGrid (currentview) {
 
     for(let j = 0 ; j < 7; j++){
         let weekNumber, dayClass, firstColoumn;
-        
-        //  weekNumber = parseInt(monday) + j ;
         let firstDayOfWeek = currentview.weekday(j );
         let days = firstDayOfWeek.format("dddd"); 
         let dataDay = firstDayOfWeek.format("YYYY-MM-DD");
         weekNumber = firstDayOfWeek.format("DD");
         let shrinkDays = days.substring(0,3);
+        const accessibleDate = firstDayOfWeek.format(
+        "dddd D MMMM YYYY"
+      );
        
-       if (dataDay === globalDate.date.format("YYYY-MM-DD")){
+       if (dataDay === currentview.format("YYYY-MM-DD")){
         dayClass = "is-today"
        } else {
         dayClass = "normal-week"
@@ -50,7 +49,7 @@ export default function createWeekGrid (currentview) {
      
    weekHeaderRow.insertAdjacentHTML("beforeend", `
   <div class="week-day-display" data-day="${dataDay}">
-    <button type="button" class="header-btn">
+    <button type="button" class="header-btn" aria-label="Seleziona ${accessibleDate}">
       <span class="day-label">${weekNumber}</span>
       <br><br>
       <span 

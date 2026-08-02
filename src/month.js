@@ -1,17 +1,12 @@
-import dayjs from "./day.js"
-import globalDate from "./state.js";
 import { config } from "./utils/config/config.js";
+import dayjs from "./day.js";
 
- let vistaCorrente = globalDate.date;
-
-//appunti, avere usato j, al posto dell'indice, vuol dire che ad ogni ciclo, siccomme aumenta il numero da 0 a 6, incrementa sia la casella, che l'indice dell'array; poi ho modificato entrambi in beforeend, che se no sarebbe stato invertito; 
-
- function createMonthGrid (vistaCorrente, gridType, gridConfig) { 
-        const giorniMese = vistaCorrente.daysInMonth(); //giorni del mese totale
-        const primoGiorno = vistaCorrente.date(1);
-        const firstDayIndex = vistaCorrente.startOf("month").weekday()
-        const ultimoGiorno = vistaCorrente.endOf("month")
-        const lastDayPrevMonth = primoGiorno.subtract(1, "day"); //questo metodo, sottrae il tempo
+ function createMonthGrid (currentView, gridType, gridConfig) { 
+        const giorniMese = currentView.daysInMonth(); 
+        const primoGiorno = currentView.date(1);
+        const firstDayIndex = currentView.startOf("month").weekday()
+        const ultimoGiorno = currentView.endOf("month")
+        const lastDayPrevMonth = primoGiorno.subtract(1, "day"); 
         const firstDayNextMonth = ultimoGiorno.add(1, "day") ;
         
         gridType.innerHTML = "";
@@ -21,7 +16,7 @@ import { config } from "./utils/config/config.js";
         gridType.appendChild(firstRow)
         
     for (let j=0; j<7; j++){
-        let days = vistaCorrente.weekday(j).format("dddd");
+        let days = currentView.weekday(j).format("dddd");
         
          firstRow.insertAdjacentHTML("beforeend", `
         <div class="${gridConfig.dailybox}">${days}</div>
@@ -42,11 +37,16 @@ import { config } from "./utils/config/config.js";
                 dayClass = `${gridConfig.colorOffset}`;
             } else {
                 dayNumber = i - firstDayIndex + 1 ;
-                dataDayID = primoGiorno.date(dayNumber).format("YYYY-MM-DD"); //funziona perchè primo giorno partendo da 1 reitera ogni volta
-                 if(dataDayID === vistaCorrente.format("YYYY-MM-DD"))
+                dataDayID = primoGiorno.date(dayNumber).format("YYYY-MM-DD"); 
+                 if(dataDayID === currentView.format("YYYY-MM-DD"))
                     {dayClass =`${gridConfig.today} ${gridConfig.colorBox}`
                     }else{dayClass=`${gridConfig.colorBox}`
                     }};
+
+            const accessibleDate = dayjs(dataDayID).format(
+            "D MMMM YYYY"
+            );
+            
        secondRow.insertAdjacentHTML("beforeend", `
         <div 
             class="${gridConfig.boxGrid} ${dayClass}"
@@ -60,6 +60,7 @@ import { config } from "./utils/config/config.js";
                     class="${gridConfig.numberBox}"
                     data-day="${dataDayID}"
                     data-action="select-date"
+                    aria-label="Seleziona ${accessibleDate}"
                     >
                     ${dayNumber}
                 </button>

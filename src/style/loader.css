@@ -17,6 +17,7 @@
 .loader-text{
     color: var(--textModal);
      font-family: "Lacquer", system-ui;
+     font-size: 1rem;
 }
 .loader-spinner{
     color: var(--textModal);
@@ -60,5 +61,11 @@
     }
     to{
         opacity: 0;
+    }
+}
+
+@media screen and (min-width:768px) {
+    .loader-text{
+        font-size: 1.5rem;
     }
 }

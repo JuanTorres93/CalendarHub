@@ -44,7 +44,6 @@ export function createMessage(message, container, father, type){
     }, 2000)
     const alertHeight = alert.getBoundingClientRect().height
     const alertWidth = alert.getBoundingClientRect().width
-    console.log(alertHeight)
 
      alert.style.top = `${top - alertHeight*0.5}px`
     alert.style.left = `${left}px`
