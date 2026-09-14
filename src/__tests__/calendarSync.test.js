@@ -121,3 +121,35 @@ describe('View switching', () => {
     await vi.waitFor(() => expect(dayView).not.toHaveClass('show-section'));
   }
 })
+
+describe('Day highlighting', () => {
+  it('should highlight the current day in the month view', async () => {
+    const todayBox = screen.getByTestId(`day-box-2026-09-14`);
+
+    await vi.waitFor(() => expect(todayBox).toHaveClass('selected'));
+  });
+
+  it('should highlight another day when clicking number button', async () => {
+    const anotherDayButton = screen.getByTestId('day-number-button-2026-09-15');
+
+    expect(screen.getByTestId('day-box-2026-09-15')).not.toHaveClass('selected');
+
+    await user.click(anotherDayButton);
+
+    const anotherDayBox = screen.getByTestId('day-box-2026-09-15');
+    expect(anotherDayBox).toHaveClass('selected');
+  })
+})
+
+describe('Events', () => {
+  it('should open event modal when clicking day box', async () => {
+    const dayBox = screen.getByTestId('day-box-2026-09-14');
+    const eventModal = screen.getByTestId('event-popup-container');
+
+    expect(eventModal).not.toHaveClass('show-container');
+
+    await user.click(dayBox);
+
+    await vi.waitFor(() => expect(eventModal).toHaveClass('show-container'));
+  })
+})

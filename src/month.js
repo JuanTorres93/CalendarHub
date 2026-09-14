@@ -1,4 +1,3 @@
-import { config } from "./utils/config/config.js";
 import dayjs from "./day.js";
 
  function createMonthGrid (currentView, gridType, gridConfig) { 
@@ -52,6 +51,7 @@ import dayjs from "./day.js";
             class="${gridConfig.boxGrid} ${dayClass}"
             data-action="create-event"
             data-day="${dataDayID}"
+            data-testid="day-box-${dataDayID}"
             >
           <div class="${gridConfig.firstRowMonth}">
             <div class="${gridConfig.insideBoxGrid}">
@@ -61,12 +61,14 @@ import dayjs from "./day.js";
                     data-day="${dataDayID}"
                     data-action="select-date"
                     aria-label="Seleziona ${accessibleDate}"
+                    data-testid="day-number-button-${dataDayID}"
                     >
                     ${dayNumber}
                 </button>
             </div>
             <div class="${gridConfig.todoContainer}">
             </div>
+          
           </div>
          ${gridConfig.eventsContainer ? `
             <div class="${gridConfig.eventAllDay}"></div>

@@ -161,7 +161,7 @@ function handleMonthGridClick(e){
     const cell = e.target.closest('[data-action="create-event"]')
     const todo = e.target.closest('.todo-btn-header')
     const itemContextualMenu = e.target.closest('[data-action="rehydrate-todo"]')
-    const  selectBtnAndTodoContainer = e.target.closest(".fist-row-month")
+    const selectBtnAndTodoContainer = e.target.closest(".fist-row-month")
     const badgeContainer = e.target.closest(".todo-container-month")
 
     if(itemContextualMenu){
