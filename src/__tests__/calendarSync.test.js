@@ -152,4 +152,42 @@ describe('Events', () => {
 
     await vi.waitFor(() => expect(eventModal).toHaveClass('show-container'));
   })
-})
+
+  it('should close event modal when clicking close button', async () => {
+    const dayBox = screen.getByTestId('day-box-2026-09-14');
+    const eventModal = screen.getByTestId('event-popup-container');
+
+    await user.click(dayBox);
+
+    await vi.waitFor(() => expect(eventModal).toHaveClass('show-container'));
+
+    await user.type(screen.getByTestId('event-title-input'), 'Test event');
+
+    await user.click(screen.getByTestId('event-close-button'));
+
+    await vi.waitFor(() => expect(eventModal).not.toHaveClass('show-container'));
+  })
+
+  describe('Event creation', () => {
+    beforeEach(async () => {
+      localStorage.clear();
+
+      const dayBox = screen.getByTestId('day-box-2026-09-14');
+
+      await user.click(dayBox);
+
+      await vi.waitFor(() => expect(screen.getByTestId('event-popup-container')).toHaveClass('show-container'));
+
+      await user.type(screen.getByTestId('event-title-input'), 'Test event');
+    });
+    
+    it('should save event name', async () => {
+      await user.click(screen.getByTestId('event-save-button'));
+
+      const allEvents = localStorage.getAllForTesting()['calendarEvents'];
+      const allEventsParsed = JSON.parse(allEvents ?? '[]');
+
+      expect(allEventsParsed).toContainEqual(expect.objectContaining({ title: 'Test event' }));
+    });
+  })
+});
