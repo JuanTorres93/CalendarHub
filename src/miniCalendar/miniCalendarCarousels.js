@@ -15,7 +15,9 @@ export function renderMonthList(currentMonthIndex){
     const monthCaroseul = document.querySelector(".month-lists")
     const months = Array.from({length: 12}, (_, i) => dayjs().month(i).format("MMMM"))
     months.forEach((month, index)=>{
-        const el = createElement(monthCaroseul, "mini-month-item", month, "div")
+        const el = createElement(monthCaroseul, "mini-month-item", month, "div", {
+            attributes: { "data-testid": `mini-month-item-${index}` }
+        })
         if(index === currentMonthIndex){
         el.classList.add("current-month-item")
     } 

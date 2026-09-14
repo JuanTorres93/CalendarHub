@@ -15,6 +15,7 @@ function renderYears(listClass, itemClass, currentYear, currentYearClass){
                     itemClass,
                     year,
                     "div",
+                    { attributes: { "data-testid": `mini-year-item-${year}` } }
             )
             if(year === currentYear){
                 el.classList.add(currentYearClass)

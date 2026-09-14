@@ -46,7 +46,8 @@
       document.body,
       "option-banner-container",
       null,
-      "div"
+      "div",
+      { attributes: { "data-testid": "event-banner" } }
     )
     const close = createElement(optionsBanner, "close-banner", "x", "button")
     const infoWrapper = createElement(optionsBanner, "info-wrapper", null, "div")
@@ -79,6 +80,7 @@ function getOptionButtons(isRepeatedEvent){
         class="edit-event-btn" 
         type='button' 
         data-action="edit-single"
+        data-testid="event-banner-edit-single-button"
       >
         modifica evento
       </button>
@@ -86,6 +88,7 @@ function getOptionButtons(isRepeatedEvent){
         class="edit-event-btn" 
         type='button' 
         data-action="edit-series"
+        data-testid="event-banner-edit-series-button"
       >
         modifica serie
       </button>
@@ -93,6 +96,7 @@ function getOptionButtons(isRepeatedEvent){
         class="delete-event-btn" 
         type='button' 
         data-action="delete-single"
+        data-testid="event-banner-delete-single-button"
       >
         elimina evento
       </button>
@@ -100,6 +104,7 @@ function getOptionButtons(isRepeatedEvent){
         class="delete-event-btn" 
         type='button' 
         data-action="delete-series"
+        data-testid="event-banner-delete-series-button"
       >
         elimina serie
       </button>
@@ -110,6 +115,7 @@ function getOptionButtons(isRepeatedEvent){
       class="edit-event-btn"
        type='button'
        data-action="edit-normal"
+       data-testid="event-banner-edit-button"
        >
        modifica
        </button>
@@ -117,6 +123,7 @@ function getOptionButtons(isRepeatedEvent){
       class="delete-event-btn" 
       type='button'
       data-action="delete-normal"
+      data-testid="event-banner-delete-button"
       >
       elimina evento
       </button>`

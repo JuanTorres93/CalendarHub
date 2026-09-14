@@ -52,7 +52,8 @@ function renderMonthEvents(allEvents){
             "",
             "div",
             {
-                dataset: { id: event.id }
+                dataset: { id: event.id },
+                attributes: { "data-testid": `monthly-event-${event.id}` }
             }
         );
 
@@ -78,7 +79,8 @@ function renderMonthEvents(allEvents){
             "",
             "div",
             {
-                dataset: { id: event.id }
+                dataset: { id: event.id },
+                attributes: { "data-testid": `monthly-event-${event.id}` }
             }
         );
 

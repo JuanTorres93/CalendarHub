@@ -6,6 +6,11 @@ const user = userEvent.setup();
 
 import html from '../../index.html?raw';
 
+function getSavedEvents() {
+  const allEvents = localStorage.getAllForTesting()['calendarEvents'];
+  return JSON.parse(allEvents ?? '[]');
+}
+
 let injectJavascriptToMainHtml;
 
 beforeEach(async () => {
@@ -180,11 +185,6 @@ describe('Events', () => {
 
       await user.type(screen.getByTestId('event-title-input'), 'Test event');
     });
-
-    function getSavedEvents() {
-      const allEvents = localStorage.getAllForTesting()['calendarEvents'];
-      return JSON.parse(allEvents ?? '[]');
-    }
     
     it('should save event name', async () => {
       await user.click(screen.getByTestId('event-save-button'));
@@ -389,5 +389,268 @@ describe('Todo list', () => {
     await vi.waitFor(() =>
       expect(within(screen.getByTestId('todo-items-container')).getByText('Test activity')).toBeInTheDocument()
     );
+  });
+});
+
+describe('Week and day navigation', () => {
+  it('should display previous week when clicking previous week button', async () => {
+    await user.click(screen.getByTestId('week-button'));
+
+    const weekDisplay = screen.getByTestId('week-display');
+
+    await vi.waitFor(() => expect(weekDisplay).toHaveTextContent(/14 settembre - 20 settembre/i));
+
+    await user.click(screen.getByTestId('previous-week-button'));
+
+    await vi.waitFor(() => expect(weekDisplay).toHaveTextContent(/07 settembre - 13 settembre/i));
+  });
+
+  it('should display next week when clicking next week button', async () => {
+    await user.click(screen.getByTestId('week-button'));
+
+    const weekDisplay = screen.getByTestId('week-display');
+
+    await vi.waitFor(() => expect(weekDisplay).toHaveTextContent(/14 settembre - 20 settembre/i));
+
+    await user.click(screen.getByTestId('next-week-button'));
+
+    await vi.waitFor(() => expect(weekDisplay).toHaveTextContent(/21 settembre - 27 settembre/i));
+  });
+
+  it('should display previous day when clicking previous day button', async () => {
+    await user.click(screen.getByTestId('day-button'));
+
+    const dayDisplay = screen.getByTestId('day-display');
+
+    await vi.waitFor(() => expect(dayDisplay).toHaveTextContent(/14 settembre/i));
+
+    await user.click(screen.getByTestId('previous-day-button'));
+
+    await vi.waitFor(() => expect(dayDisplay).toHaveTextContent(/13 settembre/i));
+  });
+
+  it('should display next day when clicking next day button', async () => {
+    await user.click(screen.getByTestId('day-button'));
+
+    const dayDisplay = screen.getByTestId('day-display');
+
+    await vi.waitFor(() => expect(dayDisplay).toHaveTextContent(/14 settembre/i));
+
+    await user.click(screen.getByTestId('next-day-button'));
+
+    await vi.waitFor(() => expect(dayDisplay).toHaveTextContent(/15 settembre/i));
+  });
+});
+
+describe('Mini calendar from navbar', () => {
+  async function openMiniCalendar() {
+    await user.click(screen.getByTestId('show-mini-calendar-button'));
+
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('mini-calendar-dialog')).toHaveClass('show-mini-calendar')
+    );
+  }
+
+  function getMiniGrid() {
+    return document.querySelector('.mini-boxes-container');
+  }
+
+  it('should open mini calendar when clicking month display', async () => {
+    await openMiniCalendar();
+
+    expect(screen.getByTestId('mini-calendar-layer')).toHaveClass('show-mini-calendar-layer');
+  });
+
+  it('should open mini calendar when clicking week display', async () => {
+    await user.click(screen.getByTestId('show-week-mini-calendar-button'));
+
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('mini-calendar-dialog')).toHaveClass('show-mini-calendar')
+    );
+  });
+
+  it('should open mini calendar when clicking day display', async () => {
+    await user.click(screen.getByTestId('show-day-mini-calendar-button'));
+
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('mini-calendar-dialog')).toHaveClass('show-mini-calendar')
+    );
+  });
+
+  it('should open mini calendar when clicking year display', async () => {
+    await user.click(screen.getByTestId('show-year-mini-calendar-button'));
+
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('mini-calendar-dialog')).toHaveClass('show-mini-calendar')
+    );
+  });
+
+  it('should change the displayed month when confirming a date in mini calendar', async () => {
+    await openMiniCalendar();
+
+    await user.click(within(getMiniGrid()).getByTestId('day-box-2026-10-01'));
+
+    await user.click(document.querySelector('.mini-save-btn'));
+
+    await vi.waitFor(() => expect(screen.getByTestId('month-display')).toHaveTextContent(/ottobre/i));
+  });
+
+  it('should change the displayed month when selecting a month in the mini calendar carousel', async () => {
+    await openMiniCalendar();
+
+    await user.click(document.querySelector('.mini-month-btn'));
+
+    await user.click(screen.getByTestId('mini-month-item-9'));
+
+    await user.click(document.querySelector('.mini-save-btn'));
+
+    await vi.waitFor(() => expect(screen.getByTestId('month-display')).toHaveTextContent(/ottobre/i));
+  });
+
+  it('should change the displayed year when selecting a year in the mini calendar carousel', async () => {
+    await openMiniCalendar();
+
+    await user.click(document.querySelector('.mini-year-btn'));
+
+    await user.click(screen.getByTestId('mini-year-item-2027'));
+
+    await user.click(document.querySelector('.mini-save-btn'));
+
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('show-year-mini-calendar-button')).toHaveTextContent('2027')
+    );
+  });
+});
+
+describe('Event banner', () => {
+  function createBaseEvent(overrides = {}) {
+    return {
+      id: 'evt-base',
+      title: 'Base event',
+      date: '2026-09-14',
+      from: '10:00',
+      to: '11:00',
+      description: '',
+      icon: '✏️',
+      color: 'blue',
+      urgent: false,
+      allDay: false,
+      notification: '5 minuti prima',
+      repeat: null,
+      ...overrides,
+    };
+  }
+
+  async function seedAndRender(events) {
+    localStorage.setItem('calendarEvents', JSON.stringify(events));
+
+    const { renderEvents } = await import('../utils/events/eventRendering.js');
+    renderEvents();
+  }
+
+  async function openEventBanner(testId) {
+    await user.click(within(screen.getByTestId('day-box-2026-09-14')).getByTestId(testId));
+
+    await vi.waitFor(() => expect(screen.getByTestId('event-banner')).toHaveClass('show-option-banner'));
+  }
+
+  it('should show edit and delete options when clicking an event', async () => {
+    await seedAndRender([createBaseEvent()]);
+
+    await openEventBanner('monthly-event-evt-base');
+
+    expect(screen.getByTestId('event-banner-edit-button')).toBeInTheDocument();
+    expect(screen.getByTestId('event-banner-delete-button')).toBeInTheDocument();
+  });
+
+  it('should edit an event when confirming the preloaded form', async () => {
+    await seedAndRender([createBaseEvent()]);
+
+    await openEventBanner('monthly-event-evt-base');
+
+    await user.click(screen.getByTestId('event-banner-edit-button'));
+
+    const eventModal = screen.getByTestId('event-popup-container');
+    await vi.waitFor(() => expect(eventModal).toHaveClass('show-container'));
+
+    const titleInput = screen.getByTestId('event-title-input');
+    expect(titleInput).toHaveValue('Base event');
+
+    await user.clear(titleInput);
+    await user.type(titleInput, 'Edited event');
+
+    await user.click(screen.getByTestId('event-save-button'));
+
+    await vi.waitFor(() => expect(eventModal).not.toHaveClass('show-container'));
+
+    expect(getSavedEvents()).toEqual([
+      expect.objectContaining({ id: 'evt-base', title: 'Edited event' }),
+    ]);
+  });
+
+  it('should delete an event when confirming deletion', async () => {
+    await seedAndRender([createBaseEvent()]);
+
+    await openEventBanner('monthly-event-evt-base');
+
+    await user.click(screen.getByTestId('event-banner-delete-button'));
+
+    await vi.waitFor(() => expect(getSavedEvents()).toEqual([]));
+    await vi.waitFor(() => expect(screen.getByTestId('event-banner')).not.toHaveClass('show-option-banner'));
+  });
+
+  it('should delete a single occurrence when confirming single deletion', async () => {
+    const seriesEvent = createBaseEvent({
+      id: 'evt-series',
+      title: 'Series event',
+      repeat: {
+        seriesId: 'series-1',
+        type: 'daily',
+        interval: 1,
+        weekdays: [],
+        customDates: [],
+        exceptions: [],
+        until: '2026-09-20',
+      },
+    });
+
+    await seedAndRender([seriesEvent]);
+
+    await user.click(within(screen.getByTestId('day-box-2026-09-15')).getByTestId('monthly-event-series-1-2026-09-15'));
+
+    await vi.waitFor(() => expect(screen.getByTestId('event-banner')).toHaveClass('show-option-banner'));
+
+    await user.click(screen.getByTestId('event-banner-delete-single-button'));
+
+    await vi.waitFor(() => {
+      expect(getSavedEvents()).toHaveLength(1);
+      expect(getSavedEvents()[0].repeat.exceptions).toContain('2026-09-15');
+    });
+  });
+
+  it('should delete the whole series when confirming series deletion', async () => {
+    const seriesEvent = createBaseEvent({
+      id: 'evt-series',
+      title: 'Series event',
+      repeat: {
+        seriesId: 'series-1',
+        type: 'daily',
+        interval: 1,
+        weekdays: [],
+        customDates: [],
+        exceptions: [],
+        until: '2026-09-20',
+      },
+    });
+
+    await seedAndRender([seriesEvent]);
+
+    await user.click(within(screen.getByTestId('day-box-2026-09-15')).getByTestId('monthly-event-series-1-2026-09-15'));
+
+    await vi.waitFor(() => expect(screen.getByTestId('event-banner')).toHaveClass('show-option-banner'));
+
+    await user.click(screen.getByTestId('event-banner-delete-series-button'));
+
+    await vi.waitFor(() => expect(getSavedEvents()).toEqual([]));
   });
 });
