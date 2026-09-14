@@ -81,7 +81,7 @@
     <link rel="stylesheet" href="./src/style/loader.css">
 </head>
 <body >
-  <div class="loader-layer">
+  <div class="loader-layer" data-testid="loader">
     <div class="loader-box">
         <p class="loader-text">
             CARICAMENTO IN CORSO
@@ -400,7 +400,7 @@
               data-testid="todo-title-input"
               >
      
-            <button type="button" class="delete-list-btn" aria-label="Elimina lista">
+            <button type="button" class="delete-list-btn" aria-label="Elimina lista" data-testid="todo-delete-list-button">
                 <svg viewBox="0 0 24 24" class="todo-delete-icon">
                         <path d="M3 6h18"></path>
                         <path d="M8 6V4h8v2"></path>
