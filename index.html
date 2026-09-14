@@ -117,9 +117,9 @@
   <nav id="navbar" aria-label="Navigazione calendario">
     <div id="first-layer">
         <div class="mode-btns" aria-label="Selezione vista calendario">
-            <button id="day-btn" class="btns-nav" type="button">Giorno</button>
-            <button id="week-btn" class="btns-nav" type="button">Settimana</button>
-            <button id="month-btn" class="btns-nav" type="button">Mese</button>
+            <button id="day-btn" class="btns-nav" type="button" data-testid="day-button">Giorno</button>
+            <button id="week-btn" class="btns-nav" type="button" data-testid="week-button">Settimana</button>
+            <button id="month-btn" class="btns-nav" type="button" data-testid="month-button">Mese</button>
         </div>
 
         <div id="show-year">
@@ -327,7 +327,9 @@
      >
     <div 
         id="month-body"
-        class="month-view">
+        class="month-view"
+        data-testid="month-view"
+    >
       <div class="month-structure"></div>
     </div>
   </section>
@@ -336,7 +338,7 @@
      class="week-carousel"
      aria-label="Vista settimanale del calendario"
      >
-    <div id="week-body" class="week-view">
+    <div id="week-body" class="week-view" data-testid="week-view">
       <div id="list-week">
         <div id="full-week-view"></div>
       </div>
@@ -347,7 +349,7 @@
      id="day-corousel"
      aria-label="Vista giornaliera del calendario"
      >
-    <div id="day-body" class="day-view">
+    <div id="day-body" class="day-view"  data-testid="day-view">
       <div id="list-day">
         <div id="full-day-view"></div>
       </div>
