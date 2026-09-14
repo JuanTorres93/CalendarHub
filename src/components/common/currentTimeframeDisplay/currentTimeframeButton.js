@@ -1,11 +1,32 @@
-export default function createCurrentTimeframeButton({ testid, extraClasses = [] }) {
+export default function createCurrentTimeframeButton({ timeframe }) {
+  const config = timeframeConfigs[timeframe];
   const button = document.createElement('button');
 
-  button.className = ['big-numbers text', ...extraClasses].filter(Boolean).join(' ');
+  button.className = ['big-numbers text', ...config.buttonExtraClasses]
+    .filter(Boolean)
+    .join(' ');
   button.type = 'button';
   button.setAttribute('aria-label', 'Apri mini calendario');
   button.setAttribute('aria-haspopup', 'dialog');
-  button.setAttribute('data-testid', testid);
+  button.setAttribute(
+    'data-testid',
+    `show-${config.testId ? `${config.testId}-` : ''}mini-calendar-button`,
+  );
 
   return button;
 }
+
+const timeframeConfigs = {
+  month: {
+    testId: '',
+    buttonExtraClasses: [],
+  },
+  week: {
+    testId: 'week',
+    buttonExtraClasses: ['week-displayed'],
+  },
+  day: {
+    testId: 'day',
+    buttonExtraClasses: ['day-displayed'],
+  },
+};
