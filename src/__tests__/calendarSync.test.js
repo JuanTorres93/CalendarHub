@@ -294,3 +294,100 @@ describe('Events', () => {
     });
   })
 });
+
+describe('Today button', () => {
+  it('should return to the current month when clicking today button', async () => {
+    const monthDisplay = screen.getByTestId('month-display');
+
+    await vi.waitFor(() => expect(monthDisplay).toHaveTextContent(/settembre/i));
+
+    await user.click(screen.getByTestId('next-month-button'));
+
+    await vi.waitFor(() => expect(monthDisplay).toHaveTextContent(/ottobre/i));
+
+    await user.click(screen.getByTestId('today-button'));
+
+    await vi.waitFor(() => expect(monthDisplay).toHaveTextContent(/settembre/i));
+  });
+
+  it('should highlight the current day after clicking today button', async () => {
+    const monthDisplay = screen.getByTestId('month-display');
+
+    await vi.waitFor(() => expect(monthDisplay).toHaveTextContent(/settembre/i));
+
+    await user.click(screen.getByTestId('next-month-button'));
+
+    await vi.waitFor(() => expect(monthDisplay).toHaveTextContent(/ottobre/i));
+
+    await user.click(screen.getByTestId('day-number-button-2026-10-05'));
+
+    await vi.waitFor(() => expect(screen.getByTestId('day-box-2026-10-05')).toHaveClass('selected'));
+
+    await user.click(screen.getByTestId('today-button'));
+
+    await vi.waitFor(() => expect(screen.getByTestId('day-box-2026-09-14')).toHaveClass('selected'));
+  });
+});
+
+describe('Todo list', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  async function openTodoPanel() {
+    await user.click(screen.getByTestId('new-todo-button'));
+
+    await vi.waitFor(() => expect(screen.getByTestId('todo-panel')).toHaveClass('show-modal'));
+
+    await user.click(screen.getByTestId('todo-new-list-button'));
+  }
+
+  function getSavedTodos() {
+    const allTodos = localStorage.getAllForTesting()['todoEvents'];
+    return JSON.parse(allTodos ?? '[]');
+  }
+
+  it('should open todo panel when clicking new todo button', async () => {
+    await user.click(screen.getByTestId('new-todo-button'));
+
+    await vi.waitFor(() => expect(screen.getByTestId('todo-panel')).toHaveClass('show-modal'));
+  });
+
+  it('should create a todo list when entering a title', async () => {
+    await openTodoPanel();
+
+    expect(screen.getByTestId('todo-header-date')).toHaveTextContent('14-09');
+
+    await user.type(screen.getByTestId('todo-title-input'), 'Test list');
+
+    await user.tab();
+
+    expect(getSavedTodos()).toContainEqual(expect.objectContaining({
+      title: 'Test list',
+      date: '2026-09-14',
+    }));
+  });
+
+  it('should add an activity to the todo list', async () => {
+    await openTodoPanel();
+
+    await user.type(screen.getByTestId('todo-title-input'), 'Test list');
+
+    await user.tab();
+
+    await user.type(screen.getByTestId('todo-item-input'), 'Test activity');
+
+    await user.tab();
+
+    await user.click(screen.getByTestId('todo-add-item-button'));
+
+    expect(getSavedTodos()[0].items).toContainEqual(expect.objectContaining({
+      title: 'Test activity',
+      completed: false,
+    }));
+
+    await vi.waitFor(() =>
+      expect(within(screen.getByTestId('todo-items-container')).getByText('Test activity')).toBeInTheDocument()
+    );
+  });
+});

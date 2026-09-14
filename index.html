@@ -219,12 +219,13 @@
         </div>
        
         <div class="action-btns">
-            <button type="button" class="reset" aria-label="Ripristina data corrente"> today</button>
+            <button type="button" class="reset" aria-label="Ripristina data corrente" data-testid="today-button"> today</button>
 
             <button
              type="button"
               class="new-btn inside-nav"
               aria-label="Crea nuova Todo-list"
+              data-testid="new-todo-button"
               >
                 <svg
                  xmlns="http://www.w3.org/2000/svg"
@@ -363,11 +364,12 @@
      class="todo-panel"
      role="dialog"
      aria-labelledby="todo-panel-title"
+     data-testid="todo-panel"
      >
     <div class="todo-header">
         <h2 id="todo-panel-title" class="title-main-todo">To-do List</h2>
 
-        <button type="button" class="close-todo-btn" aria-label="Chiudi To-do List">
+        <button type="button" class="close-todo-btn" aria-label="Chiudi To-do List" data-testid="todo-close-button">
             ✕
         </button>
     </div>
@@ -376,7 +378,7 @@
         <p class="my-list-text">My Lists</p>
 
         <div class="my-list-buttons-container">
-            <button type="button" class="new-list">
+            <button type="button" class="new-list" data-testid="todo-new-list-button">
                 New
             </button>
         </div>
@@ -386,12 +388,13 @@
 
     <section data-id="list-id" class="to-do-container">
         <header class="to-do-title ">
-            <p data-day="2025-10-11" class="date-to-do">10-11</p>
+            <p data-day="2025-10-11" class="date-to-do" data-testid="todo-header-date">10-11</p>
             <input
              class="todo-input-title"
               placeholder="inserisci un titolo"
               type="text"
               aria-label="Titolo della lista"
+              data-testid="todo-title-input"
               >
      
             <button type="button" class="delete-list-btn" aria-label="Elimina lista">
@@ -414,7 +417,7 @@
             </p>
         </section>
 
-        <div class="todo-items-container">
+        <div class="todo-items-container" data-testid="todo-items-container">
 
         </div>
 
@@ -424,9 +427,10 @@
                   class="todo-input"
                    placeholder="Nuova attività..."
                    aria-label="Nuova attività"
+                   data-testid="todo-item-input"
                    >
 
-            <button type="button" class="add-todo-btn" aria-label="Aggiungi attività">
+            <button type="button" class="add-todo-btn" aria-label="Aggiungi attività" data-testid="todo-add-item-button">
                 +
             </button>
         </div>
