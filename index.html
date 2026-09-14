@@ -136,7 +136,7 @@
 
     <div id="layer" >
         <!-- mensile -->
-        <div class="display-overlay month  " data-testid="month-display">
+        <div class="display-overlay month" data-testid="month-display">
             <button class="left-arrow" type="button" aria-label="Mese precedente" data-testid="previous-month-button">
                 <img 
                 src="./images/streamline-plump-color--arrow-right-circle-1-flat.svg"
@@ -145,13 +145,9 @@
                  aria-hidden="true"
                  >
             </button>
-            <button
-                 class="big-numbers text"
-                 type="button"
-                 aria-label="Apri mini calendario"
-                 aria-haspopup="dialog"
-                 data-testid="show-mini-calendar-button"
-                 ></button>
+
+            <!-- replace_currentTimeframeButton||show-mini-calendar-button -->
+
             <button class="right-arrow" type="button" aria-label="Mese successivo" data-testid="next-month-button">
                   <img
                    src="./images/streamline-plump-color--arrow-right-circle-1-flat.svg"
@@ -174,13 +170,7 @@
                 >
             </button>
 
-            <button
-                class="big-numbers text week-displayed"
-                type="button"
-                aria-label="Apri mini calendario"
-                aria-haspopup="dialog"
-                data-testid="show-week-mini-calendar-button"
-            ></button>
+            <!-- replace_currentTimeframeButton||show-week-mini-calendar-button||week-displayed -->
 
             <button class="right-arrow" type="button" aria-label="Settimana successiva" data-testid="next-week-button">
                 <img
@@ -203,13 +193,8 @@
                 >
             </button>
 
-            <button
-                class="big-numbers text day-displayed"
-                type="button"
-                aria-label="Apri mini calendario"
-                aria-haspopup="dialog"
-                data-testid="show-day-mini-calendar-button"
-            ></button>
+
+            <!-- replace_currentTimeframeButton||show-day-mini-calendar-button||day-displayed -->
 
             <button class="right-arrow" type="button" aria-label="Giorno successivo" data-testid="next-day-button">
                 <img

@@ -44,7 +44,9 @@ function bindNavEvents(){
         allOverlays.forEach(overlayElement => {
         overlayElement.addEventListener("click", ()=>openMiniCalendar("normal"))
         })
+
         currentYearDisplay.addEventListener("click", (e)=> openMiniCalendar("normal", null, "normal", e.currentTarget))
+
         monthBtn.addEventListener("click", () => {
          switchView(0)
         })

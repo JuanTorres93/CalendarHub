@@ -1,10 +1,11 @@
 import { injectJavascriptToMainHtml } from "./injectJavascriptToMainHtml.js";
+
 document.addEventListener('selectstart', (e) => {
   e.preventDefault();
 });
 
 document.addEventListener("DOMContentLoaded", ()=>{
-  injectJavascriptToMainHtml  ()
+  injectJavascriptToMainHtml()
 })
 
 
