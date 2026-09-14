@@ -1,6 +1,6 @@
-import createCurrentTimeframeButton from "./common/currentTimeframeButton.js";
-import createLeftArrowButton from "./common/leftArrowButton.js";
-import createRightArrowButton from "./common/rightArrowButton.js";
+import createCurrentTimeframeButton from "./common/currentTimeframeDisplay/currentTimeframeButton.js";
+import createLeftArrowButton from "./common/currentTimeframeDisplay/leftArrowButton.js";
+import createRightArrowButton from "./common/currentTimeframeDisplay/rightArrowButton.js";
 
 const componentBuilders = {
   replace_currentTimeframeButton(parts) {
