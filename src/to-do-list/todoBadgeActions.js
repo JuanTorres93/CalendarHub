@@ -8,7 +8,10 @@ let todoMenuContext;
 function createItemsOfTodoMenu(items, father){
 
     items.forEach(item => {
-        createElement(father, "", item.title, "li", {dataset : {id : item.id, action : "rehydrate-todo"}})
+        createElement(father, "", item.title, "li", {
+            dataset: { id: item.id, action: "rehydrate-todo" },
+            attributes: { "data-testid": `todo-menu-item-${item.id}` }
+        })
     });
 }
 
@@ -26,11 +29,12 @@ export function openContextualMenu(date, fatherCell, contextElement, monthCell){
   const menu = createElement(
     fatherCell,
      "contextual-menu",
-        `<ul class="contextual-menu-list"></ul>
+        `<ul class="contextual-menu-list" data-testid="todo-contextual-menu-list"></ul>
         `,
         "div",
         {
-            html: true
+            html: true,
+            attributes: { "data-testid": "todo-contextual-menu" }
         }
     )
     const ul = menu.querySelector(".contextual-menu-list")

@@ -5,7 +5,7 @@ function renderBadgeHelper(allTodo, dataDay, container){
      const todoOfDay = allTodo.filter(todo => todo.date === dataDay)
             if(todoOfDay.length > 0){
                 container.innerHTML = 
-                `<button type="button" class="todo-btn-header">
+                `<button type="button" class="todo-btn-header" data-testid="todo-badge-${dataDay}">
                     <span class="todo-count">
                     ${todoOfDay.length}
                     </span>

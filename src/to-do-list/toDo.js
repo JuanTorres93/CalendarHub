@@ -250,7 +250,7 @@ function renderTodoItem(todoItem) {
     const todoElement = createElement(
         toDoItemsContainer,
         "todo-item",
-        `<button type="button" class="check-btn ${todoItem.completed ? "checked" : ""}" aria-label="Completa attività">
+        `<button type="button" class="check-btn ${todoItem.completed ? "checked" : ""}" aria-label="Completa attività" data-testid="todo-item-check-${todoItem.id}">
             <svg viewBox="0 0 24 24" class="todo-check-icon">
                 <rect x="3" y="3" width="18" height="18" rx="4"></rect>
                 <path d="M7 12.5l3 3 7-7"></path>
@@ -259,7 +259,7 @@ function renderTodoItem(todoItem) {
 
         <strong class="title-item"></strong>
 
-        <button type="button" class="delete-item-todo-btn show-delete" aria-label="Elimina attività">
+        <button type="button" class="delete-item-todo-btn show-delete" aria-label="Elimina attività" data-testid="todo-item-delete-${todoItem.id}">
             <svg viewBox="0 0 24 24" class="todo-delete-icon">
                 <path d="M3 6h18"></path>
                 <path d="M8 6V4h8v2"></path>
@@ -271,7 +271,8 @@ function renderTodoItem(todoItem) {
         "article",
         {
             html: true,
-            dataset: { id: todoItem.id }
+            dataset: { id: todoItem.id },
+            attributes: { "data-testid": `todo-item-${todoItem.id}` }
         }
     );
     const titleElement = todoElement.querySelector(".title-item");

@@ -333,11 +333,6 @@ describe('Todo list', () => {
     await user.click(screen.getByTestId('todo-new-list-button'));
   }
 
-  function getSavedTodos() {
-    const allTodos = localStorage.getAllForTesting()['todoEvents'];
-    return JSON.parse(allTodos ?? '[]');
-  }
-
   it('should open todo panel when clicking new todo button', async () => {
     await user.click(screen.getByTestId('new-todo-button'));
 
@@ -864,9 +859,144 @@ describe('Event form validation', () => {
   });
 });
 
+describe('Todo list interactions', () => {
+  it('should show a badge with the list count on days with todo lists', async () => {
+    await seedTodos([createTodoList()]);
+
+    const badge = within(screen.getByTestId('day-box-2026-09-14')).getByTestId('todo-badge-2026-09-14');
+    expect(badge).toHaveTextContent('1');
+    expect(
+      within(screen.getByTestId('day-box-2026-09-15')).queryByTestId('todo-badge-2026-09-15')
+    ).not.toBeInTheDocument();
+  });
+
+  it('should show the todo lists of the day when clicking the badge', async () => {
+    await seedTodos([
+      createTodoList({ id: 'todo-1', title: 'List one' }),
+      createTodoList({ id: 'todo-2', title: 'List two' }),
+    ]);
+
+    await user.click(within(screen.getByTestId('day-box-2026-09-14')).getByTestId('todo-badge-2026-09-14'));
+
+    const menu = screen.getByTestId('todo-contextual-menu');
+    expect(within(menu).getByTestId('todo-menu-item-todo-1')).toBeInTheDocument();
+    expect(within(menu).getByTestId('todo-menu-item-todo-2')).toBeInTheDocument();
+  });
+
+  it('should rehydrate a todo list when clicking it in the contextual menu', async () => {
+    await seedTodos([
+      createTodoList({
+        id: 'todo-1',
+        title: 'My list',
+        items: [{ id: 'item-1', title: 'Buy milk', completed: false }],
+      }),
+    ]);
+
+    await openTodoFromBadge();
+
+    expect(screen.getByTestId('todo-title-input')).toHaveValue('My list');
+    expect(screen.getByTestId('todo-item-item-1')).toBeInTheDocument();
+  });
+
+  it('should mark an activity as completed when clicking its check button', async () => {
+    await seedTodos([
+      createTodoList({
+        id: 'todo-1',
+        items: [{ id: 'item-1', title: 'Buy milk', completed: false }],
+      }),
+    ]);
+
+    await openTodoFromBadge();
+
+    await user.click(screen.getByTestId('todo-item-check-item-1'));
+
+    expect(getSavedTodos()[0].items[0].completed).toBe(true);
+    expect(screen.getByTestId('todo-item-check-item-1')).toHaveClass('checked');
+  });
+
+  it('should delete an activity when clicking its delete button', async () => {
+    await seedTodos([
+      createTodoList({
+        id: 'todo-1',
+        items: [
+          { id: 'item-1', title: 'Buy milk', completed: false },
+          { id: 'item-2', title: 'Buy bread', completed: false },
+        ],
+      }),
+    ]);
+
+    await openTodoFromBadge();
+
+    await user.click(screen.getByTestId('todo-item-delete-item-1'));
+
+    expect(getSavedTodos()[0].items).toHaveLength(1);
+    expect(screen.queryByTestId('todo-item-item-1')).not.toBeInTheDocument();
+  });
+
+  it('should delete the whole list when clicking the delete list button', async () => {
+    await seedTodos([createTodoList({ id: 'todo-1' })]);
+
+    await openTodoFromBadge();
+
+    await user.click(screen.getByTestId('todo-delete-list-button'));
+
+    expect(getSavedTodos()).toEqual([]);
+    expect(
+      within(screen.getByTestId('day-box-2026-09-14')).queryByTestId('todo-badge-2026-09-14')
+    ).not.toBeInTheDocument();
+  });
+
+  it('should close the todo panel when clicking the close button', async () => {
+    await user.click(screen.getByTestId('new-todo-button'));
+
+    await vi.waitFor(() => expect(screen.getByTestId('todo-panel')).toHaveClass('show-modal'));
+
+    await user.click(screen.getByTestId('todo-close-button'));
+
+    await vi.waitFor(() => expect(screen.getByTestId('todo-panel')).not.toHaveClass('show-modal'));
+  });
+
+  function createTodoList(overrides = {}) {
+    return {
+      id: 'todo-1',
+      date: '2026-09-14',
+      title: 'My list',
+      items: [],
+      ...overrides,
+    };
+  }
+
+  async function seedTodos(todos) {
+    localStorage.setItem('todoEvents', JSON.stringify(todos));
+
+    const { initRenderBadge } = await import('../to-do-list/toDoBadgeRendering.js');
+    initRenderBadge();
+  }
+
+  async function openTodoFromBadge() {
+    await user.click(within(screen.getByTestId('day-box-2026-09-14')).getByTestId('todo-badge-2026-09-14'));
+
+    await user.click(screen.getByTestId('todo-menu-item-todo-1'));
+
+    await vi.waitFor(() => expect(screen.getByTestId('todo-panel')).toHaveClass('show-modal'));
+  }
+
+});
+
+describe('Loader', () => {
+  it('should hide the loader when the app is ready', () => {
+    expect(screen.getByTestId('loader')).toHaveClass('loader-hide');
+  });
+});
+
 function getSavedEvents() {
   const allEvents = localStorage.getAllForTesting()['calendarEvents'];
   return JSON.parse(allEvents ?? '[]');
+}
+
+function getSavedTodos() {
+  const allTodos = localStorage.getAllForTesting()['todoEvents'];
+  return JSON.parse(allTodos ?? '[]');
 }
 
 function createBaseEvent(overrides = {}) {
