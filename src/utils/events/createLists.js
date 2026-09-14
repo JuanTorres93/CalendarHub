@@ -181,7 +181,8 @@ export function createDayOfWeek(){
                     dayIndex: day.index
                 },
                 attributes: {
-                    "aria-label": `Seleziona ${day.days}`
+                    "aria-label": `Seleziona ${day.days}`,
+                    "data-testid": `weekly-repetion-item-${day.index}`
                 }
              }
             

@@ -6,11 +6,6 @@ const user = userEvent.setup();
 
 import html from '../../index.html?raw';
 
-function getSavedEvents() {
-  const allEvents = localStorage.getAllForTesting()['calendarEvents'];
-  return JSON.parse(allEvents ?? '[]');
-}
-
 let injectJavascriptToMainHtml;
 
 beforeEach(async () => {
@@ -177,11 +172,7 @@ describe('Events', () => {
     beforeEach(async () => {
       localStorage.clear();
 
-      const dayBox = screen.getByTestId('day-box-2026-09-14');
-
-      await user.click(dayBox);
-
-      await vi.waitFor(() => expect(screen.getByTestId('event-popup-container')).toHaveClass('show-container'));
+      await openEventForm();
 
       await user.type(screen.getByTestId('event-title-input'), 'Test event');
     });
@@ -523,31 +514,6 @@ describe('Mini calendar from navbar', () => {
 });
 
 describe('Event banner', () => {
-  function createBaseEvent(overrides = {}) {
-    return {
-      id: 'evt-base',
-      title: 'Base event',
-      date: '2026-09-14',
-      from: '10:00',
-      to: '11:00',
-      description: '',
-      icon: '✏️',
-      color: 'blue',
-      urgent: false,
-      allDay: false,
-      notification: '5 minuti prima',
-      repeat: null,
-      ...overrides,
-    };
-  }
-
-  async function seedAndRender(events) {
-    localStorage.setItem('calendarEvents', JSON.stringify(events));
-
-    const { renderEvents } = await import('../utils/events/eventRendering.js');
-    renderEvents();
-  }
-
   async function openEventBanner(testId) {
     await user.click(within(screen.getByTestId('day-box-2026-09-14')).getByTestId(testId));
 
@@ -654,3 +620,282 @@ describe('Event banner', () => {
     await vi.waitFor(() => expect(getSavedEvents()).toEqual([]));
   });
 });
+
+describe('Repeated events generation', () => {
+  it('should generate daily occurrences respecting interval, until and exceptions', async () => {
+    const occurrences = await seedSeries(createSeriesEvent({
+      seriesId: 'series-d',
+      type: 'daily',
+      interval: 3,
+      weekdays: [],
+      customDates: [],
+      exceptions: ['2026-09-17'],
+      until: '2026-09-20',
+    }));
+
+    expect(occurrences.map(occurrence => occurrence.date)).toEqual(['2026-09-20']);
+  });
+
+  it('should generate weekly occurrences on selected weekdays', async () => {
+    const occurrences = await seedSeries(createSeriesEvent({
+      seriesId: 'series-w',
+      type: 'weekly',
+      interval: 1,
+      weekdays: [1, 3],
+      customDates: [],
+      exceptions: [],
+      until: '2026-09-27',
+    }));
+
+    expect(occurrences.map(occurrence => occurrence.date)).toEqual(['2026-09-16', '2026-09-21', '2026-09-23']);
+  });
+
+  it('should generate monthly occurrences adding one month per interval', async () => {
+    const occurrences = await seedSeries(createSeriesEvent({
+      seriesId: 'series-m',
+      type: 'monthly',
+      interval: 1,
+      weekdays: [],
+      customDates: [],
+      exceptions: [],
+      until: '2026-11-30',
+    }));
+
+    expect(occurrences.map(occurrence => occurrence.date)).toEqual(['2026-10-14', '2026-11-14']);
+  });
+
+  it('should generate custom occurrences from the custom dates, skipping exceptions', async () => {
+    const occurrences = await seedSeries(createSeriesEvent({
+      seriesId: 'series-c',
+      type: 'custom',
+      interval: 1,
+      weekdays: [],
+      customDates: ['2026-09-18', '2026-09-20', '2026-09-25'],
+      exceptions: ['2026-09-18'],
+      until: '2026-12-31',
+    }));
+
+    expect(occurrences.map(occurrence => occurrence.date)).toEqual(['2026-09-20', '2026-09-25']);
+  });
+
+  it('should render repeated occurrences in the month view', async () => {
+    await seedAndRender([createSeriesEvent()]);
+
+    expect(
+      within(screen.getByTestId('day-box-2026-09-15')).getByTestId('monthly-event-series-1-2026-09-15')
+    ).toBeInTheDocument();
+
+    expect(
+      within(screen.getByTestId('day-box-2026-09-20')).getByTestId('monthly-event-series-1-2026-09-20')
+    ).toBeInTheDocument();
+  });
+
+  async function getGeneratedOccurrences() {
+    const { getRepeatedEvents } = await import('../eventCreation/generateRepeatEvents.js');
+    return getRepeatedEvents();
+  }
+
+  function createSeriesEvent(repeatOverrides = {}) {
+    return createBaseEvent({
+      id: 'evt-series',
+      title: 'Series event',
+      repeat: {
+        seriesId: 'series-1',
+        type: 'daily',
+        interval: 1,
+        weekdays: [],
+        customDates: [],
+        exceptions: [],
+        until: '2026-09-20',
+        ...repeatOverrides,
+      },
+    });
+  }
+
+  async function seedSeries(seriesEvent) {
+    localStorage.setItem('calendarEvents', JSON.stringify([seriesEvent]));
+    return getGeneratedOccurrences();
+  }
+
+});
+
+describe('Event repeat modes', () => {
+  it('should save a weekly repeat with the selected weekdays', async () => {
+    await openRepeatModal();
+    await selectRepeatMode('repeat-mode-option-weekly');
+
+    await user.click(screen.getByTestId('weekly-repetion-item-1'));
+    await user.click(screen.getByTestId('weekly-repetion-item-3'));
+
+    await user.click(screen.getByTestId('event-repeat-save-button'));
+
+    await saveEventWithTitle('Weekly event');
+
+    expect(getSavedEvents()).toContainEqual(expect.objectContaining({
+      repeat: expect.objectContaining({ type: 'weekly', interval: 1, weekdays: [1, 3] }),
+    }));
+  });
+
+  it('should save a monthly repeat with the default interval', async () => {
+    await openRepeatModal();
+    await selectRepeatMode('repeat-mode-option-monthly');
+
+    await user.click(screen.getByTestId('event-repeat-save-button'));
+
+    await saveEventWithTitle('Monthly event');
+
+    expect(getSavedEvents()).toContainEqual(expect.objectContaining({
+      repeat: expect.objectContaining({ type: 'monthly', interval: 1 }),
+    }));
+  });
+
+  it('should save a custom repeat with the selected custom dates', async () => {
+    await openRepeatModal();
+    await selectRepeatMode('repeat-mode-option-custom');
+
+    await user.click(screen.getByTestId('event-repeat-custom-date-button'));
+
+    const miniGrid = document.querySelector('.mini-boxes-container');
+    await user.click(within(miniGrid).getByTestId('day-box-2026-09-20'));
+
+    await user.click(document.querySelector('.mini-save-btn'));
+
+    expect(screen.getByTestId('custom-date-item-2026-09-20')).toBeInTheDocument();
+
+    await user.click(screen.getByTestId('event-repeat-save-button'));
+
+    await saveEventWithTitle('Custom event');
+
+    expect(getSavedEvents()).toContainEqual(expect.objectContaining({
+      repeat: expect.objectContaining({
+        type: 'custom',
+        customDates: ['2026-09-20'],
+      }),
+    }));
+  });
+
+  it('should save the repeat until the date chosen in the mini calendar', async () => {
+    await openRepeatModal();
+    await selectRepeatMode('repeat-mode-option-daily');
+
+    await user.click(screen.getByTestId('event-repeat-until-button'));
+
+    const miniGrid = document.querySelector('.mini-boxes-container');
+    await user.click(within(miniGrid).getByTestId('day-box-2026-10-20'));
+
+    await user.click(document.querySelector('.mini-save-btn'));
+
+    await user.click(screen.getByTestId('event-repeat-save-button'));
+
+    await saveEventWithTitle('Until event');
+
+    expect(getSavedEvents()).toContainEqual(expect.objectContaining({
+      repeat: expect.objectContaining({ until: '2026-10-20' }),
+    }));
+  });
+
+  async function openRepeatModal() {
+    await openEventForm();
+
+    await user.click(screen.getByTestId('event-repeat-button'));
+
+    await vi.waitFor(() => expect(screen.getByTestId('event-repeat-modal')).toHaveClass('show-repeat-modal'));
+  }
+
+  async function selectRepeatMode(testId) {
+    await user.click(screen.getByTestId('event-repeat-mode-button'));
+
+    await user.click(screen.getByTestId(testId));
+  }
+
+  async function saveEventWithTitle(title) {
+    await user.type(screen.getByTestId('event-title-input'), title);
+
+    await user.click(screen.getByTestId('event-save-button'));
+  }
+
+});
+
+describe('Event form validation', () => {
+  it('should not save the event when the title is empty', async () => {
+    await openEventForm();
+
+    await user.click(screen.getByTestId('event-save-button'));
+
+    expect(getSavedEvents()).toEqual([]);
+
+    await vi.waitFor(() =>
+      expect(screen.getAllByTestId('info-alert').length).toBeGreaterThan(0)
+    );
+  });
+
+  it('should not save the event when the end time is before the start time', async () => {
+    await openEventForm();
+
+    await user.type(screen.getByTestId('event-title-input'), 'Test event');
+
+    const fromHourInput = screen.getByTestId('event-from-hour-input');
+    await user.clear(fromHourInput);
+    await user.type(fromHourInput, '15');
+
+    await user.click(screen.getByTestId('event-save-button'));
+
+    expect(getSavedEvents()).toEqual([]);
+
+    await vi.waitFor(() =>
+      expect(screen.getAllByTestId('info-alert').length).toBeGreaterThan(0)
+    );
+  });
+
+  it('should save the event with full day times when all day is enabled', async () => {
+    await openEventForm();
+
+    await user.type(screen.getByTestId('event-title-input'), 'All day event');
+
+    await user.click(screen.getByTestId('event-all-day-button'));
+
+    await user.click(screen.getByTestId('event-save-button'));
+
+    expect(getSavedEvents()).toContainEqual(expect.objectContaining({
+      allDay: true,
+      from: '00:00',
+      to: '23:59',
+    }));
+  });
+});
+
+function getSavedEvents() {
+  const allEvents = localStorage.getAllForTesting()['calendarEvents'];
+  return JSON.parse(allEvents ?? '[]');
+}
+
+function createBaseEvent(overrides = {}) {
+  return {
+    id: 'evt-base',
+    title: 'Base event',
+    date: '2026-09-14',
+    from: '10:00',
+    to: '11:00',
+    description: '',
+    icon: '✏️',
+    color: 'blue',
+    urgent: false,
+    allDay: false,
+    notification: '5 minuti prima',
+    repeat: null,
+    ...overrides,
+  };
+}
+
+async function seedAndRender(events) {
+  localStorage.setItem('calendarEvents', JSON.stringify(events));
+
+  const { renderEvents } = await import('../utils/events/eventRendering.js');
+  renderEvents();
+}
+
+async function openEventForm() {
+  await user.click(screen.getByTestId('day-box-2026-09-14'));
+
+  await vi.waitFor(() => expect(screen.getByTestId('event-popup-container')).toHaveClass('show-container'));
+}

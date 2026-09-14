@@ -37,7 +37,8 @@ export function createMessage(message, container, father, type){
       father,
       "missing-info-alert",
         message,
-      "p"
+      "p",
+      { attributes: { "data-testid": "info-alert" } }
     )
     setTimeout(()=>{
       alert.remove()

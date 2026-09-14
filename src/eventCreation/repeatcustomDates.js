@@ -21,7 +21,8 @@ function renderCustomDateItem(date) {
         "",
         "li",
         {
-            dataset: { day: date }
+            dataset: { day: date },
+            attributes: { "data-testid": `custom-date-item-${date}` }
         }
     );
 
