@@ -1,5 +1,5 @@
 // TODO delete when refactor is complete
-import "./components/currentTimeframeInjector.js";
+import "./components/componentInjector.js";
 
 import { initNavbar } from "./navbar.js";
 import initCalendar from "./calendarSync.js";
