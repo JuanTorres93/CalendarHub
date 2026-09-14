@@ -135,8 +135,8 @@
 
     <div id="layer" >
         <!-- mensile -->
-        <div class="display-overlay month  ">
-            <button class="left-arrow" type="button" aria-label="Mese precedente">
+        <div class="display-overlay month  " data-testid="month-display">
+            <button class="left-arrow" type="button" aria-label="Mese precedente" data-testid="previous-month-button">
                 <img 
                 src="./images/streamline-plump-color--arrow-right-circle-1-flat.svg"
                  class="icons-arrow left"
@@ -149,8 +149,9 @@
                  type="button"
                  aria-label="Apri mini calendario"
                  aria-haspopup="dialog"
+                 data-testid="show-mini-calendar-button"
                  ></button>
-            <button class="right-arrow" type="button" aria-label="Mese successivo">
+            <button class="right-arrow" type="button" aria-label="Mese successivo" data-testid="next-month-button">
                   <img
                    src="./images/streamline-plump-color--arrow-right-circle-1-flat.svg"
                     class="icons-arrow right"
@@ -465,7 +466,7 @@
                 aria-label="Anno"
                 >
     </div>
-    <article class="mini-calendar-container">
+    <article class="mini-calendar-container" data-testid="mini-calendar-container">
        
     </article> 
     
