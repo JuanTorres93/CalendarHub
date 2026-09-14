@@ -86,7 +86,8 @@ export function renderIconsList (){
             "li",
             {
                 attributes: {
-                    "aria-label": `Seleziona icona ${key}`
+                    "aria-label": `Seleziona icona ${key}`,
+                    "data-testid": `icon-option-${key}`
                 }
             }
         )
@@ -104,7 +105,7 @@ export function renderColorList(){
                 {
                     html : true,
                     dataset : {color: color.value},
-                    attributes : {"aria-label": `Seleziona colore ${color.name}`}
+                    attributes : {"aria-label": `Seleziona colore ${color.name}`, "data-testid": `color-option-${color.value}`}
                 }
             )
     })
@@ -122,7 +123,8 @@ export function renderNotificationList(){
             {
                 dataset : {notification : item.value},
                 attributes : {
-                    "aria-label": `Imposta notifica: ${item.name}`
+                    "aria-label": `Imposta notifica: ${item.name}`,
+                    "data-testid": `notification-option-${item.value}`
                 }
             }
         )

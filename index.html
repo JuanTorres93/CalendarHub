@@ -491,9 +491,9 @@
         <p id="event-modal-description" class="current-mode-secondary-message"
         ></p>
     </header>
-    <div class="event-form">
+    <div class="event-form" data-testid="event-form">
 
-        <div class="show-date">
+        <div class="show-date" data-testid="event-date-display">
             <span data-day="" class="first-row-date"></span><span></span>
         </div>
         <div class="event-description">
@@ -502,10 +502,11 @@
                  id="icons-btn"
                   type="button"
                    aria-label="Scegli icona evento"
+                   data-testid="event-icon-button"
                    >
                     ✏️
                 </button>
-                    <ul class="icons-list">
+                    <ul class="icons-list" data-testid="event-icon-list">
                     </ul>
             </div>
             <div id="title-container">
@@ -514,6 +515,7 @@
                   class="input-name"
                    placeholder="Titolo"
                    aria-label="Titolo evento"
+                   data-testid="event-title-input"
                    >
             </div>
             <div id="description-container">
@@ -522,14 +524,16 @@
                  type="button"
                   class="btn-description"
                   aria-label="Mostra o nascondi descrizione"
+                  data-testid="event-description-toggle"
                   >📃
                 </button>
-                    <section class="description-area" >
+                    <section class="description-area" data-testid="event-description-area" >
                         <textarea 
                         class="description-area-text"
                          maxlength="200"
-                          placeholder="Max 200 caratteri"
-                           aria-label="Descrizione evento"
+placeholder="Max 200 caratteri"
+                            aria-label="Descrizione evento"
+                            data-testid="event-description-input"
                           ></textarea>
                     </section>
                  
@@ -538,17 +542,18 @@
             
             <div class="category-selector">
                 <div class="category-container">
-                    <p class="desc-text"> Categoria :</p> <div class="color-preview"></div>
+                    <p class="desc-text"> Categoria :</p> <div class="color-preview" data-testid="event-color-preview"></div>
                     <button
                         id="color-btn"
                         type="button"
                         aria-label="Scegli colore categoria"
+                        data-testid="event-color-button"
                       >
                       🎨
                     </button>
                 </div>
                 
-                <ul class="color-list" ></ul>
+                <ul class="color-list" data-testid="event-color-list" ></ul>
                 <div id="urgent-container">
                     <p class="desc-text">Urgente :</p>
                     <button
@@ -556,6 +561,7 @@
                         type="button"
                         aria-label="Contrassegna come urgente"
                         aria-pressed="false"
+                        data-testid="event-urgent-button"
                        >
                         <svg
                          xmlns="http://www.w3.org/2000/svg"
@@ -595,6 +601,7 @@
                       class="mini-calendar-btn"
                       aria-label="Scegli data"
                       aria-haspopup="dialog"
+                      data-testid="event-date-button"
                       >
                       📆
                     </button>
@@ -607,6 +614,7 @@
                     type="button"
                     aria-label="Evento per l'intera giornata"
                     aria-pressed="false"
+                    data-testid="event-all-day-button"
                   >
                    <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -645,6 +653,7 @@
                      type="button"
                       class="listed-time from"
                       aria-label="Seleziona ora di inizio"
+                      data-testid="event-from-time-button"
                       >
                       ⌛
                     </button>
@@ -656,6 +665,7 @@
                         maxlength="2"
                         inputmode="numeric"
                         aria-label="Ora di inizio"
+                        data-testid="event-from-hour-input"
                         >
                         <span class="time-separator" aria-hidden="true">:</span>
                         <input
@@ -665,9 +675,10 @@
                             maxlength="2"
                             inputmode="numeric"
                             aria-label="Minuti di inizio"
+                            data-testid="event-from-minute-input"
                         >
                     </div>
-                    <ul class="interactive-time-list from">
+                    <ul class="interactive-time-list from" data-testid="event-from-time-list">
                     </ul>
                 </div>
 
@@ -676,6 +687,7 @@
                         type="button"
                         class="listed-time to"
                         aria-label="Seleziona ora di fine"
+                        data-testid="event-to-time-button"
                       >
                       ⏳
                     </button>
@@ -687,6 +699,7 @@
                             maxlength="2"
                             inputmode="numeric"
                             aria-label="Ora di fine"
+                            data-testid="event-to-hour-input"
                             >
                         <span class="time-separator" aria-hidden="true">:</span>
                         <input
@@ -696,9 +709,10 @@
                             maxlength="2"
                             inputmode="numeric"
                             aria-label="Minuti di fine"
+                            data-testid="event-to-minute-input"
                         >
                     </div>
-                    <ul class="interactive-time-list to">
+                    <ul class="interactive-time-list to" data-testid="event-to-time-list">
                     </ul>
                 </div>
 
@@ -710,6 +724,7 @@
                      class="event-repeat-btn"
                      aria-label="Configura ripetizione evento"
                      aria-haspopup="dialog"
+                     data-testid="event-repeat-button"
                   > 
                     &#10227;
                 </button> 
@@ -722,10 +737,11 @@
                     type="button"
                     class="notification-button"
                     aria-label="Scegli quando ricevere la notifica"
+                    data-testid="event-notification-button"
                   >
                   5 minuti prima
                 </button> 
-                    <ul class="notification-list ">
+                    <ul class="notification-list " data-testid="event-notification-list">
                     </ul>        
             </div>
             <div id="save-event">
@@ -733,6 +749,7 @@
                     type="button"
                     class="btn save-btn"
                     aria-label="Salva evento"
+                    data-testid="event-save-button"
                   > 
                   save 
                 </button> 
@@ -742,6 +759,7 @@
                     type="button"
                     class="btn close-btn"
                      aria-label="Chiudi finestra evento"
+                     data-testid="event-close-button"
                   > chiudi </button> 
             </div>
         </div>
@@ -749,6 +767,7 @@
             class="modal-repeat "
             role="dialog"
             aria-labelledby="repeat-modal-title"
+            data-testid="event-repeat-modal"
             >
             <h2
                 id="repeat-modal-title"
@@ -762,13 +781,14 @@
                      type="button"
                       class="repeat-mode-btn"
                       aria-label="Scegli tipo di ripetizione"
+                      data-testid="event-repeat-mode-button"
                       >
                     </button>
-                <ul id="repeat-mode-options" class="repeat-mode-list ">
-                    <li class="repeat-mode-list-item" data-repeat-type="daily">Quotidiano</li>
-                    <li class="repeat-mode-list-item" data-repeat-type="weekly">Settimanale</li>
-                    <li class="repeat-mode-list-item" data-repeat-type="monthly">Mensile</li>
-                    <li class="repeat-mode-list-item" data-repeat-type="custom">Personalizzata</li>
+                <ul id="repeat-mode-options" class="repeat-mode-list " data-testid="event-repeat-mode-list">
+                    <li class="repeat-mode-list-item" data-repeat-type="daily" data-testid="repeat-mode-option-daily">Quotidiano</li>
+                    <li class="repeat-mode-list-item" data-repeat-type="weekly" data-testid="repeat-mode-option-weekly">Settimanale</li>
+                    <li class="repeat-mode-list-item" data-repeat-type="monthly" data-testid="repeat-mode-option-monthly">Mensile</li>
+                    <li class="repeat-mode-list-item" data-repeat-type="custom" data-testid="repeat-mode-option-custom">Personalizzata</li>
                 </ul>
             </div>
             <div class="repeat-intervall-container ">
@@ -781,6 +801,7 @@
                         inputmode="numeric"
                         aria-label="Intervallo di ripetizione"
                         aria-describedby="dynamic-interval-description"
+                        data-testid="event-repeat-interval-input"
                       >
                 </div>
                 <p 
@@ -796,6 +817,7 @@
                     <ul
                          class="weekly-repetion-list"
                          aria-label="Giorni della settimana"
+                         data-testid="event-repeat-weekdays-list"
                          >
                     
                     </ul>
@@ -808,6 +830,7 @@
                              type="button"
                              aria-label="Seleziona data di fine ripetizione"
                              aria-haspopup="dialog"
+                             data-testid="event-repeat-until-button"
                              >
                             📆
                         </button>
@@ -815,6 +838,7 @@
                     <p 
                         class="end-repeation-event-date"
                         aria-live="polite"
+                        data-testid="event-repeat-until-display"
                         >
                         5 Marzo 2026 
                     </p>
@@ -827,12 +851,13 @@
                           type="button"
                           aria-label="Aggiungi data personalizzata"
                           aria-haspopup="dialog"
+                          data-testid="event-repeat-custom-date-button"
                           >
                             📆
                         </button>
                     </div>
 
-                    <ul class="custom-dates-list" aria-label="Date personalizzate selezionate">
+                    <ul class="custom-dates-list" aria-label="Date personalizzate selezionate" data-testid="event-repeat-custom-dates-list">
          
                     </ul>
                 </div>
@@ -841,6 +866,7 @@
                              class="btn save-repeat"
                             type="button"
                              aria-label="Salva impostazioni di ripetizione"
+                             data-testid="event-repeat-save-button"
                           >
                           salva
                         </button>
@@ -848,6 +874,7 @@
                              class="btn cls-repeat"
                               type="button"
                               aria-label="Chiudi impostazioni di ripetizione"
+                              data-testid="event-repeat-close-button"
                               >
                               chiudi
                         </button>

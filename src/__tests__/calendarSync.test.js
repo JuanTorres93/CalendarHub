@@ -180,14 +180,117 @@ describe('Events', () => {
 
       await user.type(screen.getByTestId('event-title-input'), 'Test event');
     });
+
+    function getSavedEvents() {
+      const allEvents = localStorage.getAllForTesting()['calendarEvents'];
+      return JSON.parse(allEvents ?? '[]');
+    }
     
     it('should save event name', async () => {
       await user.click(screen.getByTestId('event-save-button'));
 
-      const allEvents = localStorage.getAllForTesting()['calendarEvents'];
-      const allEventsParsed = JSON.parse(allEvents ?? '[]');
+      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ title: 'Test event' }));
+    });
 
-      expect(allEventsParsed).toContainEqual(expect.objectContaining({ title: 'Test event' }));
+    it('should save event description', async () => {
+      await user.type(screen.getByTestId('event-description-input'), 'Test description');
+
+      await user.click(screen.getByTestId('event-save-button'));
+
+      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ description: 'Test description' }));
+    });
+
+    it('should save event start time', async () => {
+      const fromHourInput = screen.getByTestId('event-from-hour-input');
+
+      await user.clear(fromHourInput);
+      await user.type(fromHourInput, '08');
+
+      await user.click(screen.getByTestId('event-save-button'));
+
+      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ from: '08:00' }));
+    });
+
+    it('should save event end time', async () => {
+      const toHourInput = screen.getByTestId('event-to-hour-input');
+
+      await user.clear(toHourInput);
+      await user.type(toHourInput, '22');
+
+      await user.click(screen.getByTestId('event-save-button'));
+
+      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ to: '22:00' }));
+    });
+
+    it('should save event icon', async () => {
+      await user.click(screen.getByTestId('event-icon-button'));
+      await user.click(screen.getByTestId('icon-option-work'));
+
+      await user.click(screen.getByTestId('event-save-button'));
+
+      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ icon: '💼' }));
+    });
+
+    it('should save event color', async () => {
+      await user.click(screen.getByTestId('event-color-button'));
+      await user.click(screen.getByTestId('color-option-red'));
+
+      await user.click(screen.getByTestId('event-save-button'));
+
+      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ color: 'red' }));
+    });
+
+    it('should save urgent flag', async () => {
+      await user.click(screen.getByTestId('event-urgent-button'));
+
+      await user.click(screen.getByTestId('event-save-button'));
+
+      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ urgent: true }));
+    });
+
+    it('should save all day flag', async () => {
+      await user.click(screen.getByTestId('event-all-day-button'));
+
+      await user.click(screen.getByTestId('event-save-button'));
+
+      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ allDay: true }));
+    });
+
+    it('should save notification', async () => {
+      await user.click(screen.getByTestId('event-notification-button'));
+      await user.click(screen.getByTestId('notification-option-60'));
+
+      await user.click(screen.getByTestId('event-save-button'));
+
+      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ notification: '1 ora prima' }));
+    });
+
+    it('should save repeat configuration', async () => {
+      await user.click(screen.getByTestId('event-repeat-button'));
+
+      await user.click(screen.getByTestId('event-repeat-mode-button'));
+      await user.click(screen.getByTestId('repeat-mode-option-daily'));
+
+      await user.click(screen.getByTestId('event-repeat-save-button'));
+
+      await user.click(screen.getByTestId('event-save-button'));
+
+      expect(getSavedEvents()).toContainEqual(
+        expect.objectContaining({ repeat: expect.objectContaining({ type: 'daily', interval: 1 }) })
+      );
+    });
+
+    it('should save selected date', async () => {
+      await user.click(screen.getByTestId('event-date-button'));
+
+      const miniGrid = document.querySelector('.mini-boxes-container');
+      await user.click(within(miniGrid).getByTestId('day-box-2026-09-20'));
+
+      await user.click(document.querySelector('.mini-save-btn'));
+
+      await user.click(screen.getByTestId('event-save-button'));
+
+      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ date: '2026-09-20' }));
     });
   })
 });
