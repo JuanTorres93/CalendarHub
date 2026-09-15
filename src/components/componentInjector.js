@@ -1,8 +1,12 @@
 import createCurrentTimeframeDisplay from './common/currentTimeframeDisplay/currentTimeframeDisplay.js';
 import createLeftArrowButton from './common/currentTimeframeDisplay/leftArrowButton.js';
 import createRightArrowButton from './common/currentTimeframeDisplay/rightArrowButton.js';
+import createViewModeSwitcher from './common/viewModeSwitcher/viewModeSwitcher.js';
 
 const componentBuilders = {
+  replace_viewModeSwitcher() {
+    return createViewModeSwitcher();
+  },
   replace_leftArrowButton(parts) {
     const [, testid, ariaLabel, ...extraClasses] = parts;
     return createLeftArrowButton({ testid, ariaLabel, extraClasses });
