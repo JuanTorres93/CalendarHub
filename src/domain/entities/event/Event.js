@@ -1,10 +1,18 @@
+import { Text } from '../../value-objets/Text/Text.js';
+
 export class Event {
   constructor(props) {
     this.props = props;
   }
 
   static create(props) {
-    return new Event(props);
+    const validatedProps = {
+      ...props,
+
+      description: Text.create(props.description, DESCRIPTION_TEXT_OPTIONS),
+    };
+
+    return new Event(validatedProps);
   }
 
   get id() {
@@ -16,7 +24,7 @@ export class Event {
   }
 
   get description() {
-    return this.props.description;
+    return this.props.description.value;
   }
 
   get date() {
@@ -51,5 +59,7 @@ export class Event {
     return this.props.notification;
   }
 }
+
+const DESCRIPTION_TEXT_OPTIONS = { maxLength: 200 };
 
 const NOTIFICATION_PERIODS = ['none', '5min', '15min', '1h', '2h', '4h', '1d'];

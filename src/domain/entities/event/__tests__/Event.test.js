@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Event } from '../Event';
 import { EVENT_TEST_PROPS } from './eventTestProps';
+import { ValidationDomainError } from '../../../common/domainErrors.js';
 
 describe('Event', () => {
   it('should create an event', () => {
@@ -27,5 +28,12 @@ describe('Event', () => {
 
       expect(event).toHaveProperty(key, value);
     });
+  });
+
+  it('description should not exceed 200 characters', async () => {
+    const longDescription = 'a'.repeat(201);
+    const eventProps = { ...EVENT_TEST_PROPS, description: longDescription };
+
+    expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
   });
 });
