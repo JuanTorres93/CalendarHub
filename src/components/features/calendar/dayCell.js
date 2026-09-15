@@ -1,35 +1,39 @@
 import dayjs from '../../../day.js';
 
-export function createDayBox({ dataDayID, extraClasses = [], isMini = false }) {
-  const dayBox = initDayBox({ dataDayID, extraClasses });
+export function createDayCell({
+  dataDayID,
+  extraClasses = [],
+  isMini = false,
+}) {
+  const dayCell = initDayCell({ dataDayID, extraClasses });
   const dayContainer = initDayContainer({ isMini, dataDayID });
   const todoContainer = createTodoContainer({ isMini });
   const { eventAllDayContainer, eventsContainer } = createEventsContainers({
     isMini,
   });
 
-  dayBox.appendChild(dayContainer);
+  dayCell.appendChild(dayContainer);
   dayContainer.appendChild(todoContainer);
 
   if (!isMini) {
-    dayBox.appendChild(eventAllDayContainer);
-    dayBox.appendChild(eventsContainer);
+    dayCell.appendChild(eventAllDayContainer);
+    dayCell.appendChild(eventsContainer);
   }
 
-  return dayBox;
+  return dayCell;
 }
 
-function initDayBox({ dataDayID, extraClasses = [] }) {
-  const dayBox = document.createElement('div');
+function initDayCell({ dataDayID, extraClasses = [] }) {
+  const dayCell = document.createElement('div');
   extraClasses.forEach((extraClass) => {
-    extraClass.split(' ').forEach((cls) => dayBox.classList.add(cls));
+    extraClass.split(' ').forEach((cls) => dayCell.classList.add(cls));
   });
 
-  dayBox.setAttribute('data-action', 'create-event');
-  dayBox.setAttribute('data-day', dataDayID);
-  dayBox.setAttribute('data-testid', `day-box-${dataDayID}`);
+  dayCell.setAttribute('data-action', 'create-event');
+  dayCell.setAttribute('data-day', dataDayID);
+  dayCell.setAttribute('data-testid', `day-box-${dataDayID}`);
 
-  return dayBox;
+  return dayCell;
 }
 
 function initDayContainer({ isMini, dataDayID }) {

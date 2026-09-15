@@ -1,4 +1,4 @@
-import { createDayBox } from './dayBox.js';
+import { createDayCell } from './dayCell.js';
 import { config } from '../../../utils/config/config.js';
 
 function createMonthGrid(currentView, gridType, gridConfig) {
@@ -49,7 +49,7 @@ function createMonthGrid(currentView, gridType, gridConfig) {
     }
 
     secondRow.appendChild(
-      createDayBox({
+      createDayCell({
         dataDayID,
         extraClasses: [gridConfig.boxGrid, dayClass],
         isMini: gridConfig === config.mini,
