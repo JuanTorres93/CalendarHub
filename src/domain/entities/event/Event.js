@@ -14,9 +14,14 @@ export class Event {
       id: Id.create(props.id),
 
       title: Text.create(props.title, TITLE_TEXT_OPTIONS),
-      description: Text.create(props.description, DESCRIPTION_TEXT_OPTIONS),
+      description: Text.create(
+        props?.description || '',
+        DESCRIPTION_TEXT_OPTIONS,
+      ),
 
-      notification: NotificationPeriod.create(props.notification),
+      notification: props.notification
+        ? NotificationPeriod.create(props.notification)
+        : NotificationPeriod.create('none'),
     };
 
     return new Event(validatedProps);
@@ -68,4 +73,4 @@ export class Event {
 }
 
 const TITLE_TEXT_OPTIONS = { canBeEmpty: false };
-const DESCRIPTION_TEXT_OPTIONS = { maxLength: 200 };
+const DESCRIPTION_TEXT_OPTIONS = { maxLength: 200, canBeEmpty: true };

@@ -11,6 +11,19 @@ describe('Event', () => {
     expect(event).toBeInstanceOf(Event);
   });
 
+  it.each(
+    ['description', 'icon', 'color', 'urgent', 'allDay', 'notification'].map(
+      (property) => [property, property],
+    ),
+  )('should create event if no %s is passed', (propertyKey, property) => {
+    const eventProps = { ...EVENT_TEST_PROPS };
+    delete eventProps[propertyKey];
+
+    const event = Event.create(eventProps);
+
+    expect(event).toBeInstanceOf(Event);
+  });
+
   describe('properties', () => {
     it.each([
       ['id', EVENT_TEST_PROPS.id],
@@ -55,4 +68,13 @@ describe('Event', () => {
       expect(event).toBeInstanceOf(Event);
     },
   );
+
+  it('should default to "none" notification if it is not provided', async () => {
+    const eventProps = { ...EVENT_TEST_PROPS };
+    delete eventProps.notification;
+
+    const event = Event.create(eventProps);
+
+    expect(event.notification).toBe('none');
+  });
 });
