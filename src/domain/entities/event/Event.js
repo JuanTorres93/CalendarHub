@@ -6,6 +6,7 @@ import { Icon } from '../../value-objets/Icon/Icon.js';
 import { Color } from '../../value-objets/Color/Color.js';
 import { Time } from '../../value-objets/Time/Time.js';
 import { Day } from '../../value-objets/Day/Day.js';
+import { Repeat } from '../../value-objets/Repeat/Repeat.js';
 
 export class Event {
   constructor(props) {
@@ -42,6 +43,10 @@ export class Event {
       icon: props?.icon ? Icon.create(props.icon) : Icon.create('✏️'),
 
       color: props?.color ? Color.create(props.color) : Color.create('blue'),
+
+      repeat: props?.repeat
+        ? Repeat.create(props.repeat)
+        : Repeat.create('none'),
     };
 
     return new Event(validatedProps);
@@ -89,6 +94,14 @@ export class Event {
 
   get notification() {
     return this.props.notification.value;
+  }
+
+  get repeat() {
+    if (this.props.repeat.frequency !== null) {
+      return this.props.repeat.frequency;
+    }
+
+    return this.props.repeat.customDates.map((day) => day.value);
   }
 }
 

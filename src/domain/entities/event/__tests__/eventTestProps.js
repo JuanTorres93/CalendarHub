@@ -13,6 +13,5 @@ export const EVENT_TEST_PROPS = {
   allDay: false,
   notification: 'none',
 
-  // TODO: think about how to model this
-  //repeat: null,
+  repeat: 'none',
 };

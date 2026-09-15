@@ -12,9 +12,15 @@ describe('Event', () => {
   });
 
   it.each(
-    ['description', 'icon', 'color', 'urgent', 'allDay', 'notification'].map(
-      (property) => [property, property],
-    ),
+    [
+      'description',
+      'icon',
+      'color',
+      'urgent',
+      'allDay',
+      'notification',
+      'repeat',
+    ].map((property) => [property, property]),
   )('should create event if no %s is passed', (propertyKey, property) => {
     const eventProps = { ...EVENT_TEST_PROPS };
     delete eventProps[propertyKey];
@@ -37,6 +43,7 @@ describe('Event', () => {
       ['urgent', EVENT_TEST_PROPS.urgent],
       ['allDay', EVENT_TEST_PROPS.allDay],
       ['notification', EVENT_TEST_PROPS.notification],
+      ['repeat', EVENT_TEST_PROPS.repeat],
     ])('should have property %s', (key, value) => {
       const event = Event.create(EVENT_TEST_PROPS);
 
@@ -112,5 +119,14 @@ describe('Event', () => {
     const event = Event.create(eventProps);
 
     expect(event.color).toBe('blue');
+  });
+
+  it('should set default repeat to none', async () => {
+    const eventProps = { ...EVENT_TEST_PROPS };
+    delete eventProps.repeat;
+
+    const event = Event.create(eventProps);
+
+    expect(event.repeat).toBe('none');
   });
 });

@@ -45,6 +45,14 @@ export class Day extends ValueObject {
 }
 
 function toDayProps(day) {
+  if (day instanceof Day) {
+    return {
+      year: day.props.year,
+      month: day.props.month,
+      day: day.props.day,
+    };
+  }
+
   if (typeof day === 'string') {
     const match = day.match(DATE_PATTERN);
 
