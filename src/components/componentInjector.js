@@ -5,6 +5,7 @@ import createViewModeSwitcher from './common/timeframeSwitcher.js';
 import createTodayButton from './common/todayButton.js';
 import createTodoListButton from './common/todoListButton.js';
 import createTutorialButton from './common/tutorialButton.js';
+import createCurrentYearDisplay from './common/currentYearDisplay.js';
 
 const componentBuilders = {
   replace_viewModeSwitcher() {
@@ -18,6 +19,9 @@ const componentBuilders = {
   },
   replace_tutorialButton() {
     return createTutorialButton();
+  },
+  replace_currentYearDisplay() {
+    return createCurrentYearDisplay();
   },
   replace_leftArrowButton(parts) {
     const [, testid, ariaLabel, ...extraClasses] = parts;
