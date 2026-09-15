@@ -46,7 +46,7 @@ export class Event {
 
       repeat: props?.repeat
         ? Repeat.create(props.repeat)
-        : Repeat.create('none'),
+        : Repeat.create(null),
     };
 
     return new Event(validatedProps);
@@ -97,11 +97,7 @@ export class Event {
   }
 
   get repeat() {
-    if (this.props.repeat.frequency !== null) {
-      return this.props.repeat.frequency;
-    }
-
-    return this.props.repeat.customDates.map((day) => day.value);
+    return this.props.repeat.value;
   }
 }
 

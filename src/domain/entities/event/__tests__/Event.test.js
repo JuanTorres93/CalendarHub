@@ -121,12 +121,29 @@ describe('Event', () => {
     expect(event.color).toBe('blue');
   });
 
-  it('should set default repeat to none', async () => {
+  it('should set default repeat to null', async () => {
     const eventProps = { ...EVENT_TEST_PROPS };
     delete eventProps.repeat;
 
     const event = Event.create(eventProps);
 
-    expect(event.repeat).toBe('none');
+    expect(event.repeat).toBeNull();
+  });
+
+  it('should keep the repeat config if it is provided', async () => {
+    const repeatConfig = {
+      seriesId: 'series-id',
+      type: 'weekly',
+      interval: 1,
+      until: '2024-07-01',
+      weekdays: [1, 3],
+      customDates: [],
+      exceptions: ['2024-06-20'],
+    };
+    const eventProps = { ...EVENT_TEST_PROPS, repeat: repeatConfig };
+
+    const event = Event.create(eventProps);
+
+    expect(event.repeat).toEqual(repeatConfig);
   });
 });

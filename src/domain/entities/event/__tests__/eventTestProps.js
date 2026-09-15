@@ -13,5 +13,5 @@ export const EVENT_TEST_PROPS = {
   allDay: false,
   notification: 'none',
 
-  repeat: 'none',
+  repeat: null,
 };
