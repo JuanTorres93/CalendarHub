@@ -1,56 +1,56 @@
-import dayjs from "./day.js";
+import dayjs from './day.js';
 
 function createMonthGrid(currentView, gridType, gridConfig) {
   const giorniMese = currentView.daysInMonth();
   const primoGiorno = currentView.date(1);
-  const firstDayIndex = currentView.startOf("month").weekday();
-  const ultimoGiorno = currentView.endOf("month");
-  const lastDayPrevMonth = primoGiorno.subtract(1, "day");
-  const firstDayNextMonth = ultimoGiorno.add(1, "day");
+  const firstDayIndex = currentView.startOf('month').weekday();
+  const ultimoGiorno = currentView.endOf('month');
+  const lastDayPrevMonth = primoGiorno.subtract(1, 'day');
+  const firstDayNextMonth = ultimoGiorno.add(1, 'day');
 
-  gridType.innerHTML = "";
+  gridType.innerHTML = '';
 
-  const firstRow = document.createElement("div");
-  firstRow.classList.add("day-grid");
+  const firstRow = document.createElement('div');
+  firstRow.classList.add('day-grid');
   gridType.appendChild(firstRow);
 
   for (let j = 0; j < 7; j++) {
-    let days = currentView.weekday(j).format("dddd");
+    let days = currentView.weekday(j).format('dddd');
 
     firstRow.insertAdjacentHTML(
-      "beforeend",
+      'beforeend',
       `
         <div class="${gridConfig.dailybox}">${days}</div>
         `,
     );
   }
-  const secondRow = document.createElement("article");
+  const secondRow = document.createElement('article');
   secondRow.classList.add(`${gridConfig.boxesContainer}`);
   gridType.appendChild(secondRow);
   for (let i = 0; i < 42; i++) {
     let dataDayID, dayNumber, dayClass, today;
     if (i < firstDayIndex) {
       dayNumber = lastDayPrevMonth.date() - (firstDayIndex - 1 - i);
-      dataDayID = lastDayPrevMonth.date(dayNumber).format("YYYY-MM-DD");
+      dataDayID = lastDayPrevMonth.date(dayNumber).format('YYYY-MM-DD');
       dayClass = `${gridConfig.colorOffset}`;
     } else if (i >= giorniMese + firstDayIndex) {
       dayNumber = i - (firstDayIndex + giorniMese - 1);
-      dataDayID = firstDayNextMonth.date(dayNumber).format("YYYY-MM-DD");
+      dataDayID = firstDayNextMonth.date(dayNumber).format('YYYY-MM-DD');
       dayClass = `${gridConfig.colorOffset}`;
     } else {
       dayNumber = i - firstDayIndex + 1;
-      dataDayID = primoGiorno.date(dayNumber).format("YYYY-MM-DD");
-      if (dataDayID === currentView.format("YYYY-MM-DD")) {
+      dataDayID = primoGiorno.date(dayNumber).format('YYYY-MM-DD');
+      if (dataDayID === currentView.format('YYYY-MM-DD')) {
         dayClass = `${gridConfig.today} ${gridConfig.colorBox}`;
       } else {
         dayClass = `${gridConfig.colorBox}`;
       }
     }
 
-    const accessibleDate = dayjs(dataDayID).format("D MMMM YYYY");
+    const accessibleDate = dayjs(dataDayID).format('D MMMM YYYY');
 
     secondRow.insertAdjacentHTML(
-      "beforeend",
+      'beforeend',
       `
         <div 
             class="${gridConfig.boxGrid} ${dayClass}"
@@ -80,7 +80,7 @@ function createMonthGrid(currentView, gridType, gridConfig) {
              ? `
             <div class="${gridConfig.eventAllDay}"></div>
             <div class="${gridConfig.eventsContainer}"></div>`
-             : ""
+             : ''
          }
         </div>
         `,
