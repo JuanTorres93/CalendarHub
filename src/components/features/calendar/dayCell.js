@@ -1,4 +1,5 @@
 import dayjs from '../../../day.js';
+import { createTodoContainer } from './todoContainer.js';
 
 export function createDayCell({
   dataDayID,
@@ -7,7 +8,7 @@ export function createDayCell({
 }) {
   const dayCell = initDayCell({ dataDayID, extraClasses });
   const dayContainer = initDayContainer({ isMini, dataDayID });
-  const todoContainer = createTodoContainer({ isMini });
+  const todoContainer = createTodoContainer({ type: 'month', isMini });
   const { eventAllDayContainer, eventsContainer } = createEventsContainers({
     isMini,
   });
@@ -79,11 +80,4 @@ function createDayNumberButton({ isMini, dataDayID }) {
   dayNumberButton.textContent = dayNumber;
 
   return dayNumberButton;
-}
-
-function createTodoContainer({ isMini }) {
-  const todoContainer = document.createElement('div');
-  todoContainer.classList.add(`${isMini ? 'mini-' : ''}todo-container-month`);
-
-  return todoContainer;
 }

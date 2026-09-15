@@ -4,6 +4,7 @@ import { dayGrid } from "./utils/helpers/dom/mainCalendarDom.js";
 import { createHourCell } from "./components/features/calendar/hourCell.js";
 import { createTimeLabel } from "./components/features/calendar/timeLabel.js";
 import { createDayLabel } from "./components/features/calendar/dayLabel.js";
+import { createTodoContainer } from "./components/features/calendar/todoContainer.js";
 
 function createDailyGrid(currentview) {
   dayGrid.innerHTML = "";
@@ -14,7 +15,7 @@ function createDailyGrid(currentview) {
   });
   dailyHeader.appendChild(createDayLabel({ type: "day", date: currentview }));
   createElement(dailyHeader, "daily-allDay-container", null, "div");
-  createElement(dailyHeader, "daily-todo-container", null, "div");
+  dailyHeader.appendChild(createTodoContainer({ type: "day" }));
 
   const dailyMain = createElement(dayGrid, "daily-main", null, "div");
   const div = createElement(dailyMain, "ul-day-time", null, "div");

@@ -3,7 +3,7 @@ import createElement from "./utils/helpers/createElement.js";
 import { weekGrid } from "./utils/helpers/dom/mainCalendarDom.js";
 import { createHourCell } from "./components/features/calendar/hourCell.js";
 import { createTimeLabel } from "./components/features/calendar/timeLabel.js";
-import { createDayLabel } from "./components/features/calendar/dayLabel.js";
+import { createWeekDayLabel } from "./components/features/calendar/weekDayLabel.js";
 
 export default function createWeekGrid(currentview) {
   weekGrid.innerHTML = "";
@@ -33,8 +33,8 @@ export default function createWeekGrid(currentview) {
 
   for (let j = 0; j < 7; j++) {
     let dayClass;
-    const firstDayOfWeek = currentview.weekday(j);
-    const dataDay = firstDayOfWeek.format("YYYY-MM-DD");
+    const weekDay = currentview.weekday(j);
+    const dataDay = weekDay.format("YYYY-MM-DD");
 
     if (dataDay === currentview.format("YYYY-MM-DD")) {
       dayClass = "is-today";
@@ -42,27 +42,7 @@ export default function createWeekGrid(currentview) {
       dayClass = "normal-week";
     }
 
-    const weekDayDisplay = document.createElement("div");
-    weekDayDisplay.className = "week-day-display";
-    weekDayDisplay.dataset.day = dataDay;
-
-    weekDayDisplay.appendChild(
-      createDayLabel({ type: "week", date: firstDayOfWeek }),
-    );
-
-    const headerContent = document.createElement("div");
-    headerContent.className = "week-header-content";
-
-    const allDayContainer = document.createElement("div");
-    allDayContainer.className = "week-all-day-container";
-    headerContent.appendChild(allDayContainer);
-
-    const todoContainer = document.createElement("div");
-    todoContainer.className = "week-todo-container";
-    headerContent.appendChild(todoContainer);
-
-    weekDayDisplay.appendChild(headerContent);
-    weekHeaderRow.appendChild(weekDayDisplay);
+    weekHeaderRow.appendChild(createWeekDayLabel({ date: weekDay }));
 
     weekDaysRow.insertAdjacentHTML(
       "beforeend",
