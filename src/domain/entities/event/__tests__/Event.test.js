@@ -30,6 +30,13 @@ describe('Event', () => {
     });
   });
 
+  it('title should not be empty', async () => {
+    const emptyTitle = '';
+    const eventProps = { ...EVENT_TEST_PROPS, title: emptyTitle };
+
+    expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
+  });
+
   it('description should not exceed 200 characters', async () => {
     const longDescription = 'a'.repeat(201);
     const eventProps = { ...EVENT_TEST_PROPS, description: longDescription };

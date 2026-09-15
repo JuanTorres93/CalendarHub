@@ -9,6 +9,7 @@ export class Event {
     const validatedProps = {
       ...props,
 
+      title: Text.create(props.title, TITLE_TEXT_OPTIONS),
       description: Text.create(props.description, DESCRIPTION_TEXT_OPTIONS),
     };
 
@@ -20,7 +21,7 @@ export class Event {
   }
 
   get title() {
-    return this.props.title;
+    return this.props.title.value;
   }
 
   get description() {
@@ -60,6 +61,7 @@ export class Event {
   }
 }
 
+const TITLE_TEXT_OPTIONS = { canBeEmpty: false };
 const DESCRIPTION_TEXT_OPTIONS = { maxLength: 200 };
 
 const NOTIFICATION_PERIODS = ['none', '5min', '15min', '1h', '2h', '4h', '1d'];
