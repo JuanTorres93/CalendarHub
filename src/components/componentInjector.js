@@ -2,10 +2,22 @@ import createCurrentTimeframeDisplay from './common/currentTimeframeDisplay/curr
 import createLeftArrowButton from './common/currentTimeframeDisplay/leftArrowButton.js';
 import createRightArrowButton from './common/currentTimeframeDisplay/rightArrowButton.js';
 import createViewModeSwitcher from './common/timeframeSwitcher.js';
+import createTodayButton from './common/todayButton.js';
+import createTodoListButton from './common/todoListButton.js';
+import createTutorialButton from './common/tutorialButton.js';
 
 const componentBuilders = {
   replace_viewModeSwitcher() {
     return createViewModeSwitcher();
+  },
+  replace_todayButton() {
+    return createTodayButton();
+  },
+  replace_todoListButton() {
+    return createTodoListButton();
+  },
+  replace_tutorialButton() {
+    return createTutorialButton();
   },
   replace_leftArrowButton(parts) {
     const [, testid, ariaLabel, ...extraClasses] = parts;
