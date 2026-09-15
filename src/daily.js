@@ -1,6 +1,7 @@
 import dayjs from "./day.js";
 import createElement from "./utils/helpers/createElement.js";
 import { dayGrid } from "./utils/helpers/dom/mainCalendarDom.js";
+import { createHourCell } from "./components/features/calendar/hourCell.js";
 
 function createDailyGrid(currentview) {
   dayGrid.innerHTML = "";
@@ -48,26 +49,18 @@ function createDailyGrid(currentview) {
   );
   const dailyName = dayStructure.querySelector(".daily-name");
 
-  for (let j = 23; j >= 0; j--) {
-    let dataTime = currentview.hour(j);
-    let hour = dataTime.minute(0).format("HH:mm");
-    let halfHour = dataTime.minute(30).format("HH:mm");
-    let dayClass;
-    if (j === 0) {
-      dayClass = "first";
-    } else {
-      dayClass = "";
-    }
-    dailyName.insertAdjacentHTML(
-      "afterbegin",
-      `
-        
-                    <li class="day-box ${dayClass}" data-time="${hour}"> 
-                    </li>
-                    <li class="day-half-box" data-time="${halfHour}"> 
-                    </li> 
-                
-        `,
+  for (let j = 0; j < 24; j++) {
+    const dataTime = currentview.hour(j);
+    const hour = dataTime.minute(0).format("HH:mm");
+    const halfHour = dataTime.minute(30).format("HH:mm");
+
+    dailyName.appendChild(
+      createHourCell({
+        type: "day",
+        time: hour,
+        halfTime: halfHour,
+        extraClasses: j === 0 ? ["first"] : [],
+      }),
     );
   }
 }

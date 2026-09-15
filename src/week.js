@@ -1,6 +1,7 @@
 import dayjs from "./day.js";
 import createElement from "./utils/helpers/createElement.js";
 import { weekGrid } from "./utils/helpers/dom/mainCalendarDom.js";
+import { createHourCell } from "./components/features/calendar/hourCell.js";
 
 export default function createWeekGrid(currentview) {
   weekGrid.innerHTML = "";
@@ -87,18 +88,13 @@ export default function createWeekGrid(currentview) {
 
   dayName.forEach((day) => {
     for (let k = 0; k < 24; k++) {
-      let midnight, today;
       let p = 0;
       let dayOfWeek = currentview.weekday(p + 1).hour(k);
       let hour = dayOfWeek.minute(0).format("HH:mm");
       let halfHour = dayOfWeek.minute(30).format("HH:mm");
 
-      day.insertAdjacentHTML(
-        "beforeend",
-        `
-        <li class="week-box" data-time="${hour}"></li>
-        <li class="week-half-box" data-time="${halfHour}"></li>
-        `,
+      day.appendChild(
+        createHourCell({ type: "week", time: hour, halfTime: halfHour }),
       );
     }
   });
