@@ -1,3 +1,5 @@
+import { TIMEFRAMES, ITALIAN_WORDS } from '../../../utils/config/config.js';
+
 import createCurrentTimeframeButton from './currentTimeframeButton.js';
 import createLeftArrowButton from './leftArrowButton.js';
 import createRightArrowButton from './rightArrowButton.js';
@@ -33,17 +35,17 @@ export default function createCurrentTimeframeDisplay(timeframeString) {
 const timeframeConfigs = {
   month: {
     class: 'month',
-    testId: 'month',
-    italianTimeframeString: 'Mese',
+    testId: TIMEFRAMES.month,
+    italianTimeframeString: ITALIAN_WORDS.month,
   },
   week: {
     class: 'week',
-    testId: 'week',
-    italianTimeframeString: 'Settimana',
+    testId: TIMEFRAMES.week,
+    italianTimeframeString: ITALIAN_WORDS.week,
   },
   day: {
     class: 'day',
-    testId: 'day',
-    italianTimeframeString: 'Giorno',
+    testId: TIMEFRAMES.day,
+    italianTimeframeString: ITALIAN_WORDS.day,
   },
 };

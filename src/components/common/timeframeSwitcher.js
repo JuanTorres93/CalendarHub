@@ -1,3 +1,5 @@
+import { TIMEFRAMES, ITALIAN_WORDS } from '../../utils/config/config.js';
+
 export default function createTimeframeSwitcher() {
   const container = document.createElement('div');
 
@@ -20,7 +22,19 @@ export default function createTimeframeSwitcher() {
 }
 
 const timeframes = [
-  { id: 'day-btn', testid: 'day-button', label: 'Giorno' },
-  { id: 'week-btn', testid: 'week-button', label: 'Settimana' },
-  { id: 'month-btn', testid: 'month-button', label: 'Mese' },
+  {
+    id: `${TIMEFRAMES.day}-btn`,
+    testid: `${TIMEFRAMES.day}-button`,
+    label: ITALIAN_WORDS.day,
+  },
+  {
+    id: `${TIMEFRAMES.week}-btn`,
+    testid: `${TIMEFRAMES.week}-button`,
+    label: ITALIAN_WORDS.week,
+  },
+  {
+    id: `${TIMEFRAMES.month}-btn`,
+    testid: `${TIMEFRAMES.month}-button`,
+    label: ITALIAN_WORDS.month,
+  },
 ];

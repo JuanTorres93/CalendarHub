@@ -1,3 +1,5 @@
+import { TIMEFRAMES } from '../../../utils/config/config';
+
 export default function createCurrentTimeframeButton({ timeframe }) {
   const config = timeframeConfigs[timeframe];
   const button = document.createElement('button');
@@ -22,11 +24,11 @@ const timeframeConfigs = {
     buttonExtraClasses: [],
   },
   week: {
-    testId: 'week',
+    testId: TIMEFRAMES.week,
     buttonExtraClasses: ['week-displayed'],
   },
   day: {
-    testId: 'day',
+    testId: TIMEFRAMES.day,
     buttonExtraClasses: ['day-displayed'],
   },
 };
