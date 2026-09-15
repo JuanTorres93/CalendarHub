@@ -9,7 +9,7 @@ export const EVENT_TEST_PROPS = {
   color: 'blue',
   urgent: false,
   allDay: false,
-  notification: '',
+  notification: 'none',
 
   // TODO: think about how to model this
   //repeat: null,

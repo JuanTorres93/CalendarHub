@@ -1,3 +1,4 @@
+import { NotificationPeriod } from '../../value-objets/NotificationPeriod/NotificationPeriod.js';
 import { Text } from '../../value-objets/Text/Text.js';
 
 export class Event {
@@ -11,6 +12,7 @@ export class Event {
 
       title: Text.create(props.title, TITLE_TEXT_OPTIONS),
       description: Text.create(props.description, DESCRIPTION_TEXT_OPTIONS),
+      notification: NotificationPeriod.create(props.notification),
     };
 
     return new Event(validatedProps);
@@ -57,11 +59,9 @@ export class Event {
   }
 
   get notification() {
-    return this.props.notification;
+    return this.props.notification.value;
   }
 }
 
 const TITLE_TEXT_OPTIONS = { canBeEmpty: false };
 const DESCRIPTION_TEXT_OPTIONS = { maxLength: 200 };
-
-const NOTIFICATION_PERIODS = ['none', '5min', '15min', '1h', '2h', '4h', '1d'];

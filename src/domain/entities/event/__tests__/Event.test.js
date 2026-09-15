@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { Event } from '../Event';
 import { EVENT_TEST_PROPS } from './eventTestProps';
 import { ValidationDomainError } from '../../../common/domainErrors.js';
+import { NOTIFICATION_PERIODS } from '../../../value-objets/NotificationPeriod/NotificationPeriod.js';
 
 describe('Event', () => {
   it('should create an event', () => {
@@ -43,4 +44,15 @@ describe('Event', () => {
 
     expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
   });
+
+  it.each(NOTIFICATION_PERIODS.map((period) => [period, period]))(
+    'should create event for %s notification period',
+    (notification, period) => {
+      const eventProps = { ...EVENT_TEST_PROPS, notification: period };
+
+      const event = Event.create(eventProps);
+
+      expect(event).toBeInstanceOf(Event);
+    },
+  );
 });
