@@ -4,6 +4,7 @@ import { Id } from '../../value-objets/Id/Id.js';
 import { Boolean } from '../../value-objets/Boolean/Boolean.js';
 import { Icon } from '../../value-objets/Icon/Icon.js';
 import { Color } from '../../value-objets/Color/Color.js';
+import { Time } from '../../value-objets/Time/Time.js';
 
 export class Event {
   constructor(props) {
@@ -21,6 +22,9 @@ export class Event {
         props?.description || '',
         DESCRIPTION_TEXT_OPTIONS,
       ),
+
+      from: Time.create(props.from),
+      to: Time.create(props.to),
 
       notification: props.notification
         ? NotificationPeriod.create(props.notification)
@@ -58,11 +62,11 @@ export class Event {
   }
 
   get from() {
-    return this.props.from;
+    return this.props.from.value;
   }
 
   get to() {
-    return this.props.to;
+    return this.props.to.value;
   }
 
   get icon() {
