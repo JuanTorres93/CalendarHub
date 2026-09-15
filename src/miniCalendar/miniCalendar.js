@@ -1,37 +1,36 @@
 import {
-  miniCalendarLayer,
   calendarContainer,
+  dayInput,
   miniCalendar,
+  miniCalendarLayer,
+  monthInput,
   showModal,
   yearInput,
-  monthInput,
-  dayInput,
-} from "../utils/helpers/dom/miniCalendarDom.js";
+} from '../utils/helpers/dom/miniCalendarDom.js';
 
-import dayjs from "../day.js";
-import { overlay } from "../calendarSync.js";
-import createMonthGrid from "../month.js";
-import { config } from "../utils/config/config.js";
-import createElement from "../utils/helpers/createElement.js";
-import { updateEventDraft } from "../utils/events/eventDraft.js";
-import { updateEventDateUI } from "../utils/events/eventsUI.js";
-import { updateUntilUIAndDraft } from "../utils/events/repeatEventsUi.js";
-import { validateAndReturnCustomDate } from "../eventCreation/repeatcustomDates.js";
-import { initMonthList, initYearList } from "./miniCalendarCarousels.js";
-import { handleListSelection } from "../utils/helpers/listSelection.js";
+import { overlay } from '../calendarSync.js';
+import dayjs from '../day.js';
+import { validateAndReturnCustomDate } from '../eventCreation/repeatcustomDates.js';
+import { config } from '../utils/config/config.js';
+import { updateEventDraft } from '../utils/events/eventDraft.js';
+import { updateEventDateUI } from '../utils/events/eventsUI.js';
+import { updateUntilUIAndDraft } from '../utils/events/repeatEventsUi.js';
+import createElement from '../utils/helpers/createElement.js';
+import { initMonthList, initYearList } from './miniCalendarCarousels.js';
 
-import { displayOverlays } from "../utils/helpers/dom/mainCalendarDom.js";
+import { displayOverlays } from '../utils/helpers/dom/mainCalendarDom.js';
 
-import { eventDateDiv } from "../utils/helpers/dom/eventModalDom.js";
+import { eventDateDiv } from '../utils/helpers/dom/eventModalDom.js';
+import createMonthGrid from '../components/features/calendar/monthGrid.js';
 
 let miniLocalDate = null;
-let miniCalendarCommitTarget = "normal";
+let miniCalendarCommitTarget = 'normal';
 
 function syncMiniInputs() {
   if (!miniLocalDate) return;
-  yearInput.value = miniLocalDate.format("YYYY");
-  monthInput.value = miniLocalDate.format("MM");
-  dayInput.value = miniLocalDate.format("DD");
+  yearInput.value = miniLocalDate.format('YYYY');
+  monthInput.value = miniLocalDate.format('MM');
+  dayInput.value = miniLocalDate.format('DD');
 }
 
 export function openMiniCalendar(
@@ -40,16 +39,16 @@ export function openMiniCalendar(
   commitTarget = type,
   anchorElement = null,
 ) {
-  let display, top, left;
+  let top, left;
   miniCalendarCommitTarget = commitTarget;
 
-  miniCalendarLayer.classList.add("show-mini-calendar-layer");
-  if (type === "normal") {
+  miniCalendarLayer.classList.add('show-mini-calendar-layer');
+  if (type === 'normal') {
     miniLocalDate = dayjs(overlay.date);
     syncMiniInputs();
 
     createMiniCalendar(miniLocalDate);
-    showModal.classList.add("show-mini-calendar");
+    showModal.classList.add('show-mini-calendar');
 
     if (anchorElement) {
       const rect = anchorElement.getBoundingClientRect();
@@ -57,7 +56,7 @@ export function openMiniCalendar(
       left = rect.left - 120;
     } else {
       displayOverlays.forEach((item) => {
-        const display = item.closest(".show-display");
+        const display = item.closest('.show-display');
         if (!display) return;
 
         const displayRect = display.getBoundingClientRect();
@@ -66,11 +65,11 @@ export function openMiniCalendar(
       });
     }
   }
-  if (type === "event") {
+  if (type === 'event') {
     miniLocalDate = dayjs(date);
     syncMiniInputs();
     createMiniCalendar(miniLocalDate);
-    showModal.classList.add("show-mini-calendar");
+    showModal.classList.add('show-mini-calendar');
 
     const eventDateDivRect = eventDateDiv.getBoundingClientRect();
     top = eventDateDivRect.top - miniCalendar.clientHeight / 2;
@@ -81,11 +80,11 @@ export function openMiniCalendar(
 }
 
 export function closeMiniCalendar() {
-  miniCalendarLayer.classList.remove("show-mini-calendar-layer");
-  showModal.classList.remove("show-mini-calendar");
-  calendarContainer.style.top = "";
-  calendarContainer.style.left = "";
-  miniCalendarCommitTarget = "normal";
+  miniCalendarLayer.classList.remove('show-mini-calendar-layer');
+  showModal.classList.remove('show-mini-calendar');
+  calendarContainer.style.top = '';
+  calendarContainer.style.left = '';
+  miniCalendarCommitTarget = 'normal';
   miniLocalDate = null;
 }
 function cancelMiniCalendar() {
@@ -93,26 +92,26 @@ function cancelMiniCalendar() {
   syncMiniInputs();
   createMiniCalendar(miniLocalDate);
   closeMiniCalendar();
-  miniCalendarCommitTarget = "normal";
+  miniCalendarCommitTarget = 'normal';
 }
 
 function commitMiniDate() {
   if (!miniLocalDate) return;
 
-  const selectedDate = miniLocalDate.format("YYYY-MM-DD");
+  const selectedDate = miniLocalDate.format('YYYY-MM-DD');
 
   switch (miniCalendarCommitTarget) {
-    case "normal":
+    case 'normal':
       overlay.setDate(dayjs(miniLocalDate));
       break;
-    case "event-date":
-      updateEventDraft("date", selectedDate);
+    case 'event-date':
+      updateEventDraft('date', selectedDate);
       updateEventDateUI(selectedDate);
       break;
-    case "repeat-until":
+    case 'repeat-until':
       updateUntilUIAndDraft(selectedDate);
       break;
-    case "custom-dates":
+    case 'custom-dates':
       validateAndReturnCustomDate(selectedDate);
       break;
   }
@@ -124,15 +123,15 @@ function updateMiniDatePart(part, value) {
   if (isNaN(num) || !miniLocalDate) return;
 
   switch (part) {
-    case "year":
+    case 'year':
       if (num < 1900 || num > 2200) return;
       miniLocalDate = miniLocalDate.year(num);
       break;
-    case "month":
+    case 'month':
       if (num < 1 || num > 12) return;
       miniLocalDate = miniLocalDate.month(num - 1);
       break;
-    case "day":
+    case 'day':
       if (num < 1 || num > 31) return;
       miniLocalDate = miniLocalDate.date(num);
       break;
@@ -143,10 +142,10 @@ function updateMiniDatePart(part, value) {
 }
 
 function selectDays(e) {
-  const miniGrid = document.querySelector(".mini-boxes-container");
+  const miniGrid = document.querySelector('.mini-boxes-container');
   if (!miniGrid) return;
 
-  miniGrid.addEventListener("click", (e) => {
+  miniGrid.addEventListener('click', (e) => {
     const selectedDay = e.target.dataset.day;
     if (!selectedDay) return;
     miniLocalDate = dayjs(selectedDay);
@@ -162,65 +161,65 @@ function onDatePartSelect(part, value) {
 }
 
 function createMiniCalendar(newDate) {
-  miniCalendar.innerHTML = "";
+  miniCalendar.innerHTML = '';
 
-  const miniMonth = newDate.month(newDate.month()).format("MMMM");
+  const miniMonth = newDate.month(newDate.month()).format('MMMM');
   const miniYear = newDate.year();
 
-  const div = createElement(miniCalendar, "mini-container", null, "div");
-  const btnsCont = createElement(div, "mini-btns-cont", null, "div");
+  const div = createElement(miniCalendar, 'mini-container', null, 'div');
+  const btnsCont = createElement(div, 'mini-btns-cont', null, 'div');
   const monthBtn = createElement(
     btnsCont,
-    "mini-month-btn",
+    'mini-month-btn',
     `${miniMonth}`,
-    "button",
+    'button',
     {
       attributes: {
-        type: "button",
-        "aria-label": `Seleziona mese. Mese corrente: ${miniMonth}`,
+        type: 'button',
+        'aria-label': `Seleziona mese. Mese corrente: ${miniMonth}`,
       },
     },
   );
   const yearBtn = createElement(
     btnsCont,
-    "mini-year-btn",
+    'mini-year-btn',
     `${miniYear}`,
-    "button",
+    'button',
     {
       attributes: {
-        type: "button",
-        "aria-label": `Seleziona anno. Anno corrente: ${miniYear}`,
+        type: 'button',
+        'aria-label': `Seleziona anno. Anno corrente: ${miniYear}`,
       },
     },
   );
 
-  const monthList = createElement(monthBtn, "month-lists", null, "div");
-  const yearList = createElement(yearBtn, "year-lists", null, "div");
+  const monthList = createElement(monthBtn, 'month-lists', null, 'div');
+  const yearList = createElement(yearBtn, 'year-lists', null, 'div');
 
   initMonthList(monthBtn, monthList, onDatePartSelect, newDate.month());
   initYearList(yearBtn, yearList, onDatePartSelect, newDate.year());
 
-  const gridCalendar = createElement(div, "mini-grid", null, "div");
-  const actionsCont = createElement(div, "mini-actions", null, "div");
+  const gridCalendar = createElement(div, 'mini-grid', null, 'div');
+  const actionsCont = createElement(div, 'mini-actions', null, 'div');
   const cancelBtn = createElement(
     actionsCont,
-    "mini-cancel-btn",
-    "Annulla",
-    "button",
+    'mini-cancel-btn',
+    'Annulla',
+    'button',
     {
       attributes: {
-        type: "button",
+        type: 'button',
       },
     },
   );
   const saveBtn = createElement(
     actionsCont,
-    "mini-save-btn",
-    "Salva",
-    "button",
+    'mini-save-btn',
+    'Salva',
+    'button',
     {
       attributes: {
-        type: "button",
+        type: 'button',
       },
     },
   );
@@ -228,18 +227,18 @@ function createMiniCalendar(newDate) {
   createMonthGrid(newDate, gridCalendar, config.mini);
   selectDays();
 
-  cancelBtn.addEventListener("click", cancelMiniCalendar);
-  saveBtn.addEventListener("click", commitMiniDate);
+  cancelBtn.addEventListener('click', cancelMiniCalendar);
+  saveBtn.addEventListener('click', commitMiniDate);
 }
 
 export function initiMiniCalendarInputs() {
-  yearInput.addEventListener("change", () =>
-    updateMiniDatePart("year", yearInput.value),
+  yearInput.addEventListener('change', () =>
+    updateMiniDatePart('year', yearInput.value),
   );
-  monthInput.addEventListener("change", () =>
-    updateMiniDatePart("month", monthInput.value),
+  monthInput.addEventListener('change', () =>
+    updateMiniDatePart('month', monthInput.value),
   );
-  dayInput.addEventListener("change", () =>
-    updateMiniDatePart("day", dayInput.value),
+  dayInput.addEventListener('change', () =>
+    updateMiniDatePart('day', dayInput.value),
   );
 }

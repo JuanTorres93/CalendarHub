@@ -1,5 +1,5 @@
-import { createDayBox } from './components/features/calendar/dayBox.js';
-import { config } from './utils/config/config.js';
+import { createDayBox } from './dayBox.js';
+import { config } from '../../../utils/config/config.js';
 
 function createMonthGrid(currentView, gridType, gridConfig) {
   const giorniMese = currentView.daysInMonth();
