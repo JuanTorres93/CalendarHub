@@ -1,4 +1,5 @@
 import { createDayCell } from './dayCell.js';
+import { createDayLabel } from './dayLabel.js';
 import { config } from '../../../utils/config/config.js';
 
 function createMonthGrid(currentView, gridType, gridConfig) {
@@ -16,13 +17,12 @@ function createMonthGrid(currentView, gridType, gridConfig) {
   gridType.appendChild(firstRow);
 
   for (let j = 0; j < 7; j++) {
-    let days = currentView.weekday(j).format('dddd');
-
-    firstRow.insertAdjacentHTML(
-      'beforeend',
-      `
-        <div class="${gridConfig.dailybox}">${days}</div>
-        `,
+    firstRow.appendChild(
+      createDayLabel({
+        type: 'month',
+        date: currentView.weekday(j),
+        className: gridConfig.dailybox,
+      }),
     );
   }
   const secondRow = document.createElement('article');

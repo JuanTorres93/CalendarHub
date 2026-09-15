@@ -3,6 +3,7 @@ import createElement from "./utils/helpers/createElement.js";
 import { weekGrid } from "./utils/helpers/dom/mainCalendarDom.js";
 import { createHourCell } from "./components/features/calendar/hourCell.js";
 import { createTimeLabel } from "./components/features/calendar/timeLabel.js";
+import { createDayLabel } from "./components/features/calendar/dayLabel.js";
 
 export default function createWeekGrid(currentview) {
   weekGrid.innerHTML = "";
@@ -31,13 +32,9 @@ export default function createWeekGrid(currentview) {
   }
 
   for (let j = 0; j < 7; j++) {
-    let weekNumber, dayClass, firstColoumn;
-    let firstDayOfWeek = currentview.weekday(j);
-    let days = firstDayOfWeek.format("dddd");
-    let dataDay = firstDayOfWeek.format("YYYY-MM-DD");
-    weekNumber = firstDayOfWeek.format("DD");
-    let shrinkDays = days.substring(0, 3);
-    const accessibleDate = firstDayOfWeek.format("dddd D MMMM YYYY");
+    let dayClass;
+    const firstDayOfWeek = currentview.weekday(j);
+    const dataDay = firstDayOfWeek.format("YYYY-MM-DD");
 
     if (dataDay === currentview.format("YYYY-MM-DD")) {
       dayClass = "is-today";
@@ -45,27 +42,27 @@ export default function createWeekGrid(currentview) {
       dayClass = "normal-week";
     }
 
-    weekHeaderRow.insertAdjacentHTML(
-      "beforeend",
-      `
-  <div class="week-day-display" data-day="${dataDay}">
-    <button type="button" class="header-btn" aria-label="Seleziona ${accessibleDate}">
-      <span class="day-label">${weekNumber}</span>
-      <br><br>
-      <span 
-        class="day-label-text"
-        data-shrinkDays="${shrinkDays}"
-      >
-        ${days}
-      </span>
-    </button>
-    <div class="week-header-content">
-      <div class="week-all-day-container"></div>
-      <div class="week-todo-container"></div>
-    </div> 
-  </div>
-`,
+    const weekDayDisplay = document.createElement("div");
+    weekDayDisplay.className = "week-day-display";
+    weekDayDisplay.dataset.day = dataDay;
+
+    weekDayDisplay.appendChild(
+      createDayLabel({ type: "week", date: firstDayOfWeek }),
     );
+
+    const headerContent = document.createElement("div");
+    headerContent.className = "week-header-content";
+
+    const allDayContainer = document.createElement("div");
+    allDayContainer.className = "week-all-day-container";
+    headerContent.appendChild(allDayContainer);
+
+    const todoContainer = document.createElement("div");
+    todoContainer.className = "week-todo-container";
+    headerContent.appendChild(todoContainer);
+
+    weekDayDisplay.appendChild(headerContent);
+    weekHeaderRow.appendChild(weekDayDisplay);
 
     weekDaysRow.insertAdjacentHTML(
       "beforeend",

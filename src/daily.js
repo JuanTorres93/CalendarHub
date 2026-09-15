@@ -3,28 +3,22 @@ import createElement from "./utils/helpers/createElement.js";
 import { dayGrid } from "./utils/helpers/dom/mainCalendarDom.js";
 import { createHourCell } from "./components/features/calendar/hourCell.js";
 import { createTimeLabel } from "./components/features/calendar/timeLabel.js";
+import { createDayLabel } from "./components/features/calendar/dayLabel.js";
 
 function createDailyGrid(currentview) {
   dayGrid.innerHTML = "";
 
   let dataDay = currentview.format("YYYY-MM-DD");
-  const dailyDate = currentview.format("dddd, DD");
   const dailyHeader = createElement(dayGrid, "daily-header", null, "div", {
     dataset: { day: dataDay },
   });
+  dailyHeader.appendChild(createDayLabel({ type: "day", date: currentview }));
   createElement(dailyHeader, "daily-allDay-container", null, "div");
   createElement(dailyHeader, "daily-todo-container", null, "div");
+
   const dailyMain = createElement(dayGrid, "daily-main", null, "div");
   const div = createElement(dailyMain, "ul-day-time", null, "div");
   const list = createElement(div, "day-list", null, "ul");
-  dailyHeader.insertAdjacentHTML(
-    "afterbegin",
-    `
-        <div class="daily-current-header">
-            <h2>${dailyDate}</h2>
-        </div>
-        `,
-  );
 
   for (let i = 0; i < 24; i++) {
     const time = dayjs().hour(i).minute(0).format("HH:mm");
