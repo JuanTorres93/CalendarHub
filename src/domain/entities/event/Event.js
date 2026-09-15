@@ -1,5 +1,6 @@
 import { NotificationPeriod } from '../../value-objets/NotificationPeriod/NotificationPeriod.js';
 import { Text } from '../../value-objets/Text/Text.js';
+import { Id } from '../../value-objets/Id/Id.js';
 
 export class Event {
   constructor(props) {
@@ -10,8 +11,11 @@ export class Event {
     const validatedProps = {
       ...props,
 
+      id: Id.create(props.id),
+
       title: Text.create(props.title, TITLE_TEXT_OPTIONS),
       description: Text.create(props.description, DESCRIPTION_TEXT_OPTIONS),
+
       notification: NotificationPeriod.create(props.notification),
     };
 
@@ -19,7 +23,7 @@ export class Event {
   }
 
   get id() {
-    return this.props.id;
+    return this.props.id.value;
   }
 
   get title() {
