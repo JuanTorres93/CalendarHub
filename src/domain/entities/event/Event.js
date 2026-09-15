@@ -1,6 +1,9 @@
 import { NotificationPeriod } from '../../value-objets/NotificationPeriod/NotificationPeriod.js';
 import { Text } from '../../value-objets/Text/Text.js';
 import { Id } from '../../value-objets/Id/Id.js';
+import { Boolean } from '../../value-objets/Boolean/Boolean.js';
+import { Icon } from '../../value-objets/Icon/Icon.js';
+import { Color } from '../../value-objets/Color/Color.js';
 
 export class Event {
   constructor(props) {
@@ -22,6 +25,17 @@ export class Event {
       notification: props.notification
         ? NotificationPeriod.create(props.notification)
         : NotificationPeriod.create('none'),
+
+      urgent: props?.urgent
+        ? Boolean.create(props.urgent)
+        : Boolean.create(false),
+      allDay: props?.allDay
+        ? Boolean.create(props.allDay)
+        : Boolean.create(false),
+
+      icon: props?.icon ? Icon.create(props.icon) : Icon.create('✏️'),
+
+      color: props?.color ? Color.create(props.color) : Color.create('blue'),
     };
 
     return new Event(validatedProps);
@@ -52,19 +66,19 @@ export class Event {
   }
 
   get icon() {
-    return this.props.icon;
+    return this.props.icon.value;
   }
 
   get color() {
-    return this.props.color;
+    return this.props.color.value;
   }
 
   get urgent() {
-    return this.props.urgent;
+    return this.props.urgent.value;
   }
 
   get allDay() {
-    return this.props.allDay;
+    return this.props.allDay.value;
   }
 
   get notification() {

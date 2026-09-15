@@ -77,4 +77,40 @@ describe('Event', () => {
 
     expect(event.notification).toBe('none');
   });
+
+  it('urgent should default to false if it is not provided', async () => {
+    const eventProps = { ...EVENT_TEST_PROPS };
+    delete eventProps.urgent;
+
+    const event = Event.create(eventProps);
+
+    expect(event.urgent).toBe(false);
+  });
+
+  it('allDay should default to false if it is not provided', async () => {
+    const eventProps = { ...EVENT_TEST_PROPS };
+    delete eventProps.allDay;
+
+    const event = Event.create(eventProps);
+
+    expect(event.allDay).toBe(false);
+  });
+
+  it('icon should default to pencil icon if it is not provided', async () => {
+    const eventProps = { ...EVENT_TEST_PROPS };
+    delete eventProps.icon;
+
+    const event = Event.create(eventProps);
+
+    expect(event.icon).toBe('✏️');
+  });
+
+  it('color should default to blue if not provided', async () => {
+    const eventProps = { ...EVENT_TEST_PROPS };
+    delete eventProps.color;
+
+    const event = Event.create(eventProps);
+
+    expect(event.color).toBe('blue');
+  });
 });

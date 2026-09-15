@@ -12,7 +12,7 @@ export class Icon extends ValueObject {
     if (typeof value !== 'string' || value === null || value === undefined)
       throw new ValidationDomainError('Icon must be a string');
 
-    if (Array.from(value).length !== 1) {
+    if (Array.from(value.replace(/[\uFE00-\uFE0F]/g, '')).length !== 1) {
       throw new ValidationDomainError('Icon must be a single character');
     }
 

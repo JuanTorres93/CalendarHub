@@ -13,6 +13,15 @@ describe('Icon', () => {
     expect(icon.value).toBe(iconValue);
   });
 
+  it('should create a valid Icon with an emoji', () => {
+    const iconValue = '✏️';
+
+    const icon = Icon.create(iconValue);
+
+    expect(icon).toBeInstanceOf(Icon);
+    expect(icon.value).toBe(iconValue);
+  });
+
   describe('Equality checks', () => {
     it('should consider two Icon instances with the same value as equal', () => {
       const icon1 = Icon.create('🌳');
