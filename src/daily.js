@@ -2,6 +2,7 @@ import dayjs from "./day.js";
 import createElement from "./utils/helpers/createElement.js";
 import { dayGrid } from "./utils/helpers/dom/mainCalendarDom.js";
 import { createHourCell } from "./components/features/calendar/hourCell.js";
+import { createTimeLabel } from "./components/features/calendar/timeLabel.js";
 
 function createDailyGrid(currentview) {
   dayGrid.innerHTML = "";
@@ -25,18 +26,14 @@ function createDailyGrid(currentview) {
         `,
   );
 
-  for (let i = 23; i >= 0; i--) {
-    let time = dayjs().hour(i).format("HH");
-    time = time + ":00";
+  for (let i = 0; i < 24; i++) {
+    const time = dayjs().hour(i).minute(0).format("HH:mm");
 
-    list.insertAdjacentHTML(
-      "afterbegin",
-      `
-          <li class="time-lable-day">
-                        <div class="hour-lable-day"><span>${time}</span></div> 
-                        <div class="half-lable-day"></div>
-                    </li>
-            `,
+    list.appendChild(
+      createTimeLabel({
+        type: "day",
+        time,
+      }),
     );
   }
   const dayStructure = createElement(dailyMain, "day-structure", null, "div");

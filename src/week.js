@@ -2,6 +2,7 @@ import dayjs from "./day.js";
 import createElement from "./utils/helpers/createElement.js";
 import { weekGrid } from "./utils/helpers/dom/mainCalendarDom.js";
 import { createHourCell } from "./components/features/calendar/hourCell.js";
+import { createTimeLabel } from "./components/features/calendar/timeLabel.js";
 
 export default function createWeekGrid(currentview) {
   weekGrid.innerHTML = "";
@@ -17,24 +18,15 @@ export default function createWeekGrid(currentview) {
   );
   const weekDaysRow = createElement(weekWrapper, "week-days-row", null, "div");
 
-  for (let i = 23; i >= 0; i--) {
-    let midnight;
-    let time = dayjs().hour(i).format("HH");
-    time = time + ":00";
+  for (let i = 0; i < 24; i++) {
+    const time = dayjs().hour(i).minute(0).format("HH:mm");
 
-    if (i === 0) {
-      midnight = "midnight";
-    } else {
-      midnight = "";
-    }
-    list.insertAdjacentHTML(
-      "afterbegin",
-      `
-                    <li class="time-lable ${midnight}">
-                        <div class="hour-lable "><span>${time}</span></div> 
-                        <div class="half-lable"><span></span></div>
-                    </li>
-                    `,
+    list.appendChild(
+      createTimeLabel({
+        type: "week",
+        time,
+        extraClasses: i === 0 ? ["midnight"] : [],
+      }),
     );
   }
 
