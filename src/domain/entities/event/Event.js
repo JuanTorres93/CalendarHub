@@ -5,6 +5,7 @@ import { Boolean } from '../../value-objets/Boolean/Boolean.js';
 import { Icon } from '../../value-objets/Icon/Icon.js';
 import { Color } from '../../value-objets/Color/Color.js';
 import { Time } from '../../value-objets/Time/Time.js';
+import { Day } from '../../value-objets/Day/Day.js';
 
 export class Event {
   constructor(props) {
@@ -23,6 +24,7 @@ export class Event {
         DESCRIPTION_TEXT_OPTIONS,
       ),
 
+      date: Day.create(props.date),
       from: Time.create(props.from),
       to: Time.create(props.to),
 
@@ -58,7 +60,7 @@ export class Event {
   }
 
   get date() {
-    return this.props.date;
+    return this.props.date.value;
   }
 
   get from() {
