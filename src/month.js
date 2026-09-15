@@ -1,4 +1,5 @@
-import dayjs from './day.js';
+import { createDayBox } from './components/features/calendar/dayBox.js';
+import { config } from './utils/config/config.js';
 
 function createMonthGrid(currentView, gridType, gridConfig) {
   const giorniMese = currentView.daysInMonth();
@@ -28,7 +29,7 @@ function createMonthGrid(currentView, gridType, gridConfig) {
   secondRow.classList.add(`${gridConfig.boxesContainer}`);
   gridType.appendChild(secondRow);
   for (let i = 0; i < 42; i++) {
-    let dataDayID, dayNumber, dayClass, today;
+    let dataDayID, dayNumber, dayClass;
     if (i < firstDayIndex) {
       dayNumber = lastDayPrevMonth.date() - (firstDayIndex - 1 - i);
       dataDayID = lastDayPrevMonth.date(dayNumber).format('YYYY-MM-DD');
@@ -47,43 +48,12 @@ function createMonthGrid(currentView, gridType, gridConfig) {
       }
     }
 
-    const accessibleDate = dayjs(dataDayID).format('D MMMM YYYY');
-
-    secondRow.insertAdjacentHTML(
-      'beforeend',
-      `
-        <div 
-            class="${gridConfig.boxGrid} ${dayClass}"
-            data-action="create-event"
-            data-day="${dataDayID}"
-            data-testid="day-box-${dataDayID}"
-            >
-          <div class="${gridConfig.firstRowMonth}">
-            <div class="${gridConfig.insideBoxGrid}">
-                <button
-                    type="button"
-                    class="${gridConfig.numberBox}"
-                    data-day="${dataDayID}"
-                    data-action="select-date"
-                    aria-label="Seleziona ${accessibleDate}"
-                    data-testid="day-number-button-${dataDayID}"
-                    >
-                    ${dayNumber}
-                </button>
-            </div>
-            <div class="${gridConfig.todoContainer}">
-            </div>
-          
-          </div>
-         ${
-           gridConfig.eventsContainer
-             ? `
-            <div class="${gridConfig.eventAllDay}"></div>
-            <div class="${gridConfig.eventsContainer}"></div>`
-             : ''
-         }
-        </div>
-        `,
+    secondRow.appendChild(
+      createDayBox({
+        dataDayID,
+        extraClasses: [gridConfig.boxGrid, dayClass],
+        isMini: gridConfig === config.mini,
+      }),
     );
   }
 }
