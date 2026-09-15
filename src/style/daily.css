@@ -1,63 +1,61 @@
 #day-body {
-    width: 100%;
-    
-    /* margin-top: -20px;  */
+  width: 100%;
+
+  /* margin-top: -20px;  */
 }
-.day-view { 
-    display: none;
+.day-view {
+  display: none;
 }
 
-#full-day-view {   
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    max-height: 85vh;
-    scrollbar-width: none;
+#full-day-view {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 85vh;
+  scrollbar-width: none;
 }
-.daily-header{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    position: sticky;
-    top: 0;
-    background: var(--timeCell);
-    z-index: 60;
-    box-sizing: border-box;
-    border: 3px solid black; 
+.daily-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  background: var(--timeCell);
+  z-index: 60;
+  box-sizing: border-box;
+  border: 3px solid black;
 }
-.daily-current-header{
-    max-width: 8rem;
+.daily-current-header {
+  max-width: 8rem;
 }
-.daily-current-header h2{
-    font-size: 1rem;
-    margin: 0 1rem;
-    text-transform: capitalize;
-    font-family: "Kaushan Script", cursive;
+.daily-current-header h2 {
+  font-size: 1rem;
+  margin: 0 1rem;
+  text-transform: capitalize;
+  font-family: "Kaushan Script", cursive;
 }
-.daily-main{
-    display: grid;
-    grid-template-columns: 2.95rem 1fr;
-    /* margin-top: 4rem; */
+.daily-main {
+  display: grid;
+  grid-template-columns: 2.95rem 1fr;
+  /* margin-top: 4rem; */
 }
-.day-structure{
-    position: relative;
-   
+.day-structure {
+  position: relative;
 }
-.day-list{
-    display: grid;
-    grid-template-rows: repeat(24, 4rem);
-    list-style-type: none; 
-    padding: 0;
-    margin-top: 0;
-    
+.day-list {
+  display: grid;
+  grid-template-rows: repeat(24, 4rem);
+  list-style-type: none;
+  padding: 0;
+  margin-top: 0;
 }
 .daily-name {
-     list-style-type: none;
-    padding-left: 0;
-    display: grid;
-    grid-template-rows: repeat(48, 2rem);
-    margin: 0;
+  list-style-type: none;
+  padding-left: 0;
+  display: grid;
+  grid-template-rows: repeat(48, 2rem);
+  margin: 0;
 }
 
 /*border-box fa si che l'altezza dichiarata includa anche il bordo*/
@@ -67,71 +65,68 @@
   box-sizing: border-box;
 }
 
-.time-lable-day{
-    display: flex;
-    align-items: start;
-    justify-content: center;
-    margin: 0;
-    background-color: var(--timeCell);
-    border-top: 1px solid black ;
-    border-left: 2px solid black;
-    border-right: 2px solid black;
-    width: 100%;
-    z-index: 1;
+.time-lable-day {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  margin: 0;
+  background-color: var(--timeCell);
+  border-top: 1px solid black;
+  border-left: 2px solid black;
+  border-right: 2px solid black;
+  width: 100%;
+  z-index: 1;
 }
-
 
 .hour-lable-day {
-    /* border-top: 1px solid black; */
-    /* text-align: center; */
-    /* padding-top: 0.5rem; */
-    font-family: "Joti One", serif;;
-    
+  /* border-top: 1px solid black; */
+  /* text-align: center; */
+  /* padding-top: 0.5rem; */
+  font-family: "Joti One", serif;
 }
 
-.day-box, .day-half-box{
-    border-bottom: 1px solid black;  
-    border-right: 1px solid black;
-    background-color: var(--body);
+.day-box,
+.day-half-box {
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  background-color: var(--body);
 }
 
-
-.day-box:hover,.day-half-box:hover{
-   /* border: 3px solid black; */
-   background-color: var(--Rosi);
-   box-shadow: var(--light-shadow);
+.day-box:hover,
+.day-half-box:hover {
+  /* border: 3px solid black; */
+  background-color: var(--Rosi);
+  box-shadow: var(--light-shadow);
 }
 
-.first { 
-    border-top: 1px solid black;
+.first {
+  border-top: 1px solid black;
 }
-.daily-todo-container{
-    position: relative;
+.daily-todo-container {
+  position: relative;
 }
 
 /*******************show-section*****************************/
 .show-section {
-    display:block;
+  display: block;
 }
 
 @media screen and (min-width: 992px) {
-    .daily-main {   
-    grid-template-columns: 5rem 1fr;   
-}
-.daily-header{
+  .daily-main {
+    grid-template-columns: 5rem 1fr;
+  }
+  .daily-header {
     width: 100%;
     display: flex;
     gap: 2rem;
-}
-.time-lable-day{
+  }
+  .time-lable-day {
     margin: 0;
-}
-.daily-current-header{
+  }
+  .daily-current-header {
     max-width: unset;
-}
-.daily-current-header h2{
+  }
+  .daily-current-header h2 {
     font-size: 2rem;
-}
-
-
+  }
 }

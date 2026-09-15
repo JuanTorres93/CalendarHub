@@ -1,19 +1,19 @@
-.monthly-events-container{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    padding: 0.1rem;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 100px; 
-    scrollbar-width: none;
--ms-overflow-style: none;
+.monthly-events-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 .monthly-event {
   display: flex;
   gap: 0.2rem;
- position: relative;
+  position: relative;
   font-size: 0.7rem;
   color: var(--textModal);
   z-index: 30;
@@ -23,181 +23,206 @@
 
   height: 1rem;
   overflow: hidden;
-  font-family:"Joti One", serif;
+  font-family: "Joti One", serif;
   padding: 0.1rem;
-
 }
 
-.icon-month{
+.icon-month {
   display: none;
   font-size: 0.7rem;
-
 }
-.title-month{
+.title-month {
   width: 80%;
   word-break: break-word;
 }
-.event-allDay-container{
+.event-allDay-container {
   width: 100%;
- 
 }
-.render-allDay{
- 
+.render-allDay {
   display: -webkit-box;
   gap: 0.4rem;
- margin-bottom: 0.2rem;
- font-family:"Kaushan Script", cursive;
- font-size: 0.7rem;
- flex: 1;
+  margin-bottom: 0.2rem;
+  font-family: "Kaushan Script", cursive;
+  font-size: 0.7rem;
+  flex: 1;
 }
-.render-allDay span{
-display: none;
+.render-allDay span {
+  display: none;
 }
-.render-allDay p, .week-allDay-event p, .daily-allDay-event p{
+.render-allDay p,
+.week-allDay-event p,
+.daily-allDay-event p {
   margin: 0;
- 
 }
-.week-allDay-event{
+.week-allDay-event {
   display: flex;
   overflow: hidden;
   gap: 0.2rem;
-font-family:"Kaushan Script", cursive;
-box-shadow: var(--light-shadow);
-font-size: 0.8rem;
- cursor: pointer;
+  font-family: "Kaushan Script", cursive;
+  box-shadow: var(--light-shadow);
+  font-size: 0.8rem;
+  cursor: pointer;
 }
-.all-event-start-text{
+.all-event-start-text {
   display: none;
 }
 .week-allDay-event p {
   display: flex;
 }
-.daily-allDay-container{
-  flex: 1
+.daily-allDay-container {
+  flex: 1;
 }
-.daily-allDay-event{
+.daily-allDay-event {
   display: flex;
   max-width: 90%;
   overflow: hidden;
   gap: 0.3rem;
-  font-family:"Kaushan Script", cursive;
+  font-family: "Kaushan Script", cursive;
   font-weight: bold;
   box-shadow: var(--light-shadow);
   padding: 0.2rem;
   cursor: pointer;
 }
 
-.daily-event, .weekly-event{
-    position: absolute;
-    top: "";
-    height: "";
-    left: 0;
-    z-index: 30;
-    border-radius: 10px;
-    padding: 0 0.3rem;
-    font-family: "Joti One", serif;
-    overflow: hidden;
-    box-sizing: border-box;
-    font-size: 1rem;
-    box-shadow: var(--light-shadow);
-     cursor: pointer;
- 
+.daily-event,
+.weekly-event {
+  position: absolute;
+  top: "";
+  height: "";
+  left: 0;
+  z-index: 30;
+  border-radius: 10px;
+  padding: 0 0.3rem;
+  font-family: "Joti One", serif;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-size: 1rem;
+  box-shadow: var(--light-shadow);
+  cursor: pointer;
 }
-.render-time, .render-title{
+.render-time,
+.render-title {
   margin: 0.1rem 0.2rem;
 }
 
-.weekly-event .render-time{
+.weekly-event .render-time {
   display: none;
 }
-.weekly-event .render-title, .monthly-event span{
+.weekly-event .render-title,
+.monthly-event span {
   word-break: break-word;
 }
 .daily-event {
   display: flex;
   gap: 1rem;
 }
-.text-background{
+.text-background {
   background-color: rgba(2, 0, 0, 0.041);
-    border-radius: 4px;
+  border-radius: 4px;
   padding-inline: 4px;
 }
 
-.event-blue, .event-green, .event-purple, .event-red, .event-yellow, .event-orange, .event-pink {
-    opacity: 0.9;
+.event-blue,
+.event-green,
+.event-purple,
+.event-red,
+.event-yellow,
+.event-orange,
+.event-pink {
+  opacity: 0.9;
 }
-.event-blue { background: blue; color: var(--textModal)}
-.event-green { background: green; color: var(--textModal)}
-.event-purple { background: purple; color: var(--textModal)}
-.event-red { background: red; color: var(--textModal)}
-.event-yellow{background: rgba(255, 255, 0, 0.87); color: var(--background);}
-.event-orange{background: orange;color: var(--background)}
-.event-pink{background: pink; color: var(--background);}
+.event-blue {
+  background: blue;
+  color: var(--textModal);
+}
+.event-green {
+  background: green;
+  color: var(--textModal);
+}
+.event-purple {
+  background: purple;
+  color: var(--textModal);
+}
+.event-red {
+  background: red;
+  color: var(--textModal);
+}
+.event-yellow {
+  background: rgba(255, 255, 0, 0.87);
+  color: var(--background);
+}
+.event-orange {
+  background: orange;
+  color: var(--background);
+}
+.event-pink {
+  background: pink;
+  color: var(--background);
+}
 
 /* current color usa il colore del testo attuale */
 .event-urgent {
   font-weight: bold;
   background-image: repeating-linear-gradient(
     45deg,
-     rgba(14, 11, 11, 0.26) 0,
-     rgba(14, 0, 0, 0.212) 1px,
-      transparent 4px,
+    rgba(14, 11, 11, 0.26) 0,
+    rgba(14, 0, 0, 0.212) 1px,
+    transparent 4px,
     transparent 7px
   );
   /* box-shadow: var(--strong-shadow); */
 }
 
-.repeat-icon, .repeat-icon-alt {
+.repeat-icon,
+.repeat-icon-alt {
   position: absolute;
   right: 0.1rem;
   background: var(--background);
   padding: 0.1rem;
   border-radius: 20px;
 }
-.repeat-icon{
+.repeat-icon {
   top: 50%;
   transform: translateY(-50%);
 }
-.repeat-icon-alt{
+.repeat-icon-alt {
   position: absolute;
   right: 0.2rem;
   bottom: 0;
   transform: translateY(-50%);
 }
 
-@media screen and (min-width:992px) {
-
-  .monthly-events-container{
+@media screen and (min-width: 992px) {
+  .monthly-events-container {
     width: 95%;
   }
-  .icon-month{
-  display: block  
-}
-  .render-time, .render-title{
+  .icon-month {
+    display: block;
+  }
+  .render-time,
+  .render-title {
     font-size: 1rem;
     margin-left: 0.3rem;
   }
-  .render-allDay{
- display: flex;
- font-size: 0.8rem;
+  .render-allDay {
+    display: flex;
+    font-size: 0.8rem;
+  }
+  .week-allDay-event {
+    font-size: 1rem;
+  }
+  .render-allDay span,
+  .all-event-start-text {
+    display: block;
+  }
+  .daily-allDay-container {
+    flex: unset;
+    width: 20rem;
+  }
+  .week-allDay-event .all-event-start-text {
+    display: none;
+  }
+  .repeat-icon {
+    right: 0.25rem;
+  }
 }
-.week-allDay-event{
- 
-  font-size: 1rem;
-}
-  .render-allDay span, .all-event-start-text{
-   display: block;
-}
-.daily-allDay-container{
-  flex: unset;
-  width: 20rem;
-}
-.week-allDay-event .all-event-start-text{
-  display: none;
-}
-.repeat-icon {
-  right: 0.25rem;
-}
-
-}
-

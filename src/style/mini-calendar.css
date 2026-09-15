@@ -1,194 +1,194 @@
 /* la posizione per ora è hardcodata, ma verrà poi gestita tramite getboundingclientRect, per farlo apparire in 2 punti diversi */
-#mini-calendar{
-    position: fixed;
-    z-index: 1001;
-    top: "";
-    left: "";
-    width: 10rem ;
-    background: var(--background);
-    border: 3px solid black;
-    border-radius: 10px;
-    box-shadow: var(--strong-shadow);
-    color: var(--textModal);
+#mini-calendar {
+  position: fixed;
+  z-index: 1001;
+  top: "";
+  left: "";
+  width: 10rem;
+  background: var(--background);
+  border: 3px solid black;
+  border-radius: 10px;
+  box-shadow: var(--strong-shadow);
+  color: var(--textModal);
 }
-.mini-calendar-layer{
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    display: none;
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
+.mini-calendar-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
 }
-.show-mini-calendar-layer{
+.show-mini-calendar-layer {
   display: block;
 }
-.date-input{
-    display: flex;
-    justify-content: center;
+.date-input {
+  display: flex;
+  justify-content: center;
 }
 .day-select {
-    display: none;
+  display: none;
 }
 .show-mini-calendar {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
-.input-year, .input-month, .input-day {
-    border-top:none;
-    border-left:none;
-    border-right:none;
-    border-bottom: 1px dashed var(--textModal);
-    background: none;    
-    text-align: center;
-    font-family: "Kaushan Script", cursive;
-    color: var(--textModal);
-}
-
-.input-year{
-    width: 50px;
-    padding-top: 10px;
-    padding-left: 5px;
-}
-.input-month, .input-day {
-    width: 30px;
-    padding-top: 10px;  
+.input-year,
+.input-month,
+.input-day {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px dashed var(--textModal);
+  background: none;
+  text-align: center;
+  font-family: "Kaushan Script", cursive;
+  color: var(--textModal);
 }
 
+.input-year {
+  width: 50px;
+  padding-top: 10px;
+  padding-left: 5px;
+}
+.input-month,
+.input-day {
+  width: 30px;
+  padding-top: 10px;
+}
 
 .slash {
-    /* font-size: 5px; */
-    font-weight: bold;
-    font-size: 25px;
-    
+  /* font-size: 5px; */
+  font-weight: bold;
+  font-size: 25px;
 }
-.mini-container{
-    border: 2px solid black;
-    margin-top: 0.5rem
+.mini-container {
+  border: 2px solid black;
+  margin-top: 0.5rem;
 }
-.mini-btns-cont{
-    display: flex;
-    justify-content: space-between;
-   
+.mini-btns-cont {
+  display: flex;
+  justify-content: space-between;
 }
-.mini-month-btn, .mini-year-btn{
-    border: none;
-    background: transparent;
-    font-family: "Lacquer", system-ui;
-    font-size: 1rem;
-    color:var(--textModal)
-}
-
-.mini-year-btn{
-   font-family: "Kaushan Script", cursive;
-    font-size: 1.2rem;
-    
+.mini-month-btn,
+.mini-year-btn {
+  border: none;
+  background: transparent;
+  font-family: "Lacquer", system-ui;
+  font-size: 1rem;
+  color: var(--textModal);
 }
 
-.mini-day-grid-btn{
-    font-size: 0;
-    text-align: center;
-    border-bottom: 1px solid var(--darker);
-    margin-bottom: 0.5rem;
-}
-.mini-day-grid-btn::first-letter{
-    font-size: 1rem;
-    font-family: "Lacquer", system-ui;
-}
-.mini-boxes-container{
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-   
+.mini-year-btn {
+  font-family: "Kaushan Script", cursive;
+  font-size: 1.2rem;
 }
 
-.mini-inside-box{
-   border: none;
-    width: 1rem;
-    padding: 0;
+.mini-day-grid-btn {
+  font-size: 0;
+  text-align: center;
+  border-bottom: 1px solid var(--darker);
+  margin-bottom: 0.5rem;
 }
-.mini-number-box{
-    border: none;
-    background:none;
-    color: var(--textModal);
-    width: 100%;
-    padding: 0;
-   
+.mini-day-grid-btn::first-letter {
+  font-size: 1rem;
+  font-family: "Lacquer", system-ui;
 }
-
-.mini-set{
- background-color: var(--background);
-}
-.mini-offset{
- background-color: var(--offsetMini);
+.mini-boxes-container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
 }
 
-.mini-today{
-    background-color: var(--darker);
+.mini-inside-box {
+  border: none;
+  width: 1rem;
+  padding: 0;
+}
+.mini-number-box {
+  border: none;
+  background: none;
+  color: var(--textModal);
+  width: 100%;
+  padding: 0;
 }
 
-.month-lists, .year-lists{
-    display: none;
-    position: absolute;
-    top: 10%;
-    width: 5.5rem;
-    max-height: 100px;
-    overflow-y: auto;
-    background:var(--darker);
-    border: 1px solid #ccc;
-    z-index: 10;
+.mini-set {
+  background-color: var(--background);
 }
-.month-lists{
-    left: -5.5rem;
-  
-}
-.year-lists{
-    left: 100%;
-   
+.mini-offset {
+  background-color: var(--offsetMini);
 }
 
-.show-carousel{
-    display: block;
-}
-.mini-month-item, .mini-year-item {
-    padding: 4px 4px;
-    cursor: pointer;
-    color: var(--textModal);
+.mini-today {
+  background-color: var(--darker);
 }
 
-.mini-month-item:hover, .mini-year-item:hover {
-    background-color: #f0f0f0;
-    color: var(--background);
+.month-lists,
+.year-lists {
+  display: none;
+  position: absolute;
+  top: 10%;
+  width: 5.5rem;
+  max-height: 100px;
+  overflow-y: auto;
+  background: var(--darker);
+  border: 1px solid #ccc;
+  z-index: 10;
 }
-.mini-actions{
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    margin-top: 0.5rem;
+.month-lists {
+  left: -5.5rem;
 }
-.mini-cancel-btn, .mini-save-btn{
-    border: none;
-    font-family: "Lacquer", system-ui ;
-    font-weight: bold;
-    background-color: var(--textModal);
-    color: var(--background);
-    border-radius: 10px;
+.year-lists {
+  left: 100%;
 }
-.mini-todo-container-month{
-    display: none;
+
+.show-carousel {
+  display: block;
 }
-@media screen and (min-width:992px) {
-.month-lists, .year-lists{
+.mini-month-item,
+.mini-year-item {
+  padding: 4px 4px;
+  cursor: pointer;
+  color: var(--textModal);
+}
+
+.mini-month-item:hover,
+.mini-year-item:hover {
+  background-color: #f0f0f0;
+  color: var(--background);
+}
+.mini-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 0.5rem;
+}
+.mini-cancel-btn,
+.mini-save-btn {
+  border: none;
+  font-family: "Lacquer", system-ui;
+  font-weight: bold;
+  background-color: var(--textModal);
+  color: var(--background);
+  border-radius: 10px;
+}
+.mini-todo-container-month {
+  display: none;
+}
+@media screen and (min-width: 992px) {
+  .month-lists,
+  .year-lists {
     width: 8rem;
-}
-.month-lists{
+  }
+  .month-lists {
     left: -8rem;
-  
-}
-.year-lists{
+  }
+  .year-lists {
     left: 100%;
-   
-}
+  }
 
-    .mini-month-item, .mini-year-item {
+  .mini-month-item,
+  .mini-year-item {
     padding: 4px 8px;
-}
+  }
 }

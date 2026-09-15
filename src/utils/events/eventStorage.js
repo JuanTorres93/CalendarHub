@@ -1,18 +1,20 @@
-import { isValidDateString, isValidTimeString } from "../helpers/validationHelpers.js";
-import {createMessage} from "../helpers/createElement.js"
+import {
+  isValidDateString,
+  isValidTimeString,
+} from "../helpers/validationHelpers.js";
+import { createMessage } from "../helpers/createElement.js";
 import { modalEvents } from "../helpers/dom/eventModalDom.js";
- 
- export function getEvents(){
-   
-   try{
-      const storedEvents = localStorage.getItem("calendarEvents");
 
-      if(!storedEvents)return [];
+export function getEvents() {
+  try {
+    const storedEvents = localStorage.getItem("calendarEvents");
 
-        const parsedEvents = JSON.parse(storedEvents)
+    if (!storedEvents) return [];
 
-        if(!Array.isArray(parsedEvents))return [];
-        
+    const parsedEvents = JSON.parse(storedEvents);
+
+    if (!Array.isArray(parsedEvents)) return [];
+
     return parsedEvents.filter((event, index) => {
       const isValid = isValidEvent(event);
 
@@ -22,69 +24,63 @@ import { modalEvents } from "../helpers/dom/eventModalDom.js";
 
       return isValid;
     });
+  } catch (error) {
+    console.error("Unable to read calendar events from localStorage:", error);
+    return [];
+  }
+}
 
-    } catch(error){
-        console.error("Unable to read calendar events from localStorage:", error);
-        return []
-        
-    }
- }
-
- export function saveEventsInLocalStorage(events){
- 
-    if(!Array.isArray(events)){
-      createMessage(
+export function saveEventsInLocalStorage(events) {
+  if (!Array.isArray(events)) {
+    createMessage(
       "Salvataggio non riuscito: formato dei dati non valido.",
       modalEvents,
-      document.body
+      document.body,
     );
     return false;
-    };
+  }
 
-     const hasValidEvents = events.every(isValidEvent);
+  const hasValidEvents = events.every(isValidEvent);
 
-    if(!hasValidEvents){
-      createMessage(
-        "Salvataggio non riuscito: i dati degli eventi non sono validi.",
-        modalEvents,
-        document.body
-      )
-      return false
-    }
-
-    try {
-       localStorage.setItem("calendarEvents", JSON.stringify(events))
-       return true
-    } catch (error) {
-      console.error(
-      "Failed to save calendar events in localStorage:",
-      error
+  if (!hasValidEvents) {
+    createMessage(
+      "Salvataggio non riuscito: i dati degli eventi non sono validi.",
+      modalEvents,
+      document.body,
     );
+    return false;
+  }
+
+  try {
+    localStorage.setItem("calendarEvents", JSON.stringify(events));
+    return true;
+  } catch (error) {
+    console.error("Failed to save calendar events in localStorage:", error);
     createMessage(
       "Salvataggio non riuscito. Il browser non ha potuto memorizzare gli eventi.",
       modalEvents,
-      document.body
+      document.body,
     );
 
     return false;
-    } 
- }
+  }
+}
 
- export function deleteEventFromLocalStorage(currentId){
-    const events = getEvents() 
-    const updatedEvents = events.filter(event => event.id !== currentId)
-    
-    saveEventsInLocalStorage(updatedEvents)
- }
+export function deleteEventFromLocalStorage(currentId) {
+  const events = getEvents();
+  const updatedEvents = events.filter((event) => event.id !== currentId);
+
+  saveEventsInLocalStorage(updatedEvents);
+}
 
 function isValidEvent(event) {
   if (event === null || typeof event !== "object" || Array.isArray(event)) {
     return false;
   }
-  const isValidDate = isValidDateString(event.date)
-  const isValidTimeFrom = isValidTimeString(event.from)
-  const isValidTimeTo = isValidTimeString(event.to)
-  const hasValidRepeatData = isValidRepeatConfig(event.repeat)
+  const isValidDate = isValidDateString(event.date);
+  const isValidTimeFrom = isValidTimeString(event.from);
+  const isValidTimeTo = isValidTimeString(event.to);
+  const hasValidRepeatData = isValidRepeatConfig(event.repeat);
   if (
     typeof event.id !== "string" ||
     event.id.trim() === "" ||
@@ -105,8 +101,6 @@ function isValidEvent(event) {
   }
   return true;
 }
-
-
 
 function isValidRepeatConfig(value) {
   if (value === null) return true;

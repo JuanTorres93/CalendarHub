@@ -12,14 +12,14 @@ import { initToDobinds } from "./to-do-list/toDo.js";
 import { initNotifications } from "./utils/notifications/createNotifications.js";
 
 export function injectJavascriptToMainHtml() {
-  initCalendar()
-  initNavbar()
-  initOptionsBanner()
-  initTutorial()
-  initEventModal()
-  initiMiniCalendarInputs()
-  initToDobinds()
+  initCalendar();
+  initNavbar();
+  initOptionsBanner();
+  initTutorial();
+  initEventModal();
+  initiMiniCalendarInputs();
+  initToDobinds();
 
-  appready()
-  initNotifications()
+  appready();
+  initNotifications();
 }

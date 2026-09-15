@@ -19,4 +19,3 @@ dayjs.extend(isSameOrBefore);
 dayjs.locale("it-ch");
 
 export default dayjs;
-

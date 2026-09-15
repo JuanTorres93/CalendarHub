@@ -2,22 +2,22 @@
 
 /* CSS HEX */
 :root {
---darker: rgba(136, 13, 29, 0.925);
---darkerBtns: rgb(70, 7, 15);
---navBar: rgba(221, 45, 74, 0.801);
---body: rgba(242, 106, 140, 0.758);
---today: #f1436ed0;
---offset: rgba(244, 156, 187, 0.753);
---lighter: #d8e6d0;
---Rosi: rgba(243, 95, 120, 0.767);
---background:  #232323;
---offsetMini: #3d3a3a;
---textModal: rgb(247, 236, 218) ;
---timeCell: rgba(255, 235, 205, 0.836);
-/* shadows */
---light-shadow:-1px 2px 3px 1px black;
---strong-shadow:-2px 4px 10px 3px black;
---modal-shadow : 1px 2px 3px 1px rgba(109, 14, 27, 0.664);
+  --darker: rgba(136, 13, 29, 0.925);
+  --darkerBtns: rgb(70, 7, 15);
+  --navBar: rgba(221, 45, 74, 0.801);
+  --body: rgba(242, 106, 140, 0.758);
+  --today: #f1436ed0;
+  --offset: rgba(244, 156, 187, 0.753);
+  --lighter: #d8e6d0;
+  --Rosi: rgba(243, 95, 120, 0.767);
+  --background: #232323;
+  --offsetMini: #3d3a3a;
+  --textModal: rgb(247, 236, 218);
+  --timeCell: rgba(255, 235, 205, 0.836);
+  /* shadows */
+  --light-shadow: -1px 2px 3px 1px black;
+  --strong-shadow: -2px 4px 10px 3px black;
+  --modal-shadow: 1px 2px 3px 1px rgba(109, 14, 27, 0.664);
 }
 
 .lacquer-regular {
@@ -42,27 +42,26 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   width: 100%;
-  margin:0;
+  margin: 0;
 }
-
 
 button {
   cursor: pointer;
 }
 
-.missing-info-alert{
-    position: absolute;
-    z-index: 1001;
-    width: fit-content;
-    top : "";
-    left: "";
-    transform: translateY(-50%);
-    font-size: 1rem;
-    padding: 0.2rem 1rem 0;
-    background-color: var(--background);
-    color: var(--textModal);
-    box-shadow: var(--light-shadow);
-    border-radius: 9px;
+.missing-info-alert {
+  position: absolute;
+  z-index: 1001;
+  width: fit-content;
+  top: "";
+  left: "";
+  transform: translateY(-50%);
+  font-size: 1rem;
+  padding: 0.2rem 1rem 0;
+  background-color: var(--background);
+  color: var(--textModal);
+  box-shadow: var(--light-shadow);
+  border-radius: 9px;
 }
 
 .visually-hidden {
@@ -82,13 +81,13 @@ button {
     max-width: 1200px;
     margin: 0 auto;
   }
-  .missing-info-alert{
-      font-size: 1.4rem;
+  .missing-info-alert {
+    font-size: 1.4rem;
   }
 }
 
 @media screen and (max-width: 380px) {
-    .missing-info-alert{
-      font-size: 0.8rem;
+  .missing-info-alert {
+    font-size: 0.8rem;
   }
 }

@@ -3,38 +3,34 @@ const fromMinuteInput = document.querySelector(".input-minute.from");
 const toHourInput = document.querySelector(".input-hour.to");
 const toMinuteInput = document.querySelector(".input-minute.to");
 
+export const separateHourFromMinute = (time) => {
+  const hour = time.slice(0, 2);
+  const minute = time.slice(3, 5);
 
-export const separateHourFromMinute = (time)=>{
-    const hour = time.slice(0, 2)
-    const minute = time.slice(3, 5)
+  return {
+    hour: hour,
+    minute: minute,
+  };
+};
 
-    return {
-        hour : hour,
-        minute : minute
-    }
-}
+export const timeToMinutes = (time) => {
+  const { hour, minute } = separateHourFromMinute(time);
+  //Number ritorna il numero dalla stringa, moltiplico l'ora per 60, cosi da normalizzare l'unità di misura in minuti, perchè se no sarebbe come confrontare pere con banane
+  return Number(hour) * 60 + Number(minute);
+};
 
+export function setTimeUIAndDraft(timeDraft, type, time) {
+  const { hour, minute } = separateHourFromMinute(time);
 
-export const timeToMinutes = (time)=>{
-    const {hour, minute} = separateHourFromMinute(time)
-  //Number ritorna il numero dalla stringa, moltiplico l'ora per 60, cosi da normalizzare l'unità di misura in minuti, perchè se no sarebbe come confrontare pere con banane 
-    return Number(hour)*60 + Number(minute)
-}
+  if (type === "from") {
+    fromHourInput.value = hour;
+    fromMinuteInput.value = minute;
+  }
+  if (type === "to") {
+    toHourInput.value = hour;
+    toMinuteInput.value = minute;
+  }
 
-
-
-export function setTimeUIAndDraft(timeDraft,type, time){
-    const {hour, minute} = separateHourFromMinute(time)
-
-    if(type === "from"){
-        fromHourInput.value = hour
-        fromMinuteInput.value = minute
-    }
-      if (type === "to") {
-        toHourInput.value = hour;
-        toMinuteInput.value = minute;
-    }
-
-    timeDraft[type].hour = hour;
-    timeDraft[type].minute = minute;
+  timeDraft[type].hour = hour;
+  timeDraft[type].minute = minute;
 }

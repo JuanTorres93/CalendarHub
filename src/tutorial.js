@@ -1,15 +1,15 @@
 import { tutorialSlides } from "./utils/data/tutorialData.js";
-import createElement from "./utils/helpers/createElement.js"
+import createElement from "./utils/helpers/createElement.js";
 
-const TUTORIAL_KEY = "calendar_tutorial_seen"
+const TUTORIAL_KEY = "calendar_tutorial_seen";
 let currentSlide = 0;
 let tutorialOverlay = null;
 
-function createTutorialOverlay(){
-    const overlay = document.createElement("div")
-    overlay.classList.add("tutorial-overlay")
+function createTutorialOverlay() {
+  const overlay = document.createElement("div");
+  overlay.classList.add("tutorial-overlay");
 
-    overlay.innerHTML = `
+  overlay.innerHTML = `
     <article
      class="tutorial-modal"
      role="dialog"
@@ -45,98 +45,103 @@ function createTutorialOverlay(){
       </div>
     </article>
     `;
-    document.body.appendChild(overlay)
-    tutorialOverlay = overlay;
+  document.body.appendChild(overlay);
+  tutorialOverlay = overlay;
 
-  overlay.querySelector(".tutorial-close").addEventListener("click", finishTutorial);
+  overlay
+    .querySelector(".tutorial-close")
+    .addEventListener("click", finishTutorial);
   overlay.querySelector(".tutorial-prev").addEventListener("click", prevSlide);
   overlay.querySelector(".tutorial-next").addEventListener("click", nextSlide);
-  overlay.querySelector(".tutorial-navigation").addEventListener("click", goToChapter)
-
+  overlay
+    .querySelector(".tutorial-navigation")
+    .addEventListener("click", goToChapter);
 }
-function renderNavTutorial(){
- const nav = document.querySelector(".tutorial-navigation")
+function renderNavTutorial() {
+  const nav = document.querySelector(".tutorial-navigation");
   nav.innerHTML = "";
   const getChapters = Array.from(
-    new Set(
-      tutorialSlides.map(item => item.chapter)
-    )
-  )
-  getChapters.forEach(chapter =>{
-    createElement(nav, "tutorial-navigation-btns", chapter, "button", { attributes : {type : "button"}, dataset: { chapter }} )
-  })
+    new Set(tutorialSlides.map((item) => item.chapter)),
+  );
+  getChapters.forEach((chapter) => {
+    createElement(nav, "tutorial-navigation-btns", chapter, "button", {
+      attributes: { type: "button" },
+      dataset: { chapter },
+    });
+  });
 }
 
-function renderTutorial(index){
-    const slide = tutorialSlides[index]
-    if (!slide || !tutorialOverlay) return;
+function renderTutorial(index) {
+  const slide = tutorialSlides[index];
+  if (!slide || !tutorialOverlay) return;
 
-    tutorialOverlay.querySelector(".tutorial-image").src = slide.image
-    tutorialOverlay.querySelector(".tutorial-title").innerText = slide.title;
-    tutorialOverlay.querySelector(".tutorial-description").innerText = slide.text;
+  tutorialOverlay.querySelector(".tutorial-image").src = slide.image;
+  tutorialOverlay.querySelector(".tutorial-title").innerText = slide.title;
+  tutorialOverlay.querySelector(".tutorial-description").innerText = slide.text;
 
-    const prevBtn = tutorialOverlay.querySelector(".tutorial-prev");
-    const nextBtn = tutorialOverlay.querySelector(".tutorial-next");
+  const prevBtn = tutorialOverlay.querySelector(".tutorial-prev");
+  const nextBtn = tutorialOverlay.querySelector(".tutorial-next");
 
-    prevBtn.disabled = index === 0;
-    nextBtn.innerText = index === tutorialSlides.length - 1 ? "Fine" : "Avanti"
-
+  prevBtn.disabled = index === 0;
+  nextBtn.innerText = index === tutorialSlides.length - 1 ? "Fine" : "Avanti";
 }
 
-export function openTutorial(){
-    currentSlide = 0
-    if(!tutorialOverlay){
-        createTutorialOverlay()
-    }
-    tutorialOverlay.classList.add("show")
-    renderTutorial(currentSlide)
-    renderNavTutorial()
-    highLightCurrentChapter()
+export function openTutorial() {
+  currentSlide = 0;
+  if (!tutorialOverlay) {
+    createTutorialOverlay();
+  }
+  tutorialOverlay.classList.add("show");
+  renderTutorial(currentSlide);
+  renderNavTutorial();
+  highLightCurrentChapter();
 }
-function nextSlide(){
-    if(currentSlide >= tutorialSlides.length - 1){
-        finishTutorial()
-        return;
-    }
-    currentSlide++;
-    renderTutorial(currentSlide)
-    highLightCurrentChapter()
-}
-
-function prevSlide(){
-    if(currentSlide === 0) return;
-    currentSlide--;
-    renderTutorial(currentSlide)
-    highLightCurrentChapter()
+function nextSlide() {
+  if (currentSlide >= tutorialSlides.length - 1) {
+    finishTutorial();
+    return;
+  }
+  currentSlide++;
+  renderTutorial(currentSlide);
+  highLightCurrentChapter();
 }
 
-function closeTutorial(){
-    if(!tutorialOverlay)return;
-    tutorialOverlay.classList.remove("show")
+function prevSlide() {
+  if (currentSlide === 0) return;
+  currentSlide--;
+  renderTutorial(currentSlide);
+  highLightCurrentChapter();
 }
-function goToChapter(e){
-  const btn = e.target.closest(".tutorial-navigation-btns")
-  if(btn){
-    const currentChapter = tutorialSlides.findIndex( item => item.chapter === btn.dataset.chapter)
-    if(currentChapter === -1)return
-    currentSlide = currentChapter
-    renderTutorial(currentSlide)
-     highLightCurrentChapter()
+
+function closeTutorial() {
+  if (!tutorialOverlay) return;
+  tutorialOverlay.classList.remove("show");
+}
+function goToChapter(e) {
+  const btn = e.target.closest(".tutorial-navigation-btns");
+  if (btn) {
+    const currentChapter = tutorialSlides.findIndex(
+      (item) => item.chapter === btn.dataset.chapter,
+    );
+    if (currentChapter === -1) return;
+    currentSlide = currentChapter;
+    renderTutorial(currentSlide);
+    highLightCurrentChapter();
   }
 }
-function highLightCurrentChapter(){
-  const btns = tutorialOverlay.querySelectorAll(".tutorial-navigation-btns")
-  const current = tutorialSlides[currentSlide]
-  btns.forEach(btn => {
-    if(btn.classList.contains("active-chapter")){
-      btn.classList.remove("active-chapter")
-      btn.removeAttribute("aria-current")
+function highLightCurrentChapter() {
+  const btns = tutorialOverlay.querySelectorAll(".tutorial-navigation-btns");
+  const current = tutorialSlides[currentSlide];
+  btns.forEach((btn) => {
+    if (btn.classList.contains("active-chapter")) {
+      btn.classList.remove("active-chapter");
+      btn.removeAttribute("aria-current");
     }
-    if(btn.dataset.chapter === current.chapter){
-      btn.classList.add("active-chapter")
-      btn.setAttribute("aria-current", "true")
+    if (btn.dataset.chapter === current.chapter) {
+      btn.classList.add("active-chapter");
+      btn.setAttribute("aria-current", "true");
     }
-  })
+  });
 }
 
 function finishTutorial() {
@@ -144,14 +149,14 @@ function finishTutorial() {
   closeTutorial();
 }
 
-export function resetTutorial(){
-    localStorage.removeItem(TUTORIAL_KEY)
-    openTutorial()
+export function resetTutorial() {
+  localStorage.removeItem(TUTORIAL_KEY);
+  openTutorial();
 }
 
-export function initTutorial(){
-    const hasSeentutorial = localStorage.getItem(TUTORIAL_KEY)
-    if(!hasSeentutorial){
-        openTutorial()
-    }  
+export function initTutorial() {
+  const hasSeentutorial = localStorage.getItem(TUTORIAL_KEY);
+  if (!hasSeentutorial) {
+    openTutorial();
+  }
 }

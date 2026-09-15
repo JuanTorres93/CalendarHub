@@ -1,26 +1,23 @@
-function getDropDownPosition(conatinerElement, fatherContainer){
-    let left;
-    
-    const viewportWidth = window.innerWidth
-   
+function getDropDownPosition(conatinerElement, fatherContainer) {
+  let left;
 
-    const containerRect = conatinerElement.getBoundingClientRect()
-    const fatherRect = fatherContainer.getBoundingClientRect()
+  const viewportWidth = window.innerWidth;
 
-    const containerWidth = containerRect.width
-    const fatherWidth = fatherRect.width;
+  const containerRect = conatinerElement.getBoundingClientRect();
+  const fatherRect = fatherContainer.getBoundingClientRect();
 
- 
+  const containerWidth = containerRect.width;
+  const fatherWidth = fatherRect.width;
 
-   const hasSpaceRight = fatherRect.right + containerWidth  <= viewportWidth;
-    
-    if(hasSpaceRight){
-        left = fatherWidth + 2
-    } else {
-        left = -containerWidth
-    }
+  const hasSpaceRight = fatherRect.right + containerWidth <= viewportWidth;
 
-    conatinerElement.style.left =`${left}px`
+  if (hasSpaceRight) {
+    left = fatherWidth + 2;
+  } else {
+    left = -containerWidth;
+  }
+
+  conatinerElement.style.left = `${left}px`;
 }
 
-export default getDropDownPosition
+export default getDropDownPosition;

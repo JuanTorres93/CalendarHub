@@ -1,44 +1,43 @@
-.todo-layer{
-    position: fixed;
-    inset: 0;
-    z-index: 399;
-    background: rgba(71, 70, 70, 0.404); 
-    display: none;
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
+.todo-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 399;
+  background: rgba(71, 70, 70, 0.404);
+  display: none;
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
 }
 
 .todo-panel {
-    position: fixed;
-    z-index: 400;
-    top: 10%;
-    border-radius: 20px;
-    background-image: url("/images/righe.png");
-    background-size: 20rem;
-    opacity: 0.95;
-    border: 2px solid black;
-    box-shadow: 4px 4px 10px black;
-    box-sizing: border-box;
-    width: 20rem;
-    min-height: 30rem;
-    max-height: 80dvh;
-    overflow-y: scroll;
-    display: none;
+  position: fixed;
+  z-index: 400;
+  top: 10%;
+  border-radius: 20px;
+  background-image: url("/images/righe.png");
+  background-size: 20rem;
+  opacity: 0.95;
+  border: 2px solid black;
+  box-shadow: 4px 4px 10px black;
+  box-sizing: border-box;
+  width: 20rem;
+  min-height: 30rem;
+  max-height: 80dvh;
+  overflow-y: scroll;
+  display: none;
 }
 
-
 .todo-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
 }
 
 .title-main-todo {
-    font-family: "Lacquer", system-ui;
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 12px;
+  font-family: "Lacquer", system-ui;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 12px;
 }
 
 .close-todo-btn,
@@ -46,232 +45,229 @@
 .check-btn,
 .delete-item-todo-btn,
 .add-todo-btn {
-    border: none;
-    background: transparent;
-    cursor: pointer;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 }
 
 .close-todo-btn,
 .delete-list-btn {
-    font-size: 1.2rem;
-    font-weight: bold;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
-.delete-list-btn{
-    color: var(--darker);
+.delete-list-btn {
+  color: var(--darker);
 }
 
 .my-list-row {
-    display: flex;
-    justify-content: space-around;
-    font-family: "Lacquer", system-ui;
+  display: flex;
+  justify-content: space-around;
+  font-family: "Lacquer", system-ui;
 }
 
 .my-list-text {
-    font-size: 1.2rem;
-    margin-top: 10px;
+  font-size: 1.2rem;
+  margin-top: 10px;
 }
 
 .my-list-buttons-container {
-    padding-top: 6px;
+  padding-top: 6px;
 }
 
 .new-list {
-    border: 2px solid black;
-    border-radius: 7px;
-    width: 3rem;
-    height: 2rem;
-    font-family: "Lacquer", system-ui;
-    font-weight: bold;
+  border: 2px solid black;
+  border-radius: 7px;
+  width: 3rem;
+  height: 2rem;
+  font-family: "Lacquer", system-ui;
+  font-weight: bold;
 }
 
 .to-do-title {
-    width: 100%;
-    display: none;
-    align-items: center;
-    font-family: "Kaushan Script", cursive;
-    font-size: 1.5rem;
-    justify-content: space-around;
+  width: 100%;
+  display: none;
+  align-items: center;
+  font-family: "Kaushan Script", cursive;
+  font-size: 1.5rem;
+  justify-content: space-around;
 }
 .show-title-header {
-    display: flex;
+  display: flex;
 }
 
 .date-to-do {
-    margin:  0;
+  margin: 0;
 }
 
 .todo-input-title {
-    width: 50%;
-    margin: 0;
-    overflow: hidden;
-    border: none;
-    border-bottom: 2px solid black;
-    font-family: "Kaushan Script", cursive;
-    font-size: 1.4rem;
-    background: transparent;
+  width: 50%;
+  margin: 0;
+  overflow: hidden;
+  border: none;
+  border-bottom: 2px solid black;
+  font-family: "Kaushan Script", cursive;
+  font-size: 1.4rem;
+  background: transparent;
 }
 
 .todo-items-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-     margin-top: 0.5rem;
-     
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
 }
 
 .todo-item {
-    padding: 0 0.5rem;
-    display: grid;
-    grid-template-columns: 3rem 1fr 2rem;
-    align-items: center;
-    font-family: "Kaushan Script", cursive;
-    font-size: 1.2rem;
-    font-weight: bold;
-   
+  padding: 0 0.5rem;
+  display: grid;
+  grid-template-columns: 3rem 1fr 2rem;
+  align-items: center;
+  font-family: "Kaushan Script", cursive;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .title-item {
-    margin-left: 15px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid black;
+  margin-left: 15px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid black;
 }
 
 .todo-check-icon,
 .todo-delete-icon {
-    width: 26px;
-    height: 26px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+  width: 26px;
+  height: 26px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .check-btn .todo-check-icon path {
-    opacity: 0;
+  opacity: 0;
 }
 
 .check-btn.checked .todo-check-icon path {
-    opacity: 1;
+  opacity: 1;
 }
 
 .delete-item-todo-btn {
-    display: none;
+  display: none;
 }
 
 .delete-item-todo-btn.show-delete {
-    display: block;
+  display: block;
 }
 
 .add-todo-row {
-    display: none;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    position: relative;
+  display: none;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  position: relative;
 }
 .show-add-new-item {
-    display: flex;
+  display: flex;
 }
 .todo-input {
-    flex: 1;
-    border-left: none;
-    border-top: none;
-    border-right: none;
-    background: transparent;
+  flex: 1;
+  border-left: none;
+  border-top: none;
+  border-right: none;
+  background: transparent;
 }
-.add-todo-btn{
-    border: 1px solid black;
-    font-size: 1.2rem;
-    border-radius: 30px;
+.add-todo-btn {
+  border: 1px solid black;
+  font-size: 1.2rem;
+  border-radius: 30px;
 }
 .todo-progress {
-    display: none;
-     font-family: "Kaushan Script", cursive;
-     margin-left: 2rem;
-     font-size: 0.8rem;
-     
+  display: none;
+  font-family: "Kaushan Script", cursive;
+  margin-left: 2rem;
+  font-size: 0.8rem;
 }
 
 .show-modal {
-    display: block;
+  display: block;
 }
-.contextual-menu{
-    position: absolute;
-    background: var(--textModal);
-    min-width: 2rem;
-    top: 0;
-    z-index: 40;
-    max-height: 5rem;
-    overflow-y: auto;
-    scrollbar-width: none;
-    border-radius: 8px;
-    border: 2px solid black;
-    box-sizing: border-box;
+.contextual-menu {
+  position: absolute;
+  background: var(--textModal);
+  min-width: 2rem;
+  top: 0;
+  z-index: 40;
+  max-height: 5rem;
+  overflow-y: auto;
+  scrollbar-width: none;
+  border-radius: 8px;
+  border: 2px solid black;
+  box-sizing: border-box;
 }
-.contextual-menu-list{
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
+.contextual-menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
 }
 .contextual-menu-list li {
-    border: 1px solid black;
-    overflow-x: hidden;
-    padding: 0.1rem;
-    height: 1.2rem;
-    overflow-y: hidden;
-      font-family: "Kaushan Script", cursive;
-      width: 2.5rem;
-      cursor: pointer;
-      text-align: center;
+  border: 1px solid black;
+  overflow-x: hidden;
+  padding: 0.1rem;
+  height: 1.2rem;
+  overflow-y: hidden;
+  font-family: "Kaushan Script", cursive;
+  width: 2.5rem;
+  cursor: pointer;
+  text-align: center;
 }
 .todo-btn-header {
-    position: relative;
-    border: none;
-    width: 1.6rem;
-    background: rgba(94, 91, 91, 0.342);
-    border-radius: 50px;
+  position: relative;
+  border: none;
+  width: 1.6rem;
+  background: rgba(94, 91, 91, 0.342);
+  border-radius: 50px;
 }
 
-.todo-count{
-    /* border: 1px solid black; */
-    border-radius: 40px;
-    padding: 0.1rem;
-    width: 0.8rem;
-    background-color: var(--darker);
-    color: var(--textModal);
-    font-size: 0.5rem;
-    font-family: "Kaushan Script", cursive;
-    position: absolute;
-    bottom: 0;
-    left: 0;
+.todo-count {
+  /* border: 1px solid black; */
+  border-radius: 40px;
+  padding: 0.1rem;
+  width: 0.8rem;
+  background-color: var(--darker);
+  color: var(--textModal);
+  font-size: 0.5rem;
+  font-family: "Kaushan Script", cursive;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
-.todo-icon{
-font-size: 1.1rem;
+.todo-icon {
+  font-size: 1.1rem;
 }
 
-@media screen and (min-width:992px) {
-    .todo-panel{
-        scrollbar-width: none;
-    }
-    .contextual-menu{
-        width: 7rem;
-    }
-    .contextual-menu-list li {
-      width: 7rem;
-}
-.contextual-menu-list li:hover{
+@media screen and (min-width: 992px) {
+  .todo-panel {
+    scrollbar-width: none;
+  }
+  .contextual-menu {
+    width: 7rem;
+  }
+  .contextual-menu-list li {
+    width: 7rem;
+  }
+  .contextual-menu-list li:hover {
     background-color: var(--offsetMini);
     color: var(--textModal);
-}
-.todo-btn-header {
+  }
+  .todo-btn-header {
     width: 2.2rem;
-}
-.todo-count{
+  }
+  .todo-count {
     width: 1rem;
     font-size: 0.7rem;
-}
-.todo-icon{
+  }
+  .todo-icon {
     font-size: 1.5rem;
-}
+  }
 }

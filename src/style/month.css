@@ -1,141 +1,129 @@
-
-
-#month-body{
-    width: 100%;
-    box-sizing: border-box; /*larghezza e altezza includono anche padding e bordo, il contenuto si restringe automaticamente, assicura che il layout resti allineato */  
+#month-body {
+  width: 100%;
+  box-sizing: border-box; /*larghezza e altezza includono anche padding e bordo, il contenuto si restringe automaticamente, assicura che il layout resti allineato */
 }
 .month-view {
-    display: none;
+  display: none;
 }
 
 .show-section {
-    display:block;
-   
+  display: block;
 }
 
-.day-grid  {
-
- display: grid;  
- grid-template-columns: repeat(7, 1fr);
+.day-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
 }
 .day-grid-btn {
-      background-color: var(--lighter);
-    font-family: "Lacquer", system-ui;
-    font-size: 0;
-    font-weight: bold;  
-    text-align: center;
-     border: 2px solid black;
-    
-     z-index: 10; 
-}
-.day-grid-btn::first-letter{
-    font-size: 1.5rem;
-}
+  background-color: var(--lighter);
+  font-family: "Lacquer", system-ui;
+  font-size: 0;
+  font-weight: bold;
+  text-align: center;
+  border: 2px solid black;
 
+  z-index: 10;
+}
+.day-grid-btn::first-letter {
+  font-size: 1.5rem;
+}
 
 .offset {
-    background-color: var(--offset);
-     z-index: 1;
+  background-color: var(--offset);
+  z-index: 1;
 }
-.set{
-
-    background-color: var(--body);
-     z-index: 1;
+.set {
+  background-color: var(--body);
+  z-index: 1;
 }
-.today{
-    background-color:  var(--today);
+.today {
+  background-color: var(--today);
 }
 .selected {
-    background-color: var(--navBar);
+  background-color: var(--navBar);
 }
 
 .hide {
-    display: none;
+  display: none;
 }
 
 .boxes-container {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-   height: calc(100vh - 8rem);
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  height: calc(100vh - 8rem);
 }
 
-
-div.box-grid  {
-    position: relative;
-    border: 1px solid black;
-    display:flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 2px; 
-    z-index: 10;
+div.box-grid {
+  position: relative;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 2px;
+  z-index: 10;
 }
 
 .inside-box {
-    width: 1.2rem;
-    border: 1px solid black;
-    border-radius: 10px;
-    background: white;
-    padding: 0;
+  width: 1.2rem;
+  border: 1px solid black;
+  border-radius: 10px;
+  background: white;
+  padding: 0;
 }
 .number-box {
-    font-size: 0.9rem;
-    font-family: "Kaushan Script", cursive;
-    font-weight: bold; 
-    border: none;
-    background: none;
-    padding: 0;
-    width: 100%;
+  font-size: 0.9rem;
+  font-family: "Kaushan Script", cursive;
+  font-weight: bold;
+  border: none;
+  background: none;
+  padding: 0;
+  width: 100%;
 }
-.fist-row-month{
-    width: 100%;
-    display: flex ;
-    justify-content: space-between;
+.fist-row-month {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 .todo-container-month {
-    position: relative;
-    background: none;
-    border: none;
-    padding: 0;
+  position: relative;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .show-todo-btn {
-    display: block;
+  display: block;
 }
-
 
 @media screen and (min-width: 992px) {
-.boxes-container {
-
-   height: 0;
-}
-    .day-grid-btn {
+  .boxes-container {
+    height: 0;
+  }
+  .day-grid-btn {
     font-size: 1.3rem;
-    font-weight: normal;  
+    font-weight: normal;
     border: 2px solid black;
     height: 2.5rem;
-     z-index: 10; 
-}
+    z-index: 10;
+  }
 
-div.box-grid  {
-height: 8rem;
-}
-.inside-box {
+  div.box-grid {
+    height: 8rem;
+  }
+  .inside-box {
     width: 2rem;
     border: 2px solid black;
-    border-radius: 100px;   
-}
+    border-radius: 100px;
+  }
 
-.inside-box:hover{
+  .inside-box:hover {
     transform: scale(1.2);
     background-color: var(--offsetMini);
-}
-.number-box {
+  }
+  .number-box {
     font-size: 1.2rem;
-}
-.number-box:hover{
+  }
+  .number-box:hover {
     color: var(--textModal);
-}
-
-
-
+  }
 }

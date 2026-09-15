@@ -1,78 +1,78 @@
 import {
-   notificationPermissionBtn,
-   actionBtns,
-   notificationIconOff,
-   notificationIconOn
-   } from "../helpers/dom/mainCalendarDom.js";
+  notificationPermissionBtn,
+  actionBtns,
+  notificationIconOff,
+  notificationIconOn,
+} from "../helpers/dom/mainCalendarDom.js";
 
 import {
-    requestNotificationPermission,
-     startNotificationScheduler,
-     stopNotificationScheduler,
-} from "./notificationManager.js"
+  requestNotificationPermission,
+  startNotificationScheduler,
+  stopNotificationScheduler,
+} from "./notificationManager.js";
 
 import { createMessage } from "../helpers/createElement.js";
 
 import {
-    getNotificationEnabled,
-    saveNotificationEnabled
-} from "./notificationPreferencesStorage.js"
+  getNotificationEnabled,
+  saveNotificationEnabled,
+} from "./notificationPreferencesStorage.js";
 
 let notificationsEnabled = false;
 
 async function enableNotifications() {
-    const permission = await requestNotificationPermission();
+  const permission = await requestNotificationPermission();
 
-    if(permission !== "granted") {
-        notificationsEnabled = false;
-        saveNotificationEnabled(false)
-        stopNotificationScheduler();
-        updateNotificationToggle();
-
-        return permission
-    }
-
-    const hasBeenSaved = saveNotificationEnabled(true);
-
-    if (!hasBeenSaved){
-        return "storage-error"
-    }
-
-    notificationsEnabled = true;
-    startNotificationScheduler();
-    updateNotificationToggle();
-
-    return "granted"
-}
-
-function disableNotifications() {
-    const hasBeenSaved = saveNotificationEnabled(false)
-
-    if (!hasBeenSaved){
-        return false;
-    }
-
+  if (permission !== "granted") {
     notificationsEnabled = false;
+    saveNotificationEnabled(false);
     stopNotificationScheduler();
     updateNotificationToggle();
 
-    return true
+    return permission;
+  }
+
+  const hasBeenSaved = saveNotificationEnabled(true);
+
+  if (!hasBeenSaved) {
+    return "storage-error";
+  }
+
+  notificationsEnabled = true;
+  startNotificationScheduler();
+  updateNotificationToggle();
+
+  return "granted";
 }
 
-function restoreNotifications(){
-    notificationsEnabled = getNotificationEnabled()
+function disableNotifications() {
+  const hasBeenSaved = saveNotificationEnabled(false);
 
-    if(!notificationsEnabled) {
-    updateNotificationToggle();    
-        return
-    }
+  if (!hasBeenSaved) {
+    return false;
+  }
 
-    const canStart = 
+  notificationsEnabled = false;
+  stopNotificationScheduler();
+  updateNotificationToggle();
+
+  return true;
+}
+
+function restoreNotifications() {
+  notificationsEnabled = getNotificationEnabled();
+
+  if (!notificationsEnabled) {
+    updateNotificationToggle();
+    return;
+  }
+
+  const canStart =
     "Notification" in window &&
     window.isSecureContext &&
     Notification.permission === "granted";
 
-    if (!canStart) {
+  if (!canStart) {
     notificationsEnabled = false;
     saveNotificationsEnabled(false);
     updateNotificationToggle();
@@ -91,13 +91,13 @@ async function handleNotificationToggle() {
       createMessage(
         "Le notifiche sono state disattivate.",
         actionBtns,
-        document.body
+        document.body,
       );
     } else {
       createMessage(
         "Non è stato possibile salvare la preferenza delle notifiche.",
         actionBtns,
-        document.body
+        document.body,
       );
     }
 
@@ -110,7 +110,7 @@ async function handleNotificationToggle() {
     createMessage(
       "Le notifiche sono state attivate.",
       actionBtns,
-      document.body
+      document.body,
     );
 
     return;
@@ -120,7 +120,7 @@ async function handleNotificationToggle() {
     createMessage(
       "Le notifiche sono bloccate nelle impostazioni del browser.",
       actionBtns,
-      document.body
+      document.body,
     );
 
     return;
@@ -130,7 +130,7 @@ async function handleNotificationToggle() {
     createMessage(
       "Il permesso per le notifiche non è stato concesso.",
       actionBtns,
-      document.body
+      document.body,
     );
 
     return;
@@ -140,7 +140,7 @@ async function handleNotificationToggle() {
     createMessage(
       "Questo browser non supporta le notifiche native.",
       actionBtns,
-      document.body
+      document.body,
     );
 
     return;
@@ -150,7 +150,7 @@ async function handleNotificationToggle() {
     createMessage(
       "Le notifiche richiedono una connessione sicura.",
       actionBtns,
-      document.body
+      document.body,
     );
 
     return;
@@ -160,7 +160,7 @@ async function handleNotificationToggle() {
     createMessage(
       "Non è stato possibile salvare la preferenza delle notifiche.",
       actionBtns,
-      document.body
+      document.body,
     );
 
     return;
@@ -169,45 +169,39 @@ async function handleNotificationToggle() {
   createMessage(
     "Non è stato possibile attivare le notifiche.",
     actionBtns,
-    document.body
+    document.body,
   );
 }
 
-function updateNotificationToggle(){
+function updateNotificationToggle() {
   const notificationsAreActive =
-  notificationsEnabled &&
-  "Notification" in window &&
-  Notification.permission === "granted";
+    notificationsEnabled &&
+    "Notification" in window &&
+    Notification.permission === "granted";
 
   notificationIconOff.classList.toggle(
     "notification-icon-hidden",
-    notificationsAreActive
+    notificationsAreActive,
   );
 
   notificationIconOn.classList.toggle(
     "notification-icon-hidden",
-    !notificationsAreActive
+    !notificationsAreActive,
   );
-
 
   notificationPermissionBtn.setAttribute(
     "aria-pressed",
-    String(notificationsAreActive)
+    String(notificationsAreActive),
   );
 
   notificationPermissionBtn.setAttribute(
     "aria-label",
-    notificationsAreActive
-      ? "Disattiva notifiche"
-      : "Attiva notifiche"
+    notificationsAreActive ? "Disattiva notifiche" : "Attiva notifiche",
   );
 }
 
 export function initNotifications() {
   restoreNotifications();
 
-  notificationPermissionBtn.addEventListener(
-    "click",
-    handleNotificationToggle
-  );
+  notificationPermissionBtn.addEventListener("click", handleNotificationToggle);
 }

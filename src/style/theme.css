@@ -1,17 +1,18 @@
- #prev-layer, #next-layer{
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
+#prev-layer,
+#next-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 
-    /* object-fit: cover; */
-  
+  /* object-fit: cover; */
 }
 
 /* #theme-background {
     opacity: 1;
 } */
 
-#prev-layer, #next-layer{
-    opacity: 0;
+#prev-layer,
+#next-layer {
+  opacity: 0;
 }

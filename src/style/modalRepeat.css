@@ -1,222 +1,220 @@
-.repeat-overlay{
-    position: fixed;
-    inset: 0; /*prende tutto lo spazio disponiile da top 0 a left 0*/
-    background: rgba(0, 0, 0, 0.2);
-    /* backdrop-filter: blur(1px);
+.repeat-overlay {
+  position: fixed;
+  inset: 0; /*prende tutto lo spazio disponiile da top 0 a left 0*/
+  background: rgba(0, 0, 0, 0.2);
+  /* backdrop-filter: blur(1px);
     -webkit-backdrop-filter: blur(2px); */
-    z-index: 100;
-    display: none;
+  z-index: 100;
+  display: none;
 }
-.show-repeat-overlay{
-    display: block;
-}
-
-.modal-repeat{
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 3px solid black;
-    z-index: 200;
-     background: var(--textModal);
-    color: currentColor;
-    border-radius: 15px;
-    padding: 0.5rem;   
-    width: 22rem;
-    box-shadow: var(--light-shadow);
-    height: fit-content;
-    font-family: "Lacquer", system-ui;
-    font-weight: bold;
-}
-.show-repeat-modal{
-    display: flex;
-    flex-direction: column;
+.show-repeat-overlay {
+  display: block;
 }
 
-.repeat-mode-container{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    position: relative;
+.modal-repeat {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid black;
+  z-index: 200;
+  background: var(--textModal);
+  color: currentColor;
+  border-radius: 15px;
+  padding: 0.5rem;
+  width: 22rem;
+  box-shadow: var(--light-shadow);
+  height: fit-content;
+  font-family: "Lacquer", system-ui;
+  font-weight: bold;
 }
-.repeat-mode-btn{
-    width: fit-content;
-    /* height: 1.5rem; */
-  
-    font-family: "Lacquer", system-ui;
-    min-width: 3rem;
-    min-height: 2rem;
-     font-size: 1rem;
-    border-radius: 10px;
-        box-shadow: var(--light-shadow);
-    background: var(--background);
-    color: var(--textModal);
+.show-repeat-modal {
+  display: flex;
+  flex-direction: column;
 }
 
-.repeat-mode-list{
-    list-style: none;
-    padding: 0.2rem;
-    display: none;
-    position: absolute;
-    margin: 0;
-    left: 25%;
-    /* transform: translateX(-50%); */
-    background-color: var(--textModal);
-    color:black;
-    border-radius: 10px;
-    border: 3px solid black;
-    width: 10rem;
+.repeat-mode-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+}
+.repeat-mode-btn {
+  width: fit-content;
+  /* height: 1.5rem; */
+
+  font-family: "Lacquer", system-ui;
+  min-width: 3rem;
+  min-height: 2rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  box-shadow: var(--light-shadow);
+  background: var(--background);
+  color: var(--textModal);
+}
+
+.repeat-mode-list {
+  list-style: none;
+  padding: 0.2rem;
+  display: none;
+  position: absolute;
+  margin: 0;
+  left: 25%;
+  /* transform: translateX(-50%); */
+  background-color: var(--textModal);
+  color: black;
+  border-radius: 10px;
+  border: 3px solid black;
+  width: 10rem;
 }
 .repeat-mode-list li {
-    border-bottom: 1px solid black;
-    cursor: pointer;
-    width: 100%;
+  border-bottom: 1px solid black;
+  cursor: pointer;
+  width: 100%;
 }
 
-.show-mode-list{
-    display: block;
+.show-mode-list {
+  display: block;
 }
-.repeat-intervall-container{
-    display: none;
-    justify-content: space-around;
-    align-items: center;
+.repeat-intervall-container {
+  display: none;
+  justify-content: space-around;
+  align-items: center;
 }
-.intervall-text-container{
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+.intervall-text-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
-.intervall-input{
-    width: 1.5rem;
-    border-radius: 10px;
-    text-align: center;
+.intervall-input {
+  width: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
 }
-.weekly-repetion-container{
-    display: none;
+.weekly-repetion-container {
+  display: none;
 }
-.show-repat-section{
-    display: flex;
-    gap: 1rem;
+.show-repat-section {
+  display: flex;
+  gap: 1rem;
 }
-.weekly-repetion-list{
-    list-style: none;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+.weekly-repetion-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
-.weekly-repetion-item{
-    border: 2px solid black;
-    box-shadow: var(--light-shadow);
-    background-color: var(--textModal);
-    color: black;
-    width: 1rem;
-    text-align: center;
-    border-radius: 20px;
-    cursor: pointer;
+.weekly-repetion-item {
+  border: 2px solid black;
+  box-shadow: var(--light-shadow);
+  background-color: var(--textModal);
+  color: black;
+  width: 1rem;
+  text-align: center;
+  border-radius: 20px;
+  cursor: pointer;
 }
-.weekly-repetion-item-selected{
-    color: var(--textModal);
-    background-color: black;
+.weekly-repetion-item-selected {
+  color: var(--textModal);
+  background-color: black;
 }
-.end-repeat-event-container{
-    display: none;
-    justify-content: space-around;
-
+.end-repeat-event-container {
+  display: none;
+  justify-content: space-around;
 }
-.open-miniCalendar-repeation-container{
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+.open-miniCalendar-repeation-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
-.open-miniCalendar-repeation, .open-miniCalendar-custom-date{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 3rem;
-    height: 2rem;
-    font-size: 1.2rem;
-    border-radius: 10px;
-    font-family: "Lacquer", system-ui;
-    box-shadow: var(--light-shadow);
-    background: var(--background);
-    padding: 0;
+.open-miniCalendar-repeation,
+.open-miniCalendar-custom-date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  height: 2rem;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  font-family: "Lacquer", system-ui;
+  box-shadow: var(--light-shadow);
+  background: var(--background);
+  padding: 0;
 }
-.end-repeation-event-date{
-    font-family: "Joti One", serif;
-    text-transform: capitalize;
-}
-
-.custom-dates-container{
-    display: none;
-    flex-direction: column;
-    gap: 0.5rem;
+.end-repeation-event-date {
+  font-family: "Joti One", serif;
+  text-transform: capitalize;
 }
 
-.open-custom-date-container{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 1rem;
+.custom-dates-container {
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-
-.custom-dates-list{
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
+.open-custom-date-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1rem;
 }
 
-.custom-date-item{
-    display: flex;
-    gap: 0.5rem;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--textModal);
-    color: black;
-    border: 2px solid black;
-    border-radius: 10px;
-    padding: 0.2rem 0.5rem;
-    box-shadow: var(--light-shadow);
-    font-family: "Joti One", serif;
-    text-transform: capitalize;
+.custom-dates-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
-.remove-custom-date{
-    font-size: 1.2rem;
-    border-radius: 50%;
-    cursor: pointer;
-    font-family: "Lacquer", system-ui;
+.custom-date-item {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--textModal);
+  color: black;
+  border: 2px solid black;
+  border-radius: 10px;
+  padding: 0.2rem 0.5rem;
+  box-shadow: var(--light-shadow);
+  font-family: "Joti One", serif;
+  text-transform: capitalize;
 }
 
-
-.close-repeat{
-    display: flex;
-    justify-content: space-around;
-    align-items: center ;
-}
-.btn{
-    border-radius: 8px;
-    box-shadow: var(--light-shadow);
-    font-family: "Lacquer", system-ui;
-}
-.show-repeat-section{
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+.remove-custom-date {
+  font-size: 1.2rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-family: "Lacquer", system-ui;
 }
 
-@media screen and (min-width:992px){
-    .modal-repeat{
+.close-repeat {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.btn {
+  border-radius: 8px;
+  box-shadow: var(--light-shadow);
+  font-family: "Lacquer", system-ui;
+}
+.show-repeat-section {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+@media screen and (min-width: 992px) {
+  .modal-repeat {
     /* bottom: 0;
     left: -300px; */
-}
-.repeat-mode-list li:hover{
+  }
+  .repeat-mode-list li:hover {
     background-color: black;
     color: var(--textModal);
-}
+  }
 }

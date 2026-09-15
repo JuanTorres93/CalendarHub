@@ -1,6 +1,6 @@
 /*usiamo modal overlay da modalEvent*/
 .option-banner-container {
- width: 90dvw;
+  width: 90dvw;
   min-height: 8rem;
   height: fit-content;
   overflow-y: auto;
@@ -13,72 +13,71 @@
   box-sizing: border-box;
 }
 /*con currentColor ripesco il colore passato al banner tramite variabile*/
-.info-wrapper{
+.info-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   min-height: 9rem;
 }
-.info-title{
-display: flex;
-align-items: center;
-height: fit-content;
-gap: 1rem;
+.info-title {
+  display: flex;
+  align-items: center;
+  height: fit-content;
+  gap: 1rem;
 }
-.info-title, .text-background{
+.info-title,
+.text-background {
   font-size: 1.8rem;
 }
-.option-banner-container h2{
+.option-banner-container h2 {
   font-size: 1.7rem;
   font-weight: bold;
   word-break: break-word;
-
 }
-.option-banner-container p{
+.option-banner-container p {
   color: currentColor;
   margin: 0.5rem 0;
-  font-family: "Joti One", serif; 
-  
+  font-family: "Joti One", serif;
+
   word-break: break-word;
 }
-.option-banner-container h2{
+.option-banner-container h2 {
   margin: 0;
 }
-.show-option-banner{
+.show-option-banner {
   display: block;
-  
 }
 
-.close-banner{
-position: sticky;
-left: 100%;
-font-family: "Lacquer", system-ui;
-border-radius: 40px;
-border:3px solid black;
-font-size: 1.2rem;
-font-weight: bold;
+.close-banner {
+  position: sticky;
+  left: 100%;
+  font-family: "Lacquer", system-ui;
+  border-radius: 40px;
+  border: 3px solid black;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
-.options-section{
+.options-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
 }
 
-.edit-event-btn, .delete-event-btn{
+.edit-event-btn,
+.delete-event-btn {
   border: 3px solid black;
   width: fit-content;
-  font-family: "Lacquer", system-ui ;
+  font-family: "Lacquer", system-ui;
   font-weight: bold;
   font-size: 0.8rem;
 }
-.time-row{
+.time-row {
   padding-left: 3rem;
 }
-@media screen and (min-width:992px) {
-  .option-banner-container{
+@media screen and (min-width: 992px) {
+  .option-banner-container {
     width: 20rem;
     min-height: 8rem;
-  
   }
 }
