@@ -1,10 +1,11 @@
 import { AppEventsRepo } from '../../interface-adapters/repos/AppEventsRepo.js';
+import { AppGetAllEventsUsecase } from '../../interface-adapters/use-cases/AppGetAllEventsUsecase.js';
 import { Event } from '../../domain/entities/event/Event.js';
 import { toDomainNotificationIfItalian } from '../../interface-adapters/other/bidirectionalItalianDomainMapper.js';
 
 export function getEvents() {
   try {
-    return AppEventsRepo.getAll().map((eventEntity) =>
+    return AppGetAllEventsUsecase.execute().map((eventEntity) =>
       Event.create({
         ...eventEntity.toJSON(),
         notification: toDomainNotificationIfItalian(eventEntity.notification),

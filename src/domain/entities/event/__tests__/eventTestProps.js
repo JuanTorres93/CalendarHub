@@ -1,3 +1,5 @@
+import { Event } from '../Event';
+
 export const EVENT_TEST_PROPS = {
   id: 'test-event-id',
   title: 'test event title',
@@ -15,3 +17,10 @@ export const EVENT_TEST_PROPS = {
 
   repeat: null,
 };
+
+export function createTestEvent(overrides = {}) {
+  return Event.create({
+    ...EVENT_TEST_PROPS,
+    ...overrides,
+  });
+}

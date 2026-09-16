@@ -3,6 +3,7 @@ import {
   toDomainNotification,
   toItalianNotification,
 } from '../interface-adapters/other/bidirectionalItalianDomainMapper.js';
+import { AppGetEventByIdUsecase } from '../interface-adapters/use-cases/AppGetEventByIdUsecase.js';
 import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
 import createCaroseul, {
   renderColorList,
@@ -390,7 +391,9 @@ export function saveEvent() {
         break;
       }
       case 'edit-single-occurrence': {
-        const motherEvent = AppEventsRepo.getById(editingMotherEventId);
+        const motherEvent = AppGetEventByIdUsecase.execute({
+          id: editingMotherEventId,
+        });
 
         motherEvent.update({
           repeat: {

@@ -3,6 +3,7 @@ import {
   deleteEventFromLocalStorage,
 } from '../utils/events/eventStorage.js';
 import { AppEventsRepo } from '../interface-adapters/repos/AppEventsRepo.js';
+import { AppGetEventByIdUsecase } from '../interface-adapters/use-cases/AppGetEventByIdUsecase.js';
 import createElement from '../utils/helpers/createElement.js';
 import getFloatingPosition from '../utils/helpers/floatingPositioner.js';
 import {
@@ -245,7 +246,7 @@ function deleteSingleOccurrence() {
   const occurrenceDate = currentEvent.date;
 
   if (currentEvent.isOccurrence === true && currentEvent.repeat !== null) {
-    const motherEvent = AppEventsRepo.getById(motherId);
+    const motherEvent = AppGetEventByIdUsecase.execute({ id: motherId });
 
     motherEvent.update({
       repeat: {
@@ -262,7 +263,7 @@ function deleteSingleOccurrence() {
       (event) => event.originalEventId === currentEvent.id,
     );
 
-    const motherEvent = AppEventsRepo.getById(motherId);
+    const motherEvent = AppGetEventByIdUsecase.execute({ id: motherId });
 
     motherEvent.update({
       date: nextOccurrence.date,
