@@ -1,37 +1,37 @@
-import dayjs from "../day.js";
+import dayjs from '../day.js';
 import {
   eventDraft,
   validateTimeRange,
   timeDraft,
   initEventDraft,
   resetEventDraft,
-} from "../utils/events/eventDraft.js";
+} from '../utils/events/eventDraft.js';
 import {
   renderColorList,
   renderNotificationList,
   renderIconsList,
-} from "../utils/events/createLists.js";
-import { openMiniCalendar } from "../miniCalendar/miniCalendar.js";
+} from '../utils/events/createLists.js';
+import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
 import {
   updateEventDraft,
   validatorEventDraft,
-} from "../utils/events/eventDraft.js";
-import { formatDate } from "../utils/events/eventsUI.js";
-import createCaroseul from "../utils/events/createLists.js";
-import { createMessage } from "../utils/helpers/createElement.js";
-import { nowTarget } from "../utils/isNow.js";
-import { renderEvents } from "../utils/events/eventRendering.js";
+} from '../utils/events/eventDraft.js';
+import { formatDate } from '../utils/events/eventsUI.js';
+import createCaroseul from '../utils/events/createLists.js';
+import { createMessage } from '../utils/helpers/createElement.js';
+import { nowTarget } from '../utils/isNow.js';
+import { renderEvents } from '../utils/events/eventRendering.js';
 import {
   getEvents,
   saveEventsInLocalStorage,
-} from "../utils/events/eventStorage.js";
-import { setTimeUIAndDraft } from "../utils/helpers/timeHelper.js";
-import openModal from "./eventModal.js";
-import { initRepeatEvents, forceResetRepeatModalState } from "./repeatEvent.js";
+} from '../utils/events/eventStorage.js';
+import { setTimeUIAndDraft } from '../utils/helpers/timeHelper.js';
+import openModal from './eventModal.js';
+import { initRepeatEvents, forceResetRepeatModalState } from './repeatEvent.js';
 import {
   handleListSelection,
   handleOutSideClick,
-} from "../utils/helpers/listSelection.js";
+} from '../utils/helpers/listSelection.js';
 import {
   modalEvents,
   modalOverlay,
@@ -66,66 +66,66 @@ import {
   smallMessage,
   iconBtn,
   iconsList,
-} from "../utils/helpers/dom/eventModalDom.js";
+} from '../utils/helpers/dom/eventModalDom.js';
 
 import {
   repeatContainer as repeatModal,
   repeatOverlay,
-} from "../utils/helpers/dom/repeatModalDom.js";
+} from '../utils/helpers/dom/repeatModalDom.js';
 
 const outsideDropdowns = [
   {
-    selector: ".icons-list, #icons-btn",
+    selector: '.icons-list, #icons-btn',
     dropdown: iconsList,
-    className: "show-icons-list",
+    className: 'show-icons-list',
   },
 
   {
-    selector: ".description-area, .btn-description",
+    selector: '.description-area, .btn-description',
     dropdown: showDesc,
-    className: "show-desc-area",
+    className: 'show-desc-area',
   },
 
   {
-    selector: ".color-list, #color-btn",
+    selector: '.color-list, #color-btn',
     dropdown: colorLists,
-    className: "show-color-list",
+    className: 'show-color-list',
   },
 
   {
-    selector: ".notification-list, .notification-button",
+    selector: '.notification-list, .notification-button',
     dropdown: notificationList,
-    className: "show-container",
+    className: 'show-container',
   },
 
   {
-    selector: ".interactive-time-list.from, .listed-time.from",
+    selector: '.interactive-time-list.from, .listed-time.from',
     dropdown: listedTimeFrom,
-    className: "show-menù",
+    className: 'show-menù',
   },
 
   {
-    selector: ".interactive-time-list.to, .listed-time.to",
+    selector: '.interactive-time-list.to, .listed-time.to',
     dropdown: listedTimeTo,
-    className: "show-menù",
+    className: 'show-menù',
   },
 ];
 
 const EVENT_DRAFT_FIELDS = [
-  "title",
-  "date",
-  "from",
-  "to",
-  "description",
-  "icon",
-  "color",
-  "urgent",
-  "allDay",
-  "repeat",
-  "notification",
+  'title',
+  'date',
+  'from',
+  'to',
+  'description',
+  'icon',
+  'color',
+  'urgent',
+  'allDay',
+  'repeat',
+  'notification',
 ];
 
-let formMode = "create";
+let formMode = 'create';
 let editingEventId = null;
 let editingMotherEventId = null;
 let editingOccurrenceDate = null;
@@ -134,10 +134,10 @@ let originalSeriesDate = null;
 
 export const getData = (e) => {
   let date, time;
-  const monthCell = e.target.closest(".box-grid");
+  const monthCell = e.target.closest('.box-grid');
   if (monthCell) {
     date = e.target.dataset.day;
-    time = dayjs().minute(0).format("HH:mm");
+    time = dayjs().minute(0).format('HH:mm');
     return {
       date: date,
       time: time,
@@ -161,7 +161,7 @@ function classRemovalHelper(sections) {
 }
 
 export function resetEventModal() {
-  formMode = "create";
+  formMode = 'create';
   editingEventId = null;
   editingMotherEventId = null;
   editingOccurrenceDate = null;
@@ -169,56 +169,56 @@ export function resetEventModal() {
   originalSeriesDate = null;
 
   const sections = [
-    { section: colorLists, class: "show-color-list" },
-    { section: urgentCheckBox, class: "checked" },
-    { section: iconsList, class: "show-icons-list" },
-    { section: notificationList, class: "show-container" },
-    { section: showDesc, class: "show-desc-area" },
-    { section: listedTimeFrom, class: "show-menù" },
-    { section: listedTimeTo, class: "show-menù" },
+    { section: colorLists, class: 'show-color-list' },
+    { section: urgentCheckBox, class: 'checked' },
+    { section: iconsList, class: 'show-icons-list' },
+    { section: notificationList, class: 'show-container' },
+    { section: showDesc, class: 'show-desc-area' },
+    { section: listedTimeFrom, class: 'show-menù' },
+    { section: listedTimeTo, class: 'show-menù' },
   ];
-  if (allDayCheckBox.classList.contains("checked")) {
-    allDayCheckBox.classList.remove("checked");
-    timeSelectionContainer.classList.remove("hide-time-section");
+  if (allDayCheckBox.classList.contains('checked')) {
+    allDayCheckBox.classList.remove('checked');
+    timeSelectionContainer.classList.remove('hide-time-section');
   }
 
   classRemovalHelper(sections);
   resetEventDraft();
 
-  iconBtn.innerText = "✏️";
-  inputTitle.value = "";
-  inputDesc.value = "";
-  colorPreview.style.backgroundColor = "blue";
-  fromHourInput.value = "";
-  fromMinuteInput.value = "";
-  toHourInput.value = "";
-  toMinuteInput.value = "";
-  notificationList.style.left = "";
-  notificationBtn.innerText = "5 minuti prima";
-  timeDraft.from.hour = "";
-  timeDraft.from.minute = "";
-  timeDraft.to.hour = "";
-  timeDraft.to.minute = "";
+  iconBtn.innerText = '✏️';
+  inputTitle.value = '';
+  inputDesc.value = '';
+  colorPreview.style.backgroundColor = 'blue';
+  fromHourInput.value = '';
+  fromMinuteInput.value = '';
+  toHourInput.value = '';
+  toMinuteInput.value = '';
+  notificationList.style.left = '';
+  notificationBtn.innerText = '5 minuti prima';
+  timeDraft.from.hour = '';
+  timeDraft.from.minute = '';
+  timeDraft.to.hour = '';
+  timeDraft.to.minute = '';
 }
 
 const renderModeTextInfo = (mode, eventTitle) => {
   const header = modalInfoMode;
-  smallMessage.innerText = "";
+  smallMessage.innerText = '';
   switch (mode) {
-    case "create":
-      header.innerText = "Crea un nuovo evento!";
+    case 'create':
+      header.innerText = 'Crea un nuovo evento!';
       break;
-    case "edit":
+    case 'edit':
       header.innerText = `Stai modificando : ${eventTitle}`;
       break;
-    case "edit-series":
+    case 'edit-series':
       header.innerText = `Stai modificando la serie ${eventTitle}`;
       smallMessage.innerText =
-        "Le modifiche verranno applicate a tutta la serie.";
+        'Le modifiche verranno applicate a tutta la serie.';
       break;
-    case "edit-single-occurrence":
+    case 'edit-single-occurrence':
       header.innerText = `Stai modificando : ${eventTitle}`;
-      smallMessage.innerText = "Questa occorrenza verrà separata dalla serie.";
+      smallMessage.innerText = 'Questa occorrenza verrà separata dalla serie.';
       break;
     default:
       break;
@@ -227,14 +227,14 @@ const renderModeTextInfo = (mode, eventTitle) => {
 
 export function preCompiler(e) {
   const { date, time } = getData(e);
-  const endTime = dayjs(time, "HH:mm").add(1, "hour").format("HH:mm");
+  const endTime = dayjs(time, 'HH:mm').add(1, 'hour').format('HH:mm');
 
   header.firstElementChild.textContent = formatDate(date);
   header.firstElementChild.dataset.day = date;
   header.firstElementChild.nextElementSibling.textContent = time;
 
-  setTimeUIAndDraft(timeDraft, "from", time);
-  setTimeUIAndDraft(timeDraft, "to", endTime);
+  setTimeUIAndDraft(timeDraft, 'from', time);
+  setTimeUIAndDraft(timeDraft, 'to', endTime);
 
   initEventDraft(date, time, endTime);
   renderModeTextInfo(formMode);
@@ -252,12 +252,12 @@ export function preCompilerEdit(event, mode) {
     const value = event[field];
 
     eventDraft[field] =
-      field === "repeat" && value !== null ? structuredClone(value) : value;
+      field === 'repeat' && value !== null ? structuredClone(value) : value;
   });
 
   editingEventId = event.id;
 
-  if (mode === "edit-single-occurrence") {
+  if (mode === 'edit-single-occurrence') {
     editingEventId = null;
     editingMotherEventId = event.originalEventId
       ? event.originalEventId
@@ -266,7 +266,7 @@ export function preCompilerEdit(event, mode) {
     eventDraft.repeat = null;
   }
 
-  if (mode === "edit-series") {
+  if (mode === 'edit-series') {
     // structuredClone(event.repeat) crea un clone dell'elemento
     originalRepeatSnapshot = structuredClone(event.repeat);
     originalSeriesDate = event.date;
@@ -283,14 +283,14 @@ export function preCompilerEdit(event, mode) {
   colorPreview.style.backgroundColor = `${event.color}`;
 
   if (event.urgent) {
-    urgentCheckBox.classList.add("checked");
+    urgentCheckBox.classList.add('checked');
   }
   if (event.allDay) {
-    allDayCheckBox.classList.add("checked");
-    timeSelectionContainer.classList.add("hide-time-section");
+    allDayCheckBox.classList.add('checked');
+    timeSelectionContainer.classList.add('hide-time-section');
   }
-  setTimeUIAndDraft(timeDraft, "from", event.from);
-  setTimeUIAndDraft(timeDraft, "to", event.to);
+  setTimeUIAndDraft(timeDraft, 'from', event.from);
+  setTimeUIAndDraft(timeDraft, 'to', event.to);
 
   notificationBtn.innerText = event.notification;
 }
@@ -301,44 +301,44 @@ function updateTimeInput(part, value) {
   if (isNaN(num)) return;
 
   switch (part) {
-    case "hour":
+    case 'hour':
       if (num < 0 || num > 23) return;
-      return String(num).padStart(2, "0");
+      return String(num).padStart(2, '0');
       break;
-    case "minute":
+    case 'minute':
       if (num < 0 || num >= 60) return;
-      return String(num).padStart(2, "0");
+      return String(num).padStart(2, '0');
       break;
   }
 }
 function inputTimeHelper(timeDraft, caseType, input, classType) {
   const time = updateTimeInput(caseType, input.value);
   if (time === undefined) {
-    input.value = "";
+    input.value = '';
     return;
   }
   timeDraft[classType][caseType] = time;
 
   const current = timeDraft[classType];
-  if (current.hour !== "" && current.minute !== "") {
+  if (current.hour !== '' && current.minute !== '') {
     const finalTime = `${current.hour}:${current.minute}`;
     updateEventDraft(classType, finalTime);
   }
 }
 
 function inputTimeReader(timeDraft) {
-  fromHourInput.addEventListener("change", () => {
-    inputTimeHelper(timeDraft, "hour", fromHourInput, "from");
+  fromHourInput.addEventListener('change', () => {
+    inputTimeHelper(timeDraft, 'hour', fromHourInput, 'from');
   });
-  fromMinuteInput.addEventListener("change", () => {
-    inputTimeHelper(timeDraft, "minute", fromMinuteInput, "from");
+  fromMinuteInput.addEventListener('change', () => {
+    inputTimeHelper(timeDraft, 'minute', fromMinuteInput, 'from');
   });
-  toHourInput.addEventListener("change", () => {
-    inputTimeHelper(timeDraft, "hour", toHourInput, "to");
+  toHourInput.addEventListener('change', () => {
+    inputTimeHelper(timeDraft, 'hour', toHourInput, 'to');
     validateTimeRange(timeDraft);
   });
-  toMinuteInput.addEventListener("change", () => {
-    inputTimeHelper(timeDraft, "minute", toMinuteInput, "to");
+  toMinuteInput.addEventListener('change', () => {
+    inputTimeHelper(timeDraft, 'minute', toMinuteInput, 'to');
     validateTimeRange(timeDraft);
   });
 }
@@ -349,11 +349,11 @@ function applySelectedTime(timeDraft, type, time) {
 }
 
 function closeModal() {
-  modalOverlay.classList.remove("show-overlay");
-  modalEvents.classList.remove("show-container");
+  modalOverlay.classList.remove('show-overlay');
+  modalEvents.classList.remove('show-container');
 
-  modalEvents.style.top = "";
-  modalEvents.style.left = "";
+  modalEvents.style.top = '';
+  modalEvents.style.left = '';
 
   forceResetRepeatModalState();
   resetEventModal();
@@ -361,13 +361,14 @@ function closeModal() {
 
 export function saveEvent() {
   const isValid = validatorEventDraft();
+
   if (!isValid) {
     return;
   } else {
     const events = getEvents();
 
     switch (formMode) {
-      case "create": {
+      case 'create': {
         const newEvent = {
           id: crypto.randomUUID(),
           ...eventDraft,
@@ -377,7 +378,7 @@ export function saveEvent() {
         break;
       }
 
-      case "edit": {
+      case 'edit': {
         const updatedEvents = events.map((event) => {
           return event.id === editingEventId
             ? { id: editingEventId, ...eventDraft }
@@ -392,7 +393,7 @@ export function saveEvent() {
         );
         break;
       }
-      case "edit-single-occurrence": {
+      case 'edit-single-occurrence': {
         const updatedEvents = events.map((event) => {
           if (event.id !== editingMotherEventId) return event;
           return {
@@ -416,7 +417,7 @@ export function saveEvent() {
         );
         break;
       }
-      case "edit-series": {
+      case 'edit-series': {
         const patternChanged =
           originalSeriesDate !== eventDraft.date ||
           JSON.stringify({
@@ -448,7 +449,7 @@ export function saveEvent() {
         });
         saveEventsInLocalStorage(updatedEvents);
         createMessage(
-          "la serie è stato modificata!",
+          'la serie è stato modificata!',
           modalEvents,
           document.body,
         );
@@ -472,143 +473,143 @@ export function initEventFormEvents() {
     handleOutSideClick(item.selector, item.dropdown, item.className);
   });
 
-  iconBtn.addEventListener("click", () => {
-    iconsList.classList.toggle("show-icons-list");
+  iconBtn.addEventListener('click', () => {
+    iconsList.classList.toggle('show-icons-list');
   });
 
   handleListSelection(
     iconsList,
-    ".icon-list-item",
+    '.icon-list-item',
     (li) => {
       iconBtn.innerText = li.innerText;
-      updateEventDraft("icon", li.innerText);
+      updateEventDraft('icon', li.innerText);
     },
-    "show-icons-list",
+    'show-icons-list',
   );
 
-  btnDesc.addEventListener("click", () => {
-    showDesc.classList.toggle("show-desc-area");
+  btnDesc.addEventListener('click', () => {
+    showDesc.classList.toggle('show-desc-area');
   });
 
-  inputTitle.addEventListener("change", () => {
+  inputTitle.addEventListener('change', () => {
     title = inputTitle.value;
-    updateEventDraft("title", title);
+    updateEventDraft('title', title);
   });
-  inputDesc.addEventListener("change", () => {
+  inputDesc.addEventListener('change', () => {
     desc = inputDesc.value;
-    updateEventDraft("description", desc);
+    updateEventDraft('description', desc);
   });
-  categoryBtn.addEventListener("click", () => {
-    colorLists.classList.toggle("show-color-list");
+  categoryBtn.addEventListener('click', () => {
+    colorLists.classList.toggle('show-color-list');
   });
 
   handleListSelection(
     colorLists,
-    ".color",
+    '.color',
     (li) => {
       colorPreview.style.backgroundColor = li.dataset.color;
-      updateEventDraft("color", li.dataset.color);
+      updateEventDraft('color', li.dataset.color);
     },
-    "show-color-list",
+    'show-color-list',
   );
 
-  urgentBtn.addEventListener("click", () => {
-    const isChecked = urgentCheckBox.classList.toggle("checked");
-    updateEventDraft("urgent", isChecked);
+  urgentBtn.addEventListener('click', () => {
+    const isChecked = urgentCheckBox.classList.toggle('checked');
+    updateEventDraft('urgent', isChecked);
   });
 
-  miniCalendarBtn.addEventListener("click", () => {
+  miniCalendarBtn.addEventListener('click', () => {
     const date = header.firstElementChild.dataset.day;
 
-    openMiniCalendar("event", date, "event-date");
+    openMiniCalendar('event', date, 'event-date');
   });
 
-  allDayBtn.addEventListener("click", () => {
-    const isChecked = allDayCheckBox.classList.toggle("checked");
-    updateEventDraft("allDay", isChecked);
+  allDayBtn.addEventListener('click', () => {
+    const isChecked = allDayCheckBox.classList.toggle('checked');
+    updateEventDraft('allDay', isChecked);
     if (isChecked) {
-      timeSelectionContainer.classList.add("hide-time-section");
+      timeSelectionContainer.classList.add('hide-time-section');
     } else {
-      timeSelectionContainer.classList.remove("hide-time-section");
+      timeSelectionContainer.classList.remove('hide-time-section');
     }
   });
 
   inputTimeReader(timeDraft);
 
-  listedTimeBtnFrom.addEventListener("click", (e) => {
-    const isOpen = listedTimeFrom.classList.toggle("show-menù");
+  listedTimeBtnFrom.addEventListener('click', (e) => {
+    const isOpen = listedTimeFrom.classList.toggle('show-menù');
 
     if (isOpen) {
       const targetTime = eventDraft.from;
       const target = nowTarget(
-        listedTimeFrom.querySelectorAll(".list-item"),
+        listedTimeFrom.querySelectorAll('.list-item'),
         null,
-        "cellTime",
+        'cellTime',
         targetTime,
       );
-      target?.scrollIntoView({ block: "center", behavior: "auto" });
+      target?.scrollIntoView({ block: 'center', behavior: 'auto' });
     }
   });
-  listedTimeBtnTo.addEventListener("click", () => {
-    const isOpen = listedTimeTo.classList.toggle("show-menù");
+  listedTimeBtnTo.addEventListener('click', () => {
+    const isOpen = listedTimeTo.classList.toggle('show-menù');
 
     if (isOpen) {
       const targetTime = eventDraft.to;
       const target = nowTarget(
-        listedTimeTo.querySelectorAll(".list-item"),
+        listedTimeTo.querySelectorAll('.list-item'),
         null,
-        "cellTime",
+        'cellTime',
         targetTime,
       );
-      target?.scrollIntoView({ block: "center", behavior: "auto" });
+      target?.scrollIntoView({ block: 'center', behavior: 'auto' });
     }
   });
 
   handleListSelection(
     listedTimeFrom,
-    ".list-item",
+    '.list-item',
     (li) => {
-      applySelectedTime(timeDraft, "from", li.dataset.time);
+      applySelectedTime(timeDraft, 'from', li.dataset.time);
       validateTimeRange(timeDraft);
     },
-    "show-menù",
+    'show-menù',
   );
   handleListSelection(
     listedTimeTo,
-    ".list-item",
+    '.list-item',
     (li) => {
-      applySelectedTime(timeDraft, "to", li.dataset.time);
+      applySelectedTime(timeDraft, 'to', li.dataset.time);
       validateTimeRange(timeDraft);
     },
-    "show-menù",
+    'show-menù',
   );
 
-  repeatBtn.addEventListener("click", () => {
-    repeatModal.classList.toggle("show-repeat-modal");
-    repeatOverlay.classList.add("show-repeat-overlay");
+  repeatBtn.addEventListener('click', () => {
+    repeatModal.classList.toggle('show-repeat-modal');
+    repeatOverlay.classList.add('show-repeat-overlay');
   });
 
-  notificationBtn.addEventListener("click", () => {
+  notificationBtn.addEventListener('click', () => {
     const position = notificationBtn.getClientRects()[0].right;
-    notificationList.style.left = position + "px";
-    notificationList.classList.toggle("show-container");
+    notificationList.style.left = position + 'px';
+    notificationList.classList.toggle('show-container');
   });
 
   handleListSelection(
     notificationList,
-    ".single-notification",
+    '.single-notification',
     (li) => {
-      updateEventDraft("notification", li.innerText);
+      updateEventDraft('notification', li.innerText);
       notificationBtn.innerText = li.innerText;
     },
-    "show-container",
+    'show-container',
   );
 
-  saveBtn.addEventListener("click", () => {
+  saveBtn.addEventListener('click', () => {
     saveEvent();
     renderEvents();
   });
-  closeBtn.addEventListener("click", () => {
+  closeBtn.addEventListener('click', () => {
     closeModal();
   });
 }
