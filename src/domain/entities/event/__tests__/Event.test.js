@@ -149,34 +149,49 @@ describe('Event', () => {
       expect(event.date).toBe(today);
     });
 
-    it('should default from to the current hour if it is not provided', () => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date(2024, 5, 1, 9, 45));
-
+    it('should throw when from is not provided', () => {
       const eventProps = { ...EVENT_TEST_PROPS };
       delete eventProps.from;
 
-      const event = Event.create(eventProps);
-
-      expect(event.from).toBe('09:00');
+      expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
     });
 
-    it('should default to to one hour after from if it is not provided', () => {
+    it('should throw when to is not provided', () => {
       const eventProps = { ...EVENT_TEST_PROPS };
       delete eventProps.to;
 
-      const event = Event.create(eventProps);
+      expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
+    });
+  });
 
-      expect(event.to).toBe('11:00');
+  describe('allDay', () => {
+    it('should set full-day times when allDay is true', () => {
+      const event = Event.create({
+        ...EVENT_TEST_PROPS,
+        allDay: true,
+        from: '10:00',
+        to: '11:00',
+      });
+
+      expect(event.allDay).toBe(true);
+      expect(event.from).toBe('00:00');
+      expect(event.to).toBe('23:59');
     });
 
-    it('should default to to one hour after from preserving minutes', () => {
-      const eventProps = { ...EVENT_TEST_PROPS, from: '10:30' };
-      delete eventProps.to;
+    it('should set full-day times when allDay is true and no times are provided', () => {
+      const event = Event.create({ ...EVENT_TEST_PROPS, allDay: true });
 
-      const event = Event.create(eventProps);
+      expect(event.allDay).toBe(true);
+      expect(event.from).toBe('00:00');
+      expect(event.to).toBe('23:59');
+    });
 
-      expect(event.to).toBe('11:30');
+    it('should keep the given times when allDay is false', () => {
+      const event = Event.create(EVENT_TEST_PROPS);
+
+      expect(event.allDay).toBe(false);
+      expect(event.from).toBe(EVENT_TEST_PROPS.from);
+      expect(event.to).toBe(EVENT_TEST_PROPS.to);
     });
   });
 

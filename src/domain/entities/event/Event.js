@@ -17,12 +17,17 @@ export class Event {
   static create(props) {
     const defaults = Event.defaultProps();
 
-    const from = props?.from
-      ? Time.create(props.from)
-      : Time.create(defaults.from);
-    const to = props?.to
-      ? Time.create(props.to)
-      : Time.create(addOneHour(from.value));
+    const allDay = props?.allDay
+      ? Boolean.create(props.allDay)
+      : Boolean.create(defaults.allDay);
+
+    const from = allDay.value
+      ? Time.create('00:00')
+      : Time.create(props.from);
+
+    const to = allDay.value
+      ? Time.create('23:59')
+      : Time.create(props.to);
 
     if (toMinutes(to.value) <= toMinutes(from.value)) {
       throw new ValidationDomainError('Event: to must be later than from');
@@ -50,9 +55,7 @@ export class Event {
       urgent: props?.urgent
         ? Boolean.create(props.urgent)
         : Boolean.create(defaults.urgent),
-      allDay: props?.allDay
-        ? Boolean.create(props.allDay)
-        : Boolean.create(defaults.allDay),
+      allDay: allDay,
 
       icon: props?.icon ? Icon.create(props.icon) : Icon.create(defaults.icon),
 

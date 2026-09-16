@@ -22,6 +22,8 @@ import {
 } from '../utils/events/eventDraft.js';
 import { renderEvents } from '../utils/events/eventRendering.js';
 import { AppEventsRepo } from '../interface-adapters/repos/AppEventsRepo.js';
+import { AppCreateEventUsecase } from '../interface-adapters/use-cases/AppCreateEventUsecase.js';
+import { handleKnownErrors } from '../interface-adapters/other/handleKnownErrors.js';
 import { formatDate } from '../utils/events/eventsUI.js';
 import { createMessage } from '../utils/helpers/createElement.js';
 import {
@@ -125,7 +127,6 @@ const EVENT_DRAFT_FIELDS = [
   'notification',
 ];
 
-let formMode = 'create';
 let editingEventId = null;
 let editingMotherEventId = null;
 let editingOccurrenceDate = null;
@@ -161,7 +162,8 @@ function classRemovalHelper(sections) {
 }
 
 export function resetEventModal() {
-  formMode = 'create';
+  globalEventState.mode = 'create';
+
   editingEventId = null;
   editingMotherEventId = null;
   editingOccurrenceDate = null;
@@ -237,12 +239,13 @@ export function preCompiler(e) {
   setTimeUIAndDraft(timeDraft, 'to', endTime);
 
   initEventDraft(date, time, endTime);
-  renderModeTextInfo(formMode);
+  renderModeTextInfo(globalEventState.mode);
 }
 
 export function preCompilerEdit(event, mode) {
-  formMode = mode;
-  renderModeTextInfo(formMode, event.title);
+  globalEventState.mode = mode;
+
+  renderModeTextInfo(globalEventState.mode, event.title);
 
   resetEventDraft();
 
@@ -370,17 +373,13 @@ export function saveEvent() {
     return;
   } else {
     eventDraft.updateIdDuringRefactor(
-      formMode === 'edit' || formMode === 'edit-series'
+      globalEventState.mode === 'edit' ||
+        globalEventState.mode === 'edit-series'
         ? editingEventId
         : crypto.randomUUID(),
     );
 
-    switch (formMode) {
-      case 'create': {
-        AppEventsRepo.save(eventDraft);
-        break;
-      }
-
+    switch (globalEventState.mode) {
       case 'edit': {
         AppEventsRepo.save(eventDraft);
         createMessage(
@@ -616,6 +615,18 @@ export function initEventFormEvents() {
       ...eventRawProps,
       ...globalEventState,
     };
+
+    if (
+      globalEventState.mode === 'create' &&
+      // TODO This should be removed and enabled again entity in entity when decoupling allows it
+      createEventProps.title
+    ) {
+      try {
+        AppCreateEventUsecase.execute(createEventProps);
+      } catch (error) {
+        handleKnownErrors(error);
+      }
+    }
 
     saveEvent();
     renderEvents();

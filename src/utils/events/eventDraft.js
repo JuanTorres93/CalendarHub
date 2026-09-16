@@ -14,11 +14,15 @@ import {
   toMinuteInput,
 } from '../helpers/dom/eventModalDom.js';
 
-export const globalEventState = {};
+export const globalEventState = {
+  mode: 'create',
+};
 
 export const eventDraft = Event.create({
   id: AppIdGenerator.generateId(),
   title: '',
+  from: '00:00',
+  to: '01:00',
 });
 
 export function initEventDraft(date, time, endTime) {
