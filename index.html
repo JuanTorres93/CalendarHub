@@ -383,7 +383,8 @@
           class="current-mode-secondary-message"
         ></p>
       </header>
-      <div class="event-form" data-testid="event-form">
+
+      <form class="event-form" data-testid="event-form">
         <div class="show-date" data-testid="event-date-display">
           <span data-day="" class="first-row-date"></span><span></span>
         </div>
@@ -406,6 +407,7 @@
               placeholder="Titolo"
               aria-label="Titolo evento"
               data-testid="event-title-input"
+              name="event-title"
             />
           </div>
           <div id="description-container">
@@ -428,6 +430,7 @@
                 placeholder="Max 200 caratteri"
                 aria-label="Descrizione evento"
                 data-testid="event-description-input"
+                name="event-description"
               ></textarea>
             </section>
           </div>
@@ -566,6 +569,7 @@
                   inputmode="numeric"
                   aria-label="Ora di inizio"
                   data-testid="event-from-hour-input"
+                  name="event-from-hour"
                 />
                 <span class="time-separator" aria-hidden="true">:</span>
                 <input
@@ -576,6 +580,7 @@
                   inputmode="numeric"
                   aria-label="Minuti di inizio"
                   data-testid="event-from-minute-input"
+                  name="event-from-minute"
                 />
               </div>
               <ul
@@ -602,6 +607,7 @@
                   inputmode="numeric"
                   aria-label="Ora di fine"
                   data-testid="event-to-hour-input"
+                  name="event-to-hour"
                 />
                 <span class="time-separator" aria-hidden="true">:</span>
                 <input
@@ -612,6 +618,7 @@
                   inputmode="numeric"
                   aria-label="Minuti di fine"
                   data-testid="event-to-minute-input"
+                  name="event-to-minute"
                 />
               </div>
               <ul
@@ -812,7 +819,7 @@
           </div>
         </section>
         <div class="repeat-overlay" aria-hidden="true"></div>
-      </div>
+      </form>
     </section>
 
     <script type="module" src="./src/index.js"></script>

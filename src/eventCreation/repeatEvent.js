@@ -22,7 +22,7 @@ import {
   initCustomDateRemoval,
   clearDatesStates,
 } from './repeatcustomDates.js';
-import { eventDraft } from '../utils/events/eventDraft.js';
+import { eventDraft, globalEventState } from '../utils/events/eventDraft.js';
 import { hydrateCustomDates } from './repeatcustomDates.js';
 
 import {
@@ -205,6 +205,9 @@ function saveRepeatEvent() {
     return;
   } else {
     repeatEventsDraft.seriesId = crypto.randomUUID();
+
+    globalEventState.repeat = { ...repeatEventsDraft };
+
     //fare una copia e passargli quella, funziona rispetto a passargli direttamente il valore el repeatEventDraft, perchè poi lo stato alla chiusura vine pulito, canceellando gli stessi valori. mantre la copia usando un altro ogetto di memoria non viene pulito alla chiususra.
     eventDraft.update({
       repeat: repeatEventsDraft,

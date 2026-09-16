@@ -12,6 +12,7 @@ import createCaroseul, {
 } from '../utils/events/createLists.js';
 import {
   eventDraft,
+  globalEventState,
   initEventDraft,
   resetEventDraft,
   timeDraft,
@@ -470,6 +471,8 @@ export function initEventFormEvents() {
     iconsList,
     '.icon-list-item',
     (li) => {
+      globalEventState.icon = li.innerText;
+
       iconBtn.innerText = li.innerText;
       updateEventDraft('icon', li.innerText);
     },
@@ -482,10 +485,12 @@ export function initEventFormEvents() {
 
   inputTitle.addEventListener('change', () => {
     title = inputTitle.value;
+
     updateEventDraft('title', title);
   });
   inputDesc.addEventListener('change', () => {
     desc = inputDesc.value;
+
     updateEventDraft('description', desc);
   });
   categoryBtn.addEventListener('click', () => {
@@ -496,6 +501,8 @@ export function initEventFormEvents() {
     colorLists,
     '.color',
     (li) => {
+      globalEventState.color = li.dataset.color;
+
       colorPreview.style.backgroundColor = li.dataset.color;
       updateEventDraft('color', li.dataset.color);
     },
@@ -504,6 +511,9 @@ export function initEventFormEvents() {
 
   urgentBtn.addEventListener('click', () => {
     const isChecked = urgentCheckBox.classList.toggle('checked');
+
+    globalEventState.urgent = isChecked;
+
     updateEventDraft('urgent', isChecked);
   });
 
@@ -515,6 +525,9 @@ export function initEventFormEvents() {
 
   allDayBtn.addEventListener('click', () => {
     const isChecked = allDayCheckBox.classList.toggle('checked');
+
+    globalEventState.allDay = isChecked;
+
     updateEventDraft('allDay', isChecked);
     if (isChecked) {
       timeSelectionContainer.classList.add('hide-time-section');
@@ -588,19 +601,47 @@ export function initEventFormEvents() {
     notificationList,
     '.single-notification',
     (li) => {
+      globalEventState.notification = toDomainNotification(li.innerText);
+
       updateEventDraft('notification', toDomainNotification(li.innerText));
       notificationBtn.innerText = li.innerText;
     },
     'show-container',
   );
 
-  saveBtn.addEventListener('click', () => {
+  saveBtn.addEventListener('click', (e) => {
+    const eventRawProps = getEventRawPropsFromForm(e);
+
+    const createEventProps = {
+      ...eventRawProps,
+      ...globalEventState,
+    };
+
     saveEvent();
     renderEvents();
   });
+
   closeBtn.addEventListener('click', () => {
     closeModal();
   });
+}
+
+function getEventRawPropsFromForm(e) {
+  const formData = new FormData(e.target.closest('form'));
+
+  return {
+    title: formData.get('event-title'),
+    description: formData.get('event-description'),
+    from: combineTime(formData, 'from'),
+    to: combineTime(formData, 'to'),
+  };
+}
+
+function combineTime(formData, type) {
+  const hour = formData.get(`event-${type}-hour`);
+  const minute = formData.get(`event-${type}-minute`);
+
+  return hour && minute ? `${hour}:${minute}` : '';
 }
 
 export function initEventModal() {

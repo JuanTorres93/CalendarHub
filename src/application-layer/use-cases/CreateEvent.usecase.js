@@ -6,9 +6,9 @@ export class CreateEventUsecase {
     this.idGenerator = idGenerator;
   }
 
-  execute(request) {
+  execute(eventRawProps) {
     const event = Event.create({
-      ...request,
+      ...eventRawProps,
       id: this.idGenerator.generateId(),
     });
 

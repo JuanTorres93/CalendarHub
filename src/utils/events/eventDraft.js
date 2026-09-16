@@ -14,6 +14,8 @@ import {
   toMinuteInput,
 } from '../helpers/dom/eventModalDom.js';
 
+export const globalEventState = {};
+
 export const eventDraft = Event.create({
   id: AppIdGenerator.generateId(),
   title: '',

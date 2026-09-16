@@ -12,7 +12,10 @@ import { overlay } from '../calendarSync.js';
 import dayjs from '../day.js';
 import { validateAndReturnCustomDate } from '../eventCreation/repeatcustomDates.js';
 import { config } from '../utils/config/config.js';
-import { updateEventDraft } from '../utils/events/eventDraft.js';
+import {
+  globalEventState,
+  updateEventDraft,
+} from '../utils/events/eventDraft.js';
 import { updateEventDateUI } from '../utils/events/eventsUI.js';
 import { updateUntilUIAndDraft } from '../utils/events/repeatEventsUi.js';
 import createElement from '../utils/helpers/createElement.js';
@@ -99,6 +102,7 @@ function commitMiniDate() {
   if (!miniLocalDate) return;
 
   const selectedDate = miniLocalDate.format('YYYY-MM-DD');
+  globalEventState.date = selectedDate;
 
   switch (miniCalendarCommitTarget) {
     case 'normal':
