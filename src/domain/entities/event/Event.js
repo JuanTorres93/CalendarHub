@@ -63,47 +63,47 @@ export class Event {
   }
 
   update(updateProps) {
-    if (updateProps.title) {
+    if (updateProps.title !== undefined) {
       this.props.title = Text.create(updateProps.title, TITLE_TEXT_OPTIONS);
     }
-    if (updateProps.description) {
+    if (updateProps.description !== undefined) {
       this.props.description = Text.create(
         updateProps.description,
         DESCRIPTION_TEXT_OPTIONS,
       );
     }
 
-    if (updateProps.date) {
+    if (updateProps.date !== undefined) {
       this.props.date = Day.create(updateProps.date);
     }
-    if (updateProps.from) {
+    if (updateProps.from !== undefined) {
       this.props.from = Time.create(updateProps.from);
     }
-    if (updateProps.to) {
+    if (updateProps.to !== undefined) {
       this.props.to = Time.create(updateProps.to);
     }
 
-    if (updateProps.notification) {
+    if (updateProps.notification !== undefined) {
       this.props.notification = NotificationPeriod.create(
         updateProps.notification,
       );
     }
 
-    if (updateProps.urgent) {
+    if (updateProps.urgent !== undefined) {
       this.props.urgent = Boolean.create(updateProps.urgent);
     }
-    if (updateProps.allDay) {
+    if (updateProps.allDay !== undefined) {
       this.props.allDay = Boolean.create(updateProps.allDay);
     }
 
-    if (updateProps.icon) {
+    if (updateProps.icon !== undefined) {
       this.props.icon = Icon.create(updateProps.icon);
     }
-    if (updateProps.color) {
+    if (updateProps.color !== undefined) {
       this.props.color = Color.create(updateProps.color);
     }
 
-    if (updateProps.repeat) {
+    if (updateProps.repeat !== undefined) {
       this.props.repeat = Repeat.create(updateProps.repeat);
     }
   }

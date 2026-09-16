@@ -286,6 +286,43 @@ describe('Event', () => {
 
       expect(eventToUpdate.repeat).toEqual(newRepeat);
     });
+
+    it('should clear the description of the event', async () => {
+      eventToUpdate.update({ description: '' });
+
+      expect(eventToUpdate.description).toBe('');
+    });
+
+    it('should update urgent from true to false', async () => {
+      eventToUpdate.update({ urgent: true });
+      eventToUpdate.update({ urgent: false });
+
+      expect(eventToUpdate.urgent).toBe(false);
+    });
+
+    it('should update allDay from true to false', async () => {
+      eventToUpdate.update({ allDay: true });
+      eventToUpdate.update({ allDay: false });
+
+      expect(eventToUpdate.allDay).toBe(false);
+    });
+
+    it('should clear the repeat of the event', async () => {
+      eventToUpdate.update({
+        repeat: {
+          seriesId: 'series-id',
+          type: 'weekly',
+          interval: 1,
+          until: '2024-07-01',
+          weekdays: [1, 3],
+          customDates: [],
+          exceptions: [],
+        },
+      });
+      eventToUpdate.update({ repeat: null });
+
+      expect(eventToUpdate.repeat).toBeNull();
+    });
   });
 
   it('should keep the repeat config if it is provided', async () => {
