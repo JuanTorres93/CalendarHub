@@ -19,10 +19,8 @@ import {
   validatorEventDraft,
 } from '../utils/events/eventDraft.js';
 import { renderEvents } from '../utils/events/eventRendering.js';
-import {
-  getEvents,
-  saveEventsInLocalStorage,
-} from '../utils/events/eventStorage.js';
+import { getEvents } from '../utils/events/eventStorage.js';
+import { AppEventsRepo } from '../interface-adapters/repos/AppEventsRepo.js';
 import { formatDate } from '../utils/events/eventsUI.js';
 import { createMessage } from '../utils/helpers/createElement.js';
 import {
@@ -250,17 +248,13 @@ export function preCompilerEdit(event, mode) {
   const updateEventEntityProps = {};
 
   EVENT_DRAFT_FIELDS.forEach((field) => {
-    if (!Object.hasOwn(event, field)) return;
+    if (event[field] === undefined) return;
 
     updateEventEntityProps[field] =
       field === 'repeat' && event['repeat'] !== null
         ? structuredClone(event['repeat'])
         : event[field];
   });
-
-  updateEventEntityProps.notification = toDomainNotification(
-    event.notification,
-  );
 
   eventDraft.update(updateEventEntityProps);
 
@@ -301,7 +295,7 @@ export function preCompilerEdit(event, mode) {
   setTimeUIAndDraft(timeDraft, 'from', event.from);
   setTimeUIAndDraft(timeDraft, 'to', event.to);
 
-  notificationBtn.innerText = event.notification;
+  notificationBtn.innerText = toItalianNotification(event.notification);
 }
 
 function updateTimeInput(part, value) {
@@ -374,32 +368,20 @@ export function saveEvent() {
   if (!isValid) {
     return;
   } else {
-    const events = getEvents();
-
     eventDraft.updateIdDuringRefactor(
       formMode === 'edit' || formMode === 'edit-series'
         ? editingEventId
         : crypto.randomUUID(),
     );
 
-    const jsonEventDraft = {
-      ...eventDraft.toJSON(),
-      notification: toItalianNotification(eventDraft.notification),
-    };
-
     switch (formMode) {
       case 'create': {
-        events.push(jsonEventDraft);
-        saveEventsInLocalStorage(events);
+        AppEventsRepo.save(eventDraft);
         break;
       }
 
       case 'edit': {
-        const updatedEvents = events.map((event) => {
-          return event.id === editingEventId ? jsonEventDraft : event;
-        });
-
-        saveEventsInLocalStorage(updatedEvents);
+        AppEventsRepo.save(eventDraft);
         createMessage(
           "l'evento è stato modificato!",
           modalEvents,
@@ -408,18 +390,20 @@ export function saveEvent() {
         break;
       }
       case 'edit-single-occurrence': {
-        const updatedEvents = events.map((event) => {
-          if (event.id !== editingMotherEventId) return event;
-          return {
-            ...event,
-            repeat: {
-              ...event.repeat,
-              exceptions: [...event.repeat.exceptions, editingOccurrenceDate],
-            },
-          };
+        const motherEvent = AppEventsRepo.getById(editingMotherEventId);
+
+        motherEvent.update({
+          repeat: {
+            ...motherEvent.repeat,
+            exceptions: [
+              ...motherEvent.repeat.exceptions,
+              editingOccurrenceDate,
+            ],
+          },
         });
-        updatedEvents.push(jsonEventDraft);
-        saveEventsInLocalStorage(updatedEvents);
+
+        AppEventsRepo.save(motherEvent);
+        AppEventsRepo.save(eventDraft);
         createMessage(
           "l'occorrenza è stata modificata!",
           modalEvents,
@@ -442,21 +426,15 @@ export function saveEvent() {
               weekdays: eventDraft.repeat.weekdays,
               customDates: eventDraft.repeat.customDates,
             });
-        const updatedEvents = events.map((event) => {
-          return event.id === editingEventId
-            ? {
-                ...jsonEventDraft,
 
-                repeat: {
-                  ...eventDraft.repeat,
-                  exceptions: patternChanged
-                    ? []
-                    : originalRepeatSnapshot.exceptions,
-                },
-              }
-            : event;
+        eventDraft.update({
+          repeat: {
+            ...eventDraft.repeat,
+            exceptions: patternChanged ? [] : originalRepeatSnapshot.exceptions,
+          },
         });
-        saveEventsInLocalStorage(updatedEvents);
+
+        AppEventsRepo.save(eventDraft);
         createMessage(
           'la serie è stato modificata!',
           modalEvents,

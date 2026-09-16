@@ -102,7 +102,7 @@ function checkDueNotifications() {
   const allEvents = getAllRenderableEvents();
 
   const eventWithNotification = allEvents.filter(
-    (events) => events.notification !== 'nessuna notifica',
+    (events) => events.notification !== 'none',
   );
 
   eventWithNotification.forEach((event) => {
@@ -131,17 +131,17 @@ function checkDueNotifications() {
 
 function getNotificationOffsetMs(notificationTime) {
   switch (notificationTime) {
-    case '5 minuti prima':
+    case '5min':
       return 5 * 60 * 1000;
-    case '15 minuti prima':
+    case '15min':
       return 15 * 60 * 1000;
-    case '1 ora prima':
+    case '1h':
       return 60 * 60 * 1000;
-    case '2 ore prima':
+    case '2h':
       return 60 * 2 * 60 * 1000;
-    case '4 ore prima':
+    case '4h':
       return 60 * 4 * 60 * 1000;
-    case '24 ore prima':
+    case '1d':
       return 60 * 24 * 60 * 1000;
 
     default:

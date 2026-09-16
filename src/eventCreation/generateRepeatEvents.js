@@ -1,5 +1,5 @@
-import { getEvents } from "../utils/events/eventStorage.js";
-import dayjs from "../day.js";
+import { getEvents } from '../utils/events/eventStorage.js';
+import dayjs from '../day.js';
 
 export function getRepeatedEvents() {
   let arrayOfevents = [];
@@ -10,22 +10,22 @@ export function getRepeatedEvents() {
   });
 
   repeated.forEach((event) => {
-    if (event.repeat.type === "daily") {
+    if (event.repeat.type === 'daily') {
       const getDates = generateDailyDates(event);
       const newEvents = createRepeatedEvents(event, getDates);
       arrayOfevents.push(...newEvents);
     }
-    if (event.repeat.type === "monthly") {
+    if (event.repeat.type === 'monthly') {
       const getDates = generateMonthlyDates(event);
       const newEvents = createRepeatedEvents(event, getDates);
       arrayOfevents.push(...newEvents);
     }
-    if (event.repeat.type === "custom") {
+    if (event.repeat.type === 'custom') {
       const getDates = generateCustomDates(event);
       const newEvents = createRepeatedEvents(event, getDates);
       arrayOfevents.push(...newEvents);
     }
-    if (event.repeat.type === "weekly") {
+    if (event.repeat.type === 'weekly') {
       const getDates = generateWeeklyDates(event);
       const newEvents = createRepeatedEvents(event, getDates);
       arrayOfevents.push(...newEvents);
@@ -41,7 +41,7 @@ function helperGenerateDates(event, type) {
   let sameOrBefore = begin.isSameOrBefore(event.repeat.until);
   for (let i = interval; sameOrBefore; i += interval) {
     sameOrBefore = begin.add(i, type).isSameOrBefore(event.repeat.until);
-    const dates = begin.add(i, type).format("YYYY-MM-DD");
+    const dates = begin.add(i, type).format('YYYY-MM-DD');
     if (!sameOrBefore) break;
     const exceptions = event.repeat.exceptions;
     if (exceptions.includes(dates)) {
@@ -53,11 +53,11 @@ function helperGenerateDates(event, type) {
 }
 
 function generateDailyDates(event) {
-  return helperGenerateDates(event, "day");
+  return helperGenerateDates(event, 'day');
 }
 
 function generateMonthlyDates(event) {
-  return helperGenerateDates(event, "month");
+  return helperGenerateDates(event, 'month');
 }
 
 function generateWeeklyDates(event) {
@@ -67,8 +67,8 @@ function generateWeeklyDates(event) {
   let sameOrBefore = begin.isSameOrBefore(event.repeat.until);
   if (event.repeat.weekdays.length === 0) {
     for (let i = interval; sameOrBefore; i += interval) {
-      sameOrBefore = begin.add(i, "week").isSameOrBefore(event.repeat.until);
-      const dates = begin.add(i, "week").format("YYYY-MM-DD");
+      sameOrBefore = begin.add(i, 'week').isSameOrBefore(event.repeat.until);
+      const dates = begin.add(i, 'week').format('YYYY-MM-DD');
       if (!sameOrBefore) break;
       const exceptions = event.repeat.exceptions;
       if (exceptions.includes(dates)) {
@@ -79,20 +79,20 @@ function generateWeeklyDates(event) {
     return arrayOfDates;
   } else {
     for (let i = 0; sameOrBefore; i += interval) {
-      sameOrBefore = begin.add(i, "week").isSameOrBefore(event.repeat.until);
-      const dates = begin.add(i, "week");
+      sameOrBefore = begin.add(i, 'week').isSameOrBefore(event.repeat.until);
+      const dates = begin.add(i, 'week');
       if (!sameOrBefore) break;
       const exceptions = event.repeat.exceptions;
 
       event.repeat.weekdays.forEach((item) => {
         const candidate = dates.day(item);
-        const candidateDate = candidate.format("YYYY-MM-DD");
+        const candidateDate = candidate.format('YYYY-MM-DD');
         if (exceptions.includes(candidateDate)) return;
         if (
           begin.isBefore(candidate) &&
           candidate.isSameOrBefore(event.repeat.until)
         ) {
-          arrayOfDates.push(candidate.format("YYYY-MM-DD"));
+          arrayOfDates.push(candidate.format('YYYY-MM-DD'));
         }
       });
     }
@@ -113,10 +113,10 @@ function generateCustomDates(event) {
 function createRepeatedEvents(baseEvent, dates) {
   return dates.map((date) => {
     return {
-      ...baseEvent,
+      // TODO This is adding fields to the event entity that are not semantic. Think about how to proceed when refactor is more advanced
+      ...baseEvent.toJSON(),
       id: `${baseEvent.repeat.seriesId}-${date}`,
       originalEventId: baseEvent.id,
-      seriesId: baseEvent.repeat.seriesId,
       isOccurrence: true,
       date,
     };

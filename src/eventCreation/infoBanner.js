@@ -1,47 +1,47 @@
 import {
   getEvents,
   deleteEventFromLocalStorage,
-  saveEventsInLocalStorage,
-} from "../utils/events/eventStorage.js";
-import createElement from "../utils/helpers/createElement.js";
-import getFloatingPosition from "../utils/helpers/floatingPositioner.js";
+} from '../utils/events/eventStorage.js';
+import { AppEventsRepo } from '../interface-adapters/repos/AppEventsRepo.js';
+import createElement from '../utils/helpers/createElement.js';
+import getFloatingPosition from '../utils/helpers/floatingPositioner.js';
 import {
   renderEvents,
   getAllRenderableEvents,
-} from "../utils/events/eventRendering.js";
-import { createMessage } from "../utils/helpers/createElement.js";
-import { preCompilerEdit } from "./eventLogic.js";
-import { rehydrateRepeatModal } from "./repeatEvent.js";
-import openModal from "./eventModal.js";
+} from '../utils/events/eventRendering.js';
+import { createMessage } from '../utils/helpers/createElement.js';
+import { preCompilerEdit } from './eventLogic.js';
+import { rehydrateRepeatModal } from './repeatEvent.js';
+import openModal from './eventModal.js';
 
-import { miniCalendarLayer as modalLayer } from "../utils/helpers/dom/miniCalendarDom.js";
+import { miniCalendarLayer as modalLayer } from '../utils/helpers/dom/miniCalendarDom.js';
 
 let selectedCurrentID = null;
 let colorClass = null;
 
 function handleOptionsClick(e) {
-  const button = e.target.closest("button[data-action]");
+  const button = e.target.closest('button[data-action]');
   if (!button) return;
 
   const action = button.dataset.action;
 
   switch (action) {
-    case "edit-normal":
+    case 'edit-normal':
       handleClickEditButton(e);
       break;
-    case "edit-single":
+    case 'edit-single':
       handleClickEditSingleEventBtn(e);
       break;
-    case "edit-series":
+    case 'edit-series':
       handleClickEditSeriesBtn(e);
       break;
-    case "delete-normal":
+    case 'delete-normal':
       deleteEvent();
       break;
-    case "delete-single":
+    case 'delete-single':
       deleteSingleOccurrence();
       break;
-    case "delete-series":
+    case 'delete-series':
       deleteEventsOccurrencies();
       break;
   }
@@ -50,37 +50,37 @@ function handleOptionsClick(e) {
 export function initOptionsBanner(currentEvent) {
   const optionsBanner = createElement(
     document.body,
-    "option-banner-container",
+    'option-banner-container',
     null,
-    "div",
-    { attributes: { "data-testid": "event-banner" } },
+    'div',
+    { attributes: { 'data-testid': 'event-banner' } },
   );
-  const close = createElement(optionsBanner, "close-banner", "x", "button");
-  const infoWrapper = createElement(optionsBanner, "info-wrapper", null, "div");
+  const close = createElement(optionsBanner, 'close-banner', 'x', 'button');
+  const infoWrapper = createElement(optionsBanner, 'info-wrapper', null, 'div');
 
   const infoSection = createElement(
     infoWrapper,
-    "info-section",
+    'info-section',
     null,
-    "section",
+    'section',
     { html: true },
   );
   const optionsSection = createElement(
     infoWrapper,
-    "options-section",
+    'options-section',
     null,
-    "section",
+    'section',
     { html: true },
   );
-  optionsSection.addEventListener("click", handleOptionsClick);
+  optionsSection.addEventListener('click', handleOptionsClick);
   optionsBanner
-    .querySelector(".close-banner")
-    .addEventListener("click", closeInfoBanner);
+    .querySelector('.close-banner')
+    .addEventListener('click', closeInfoBanner);
 }
 
 function getOptionButtons(isRepeatedEvent) {
-  const banner = document.querySelector(".option-banner-container");
-  const optionSection = banner.querySelector(".options-section");
+  const banner = document.querySelector('.option-banner-container');
+  const optionSection = banner.querySelector('.options-section');
 
   if (isRepeatedEvent) {
     optionSection.innerHTML = `
@@ -139,8 +139,8 @@ function getOptionButtons(isRepeatedEvent) {
 }
 
 export function renderExtraInfo(currentEvent, e) {
-  const banner = document.querySelector(".option-banner-container");
-  const infoSection = banner.querySelector(".info-section");
+  const banner = document.querySelector('.option-banner-container');
+  const infoSection = banner.querySelector('.info-section');
   const events = getAllRenderableEvents();
   const selectedEvent = events.find(
     (event) => event.id === currentEvent.dataset.id,
@@ -148,7 +148,7 @@ export function renderExtraInfo(currentEvent, e) {
   if (!selectedEvent) return;
   const isRepeatedEvent =
     selectedEvent.repeat !== null || selectedEvent.isOccurrence === true;
-  const isDailyview = e.target.closest(".daily-event, .daily-allDay-event");
+  const isDailyview = e.target.closest('.daily-event, .daily-allDay-event');
   const target = {
     top: e.clientY,
     bottom: e.clientY,
@@ -157,8 +157,8 @@ export function renderExtraInfo(currentEvent, e) {
   };
 
   banner.classList.add(`event-${selectedEvent.color}`);
-  modalLayer.classList.add("show-mini-calendar-layer");
-  banner.classList.add("show-option-banner");
+  modalLayer.classList.add('show-mini-calendar-layer');
+  banner.classList.add('show-option-banner');
   // aggiunto per compensare il calcolo iniziale dell'altezza dell'info banner che al primo click non è ancora stato calcolato
   requestAnimationFrame(() => {
     getFloatingPosition(banner, target, isDailyview);
@@ -171,32 +171,32 @@ export function renderExtraInfo(currentEvent, e) {
 
   infoSection.replaceChildren();
 
-  const infoTitle = createElement(infoSection, "info-title", "", "div");
+  const infoTitle = createElement(infoSection, 'info-title', '', 'div');
 
-  createElement(infoTitle, null, selectedEvent.icon, "span", {
+  createElement(infoTitle, null, selectedEvent.icon, 'span', {
     attributes: {
-      "text-background": "",
+      'text-background': '',
     },
   });
 
-  createElement(infoTitle, null, selectedEvent.title, "h2");
+  createElement(infoTitle, null, selectedEvent.title, 'h2');
 
   const timeText = selectedEvent.allDay
-    ? "Tutto il giorno"
+    ? 'Tutto il giorno'
     : `${selectedEvent.from} - ${selectedEvent.to}`;
 
-  createElement(infoSection, "time-row", timeText, "p");
+  createElement(infoSection, 'time-row', timeText, 'p');
 
   if (selectedEvent.description) {
-    createElement(infoSection, null, selectedEvent.description, "p");
+    createElement(infoSection, null, selectedEvent.description, 'p');
   }
 
   if (selectedEvent.urgent) {
-    createElement(infoSection, null, "Urgente!", "p");
+    createElement(infoSection, null, 'Urgente!', 'p');
   }
 
   if (isRepeatedEvent) {
-    createElement(infoSection, null, "🔗 Evento ripetuto", "p");
+    createElement(infoSection, null, '🔗 Evento ripetuto', 'p');
   }
 }
 
@@ -220,61 +220,59 @@ function getEventContext() {
 }
 
 function deleteEvent() {
-  const banner = document.querySelector(".option-banner-container");
+  const banner = document.querySelector('.option-banner-container');
 
   deleteEventFromLocalStorage(selectedCurrentID);
   finalizeBannerAction("l'evento è stato rimosso", banner);
 }
 
 function deleteEventsOccurrencies() {
-  const banner = document.querySelector(".option-banner-container");
+  const banner = document.querySelector('.option-banner-container');
   const events = getAllRenderableEvents();
 
   const { motherId } = getEventContext();
 
   deleteEventFromLocalStorage(motherId);
-  finalizeBannerAction("la serie è stato rimossa", banner);
+  finalizeBannerAction('la serie è stato rimossa', banner);
 }
 
 function deleteSingleOccurrence() {
-  const banner = document.querySelector(".option-banner-container");
+  const banner = document.querySelector('.option-banner-container');
 
   const { events, currentEvent, motherId } = getEventContext();
   if (!currentEvent) return;
 
-  const storedEvents = getEvents();
   const occurrenceDate = currentEvent.date;
 
   if (currentEvent.isOccurrence === true && currentEvent.repeat !== null) {
-    const updatedEvents = storedEvents.map((event) => {
-      if (event.id !== motherId) return event;
-      return {
-        ...event,
-        repeat: {
-          ...event.repeat,
-          exceptions: [...event.repeat.exceptions, occurrenceDate],
-        },
-      };
+    const motherEvent = AppEventsRepo.getById(motherId);
+
+    motherEvent.update({
+      repeat: {
+        ...motherEvent.repeat,
+        exceptions: [...motherEvent.repeat.exceptions, occurrenceDate],
+      },
     });
-    saveEventsInLocalStorage(updatedEvents);
+
+    AppEventsRepo.save(motherEvent);
     finalizeBannerAction("l'evento è stato rimosso", banner);
   } else {
     //con find so che mi ritorna il primo elemento corrispondente, essendo che sono in ordine
     const nextOccurrence = events.find(
       (event) => event.originalEventId === currentEvent.id,
     );
-    const updatedEvents = storedEvents.map((event) => {
-      if (event.id !== motherId) return event;
-      return {
-        ...event,
-        date: nextOccurrence.date,
-        repeat: {
-          ...event.repeat,
-          exceptions: [...event.repeat.exceptions, event.date],
-        },
-      };
+
+    const motherEvent = AppEventsRepo.getById(motherId);
+
+    motherEvent.update({
+      date: nextOccurrence.date,
+      repeat: {
+        ...motherEvent.repeat,
+        exceptions: [...motherEvent.repeat.exceptions, motherEvent.date],
+      },
     });
-    saveEventsInLocalStorage(updatedEvents);
+
+    AppEventsRepo.save(motherEvent);
     finalizeBannerAction("l'evento è stato rimosso", banner);
   }
 }
@@ -290,12 +288,12 @@ function getEventFromID() {
 }
 
 export function closeInfoBanner() {
-  const banner = document.querySelector(".option-banner-container");
+  const banner = document.querySelector('.option-banner-container');
   banner.classList.remove(`event-${colorClass}`);
   selectedCurrentID = null;
   colorClass = null;
-  modalLayer.classList.remove("show-mini-calendar-layer");
-  banner.classList.remove("show-option-banner");
+  modalLayer.classList.remove('show-mini-calendar-layer');
+  banner.classList.remove('show-option-banner');
 }
 
 function handleEditFlow(event, mode, shouldRehydrate, e) {
@@ -309,15 +307,15 @@ function handleEditFlow(event, mode, shouldRehydrate, e) {
 
 function handleClickEditButton(e) {
   const currentEvent = getEventFromID().currentEvent;
-  handleEditFlow(currentEvent, "edit", false, e);
+  handleEditFlow(currentEvent, 'edit', false, e);
 }
 function handleClickEditSingleEventBtn(e) {
   const currentEvent = getEventFromID().currentEvent;
-  handleEditFlow(currentEvent, "edit-single-occurrence", false, e);
+  handleEditFlow(currentEvent, 'edit-single-occurrence', false, e);
 }
 function handleClickEditSeriesBtn(e) {
   const currentEvent = getEventFromID().motherEvent;
-  handleEditFlow(currentEvent, "edit-series", true, e);
+  handleEditFlow(currentEvent, 'edit-series', true, e);
 }
 
 export function initExtraInfos() {
