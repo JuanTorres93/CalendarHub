@@ -1,19 +1,17 @@
-import {
-  getEvents,
-  deleteEventFromLocalStorage,
-} from '../utils/events/eventStorage.js';
 import { AppEventsRepo } from '../interface-adapters/repos/AppEventsRepo.js';
 import { AppGetEventByIdUsecase } from '../interface-adapters/use-cases/AppGetEventByIdUsecase.js';
-import createElement from '../utils/helpers/createElement.js';
-import getFloatingPosition from '../utils/helpers/floatingPositioner.js';
+import { AppDeleteEventByIdUsecase } from '../interface-adapters/use-cases/AppDeleteEventByIdUsecase.js';
 import {
-  renderEvents,
   getAllRenderableEvents,
+  renderEvents,
 } from '../utils/events/eventRendering.js';
-import { createMessage } from '../utils/helpers/createElement.js';
+import createElement, {
+  createMessage,
+} from '../utils/helpers/createElement.js';
+import getFloatingPosition from '../utils/helpers/floatingPositioner.js';
 import { preCompilerEdit } from './eventLogic.js';
-import { rehydrateRepeatModal } from './repeatEvent.js';
 import openModal from './eventModal.js';
+import { rehydrateRepeatModal } from './repeatEvent.js';
 
 import { miniCalendarLayer as modalLayer } from '../utils/helpers/dom/miniCalendarDom.js';
 
@@ -223,7 +221,7 @@ function getEventContext() {
 function deleteEvent() {
   const banner = document.querySelector('.option-banner-container');
 
-  deleteEventFromLocalStorage(selectedCurrentID);
+  AppDeleteEventByIdUsecase.execute({ id: selectedCurrentID });
   finalizeBannerAction("l'evento è stato rimosso", banner);
 }
 
@@ -233,7 +231,7 @@ function deleteEventsOccurrencies() {
 
   const { motherId } = getEventContext();
 
-  deleteEventFromLocalStorage(motherId);
+  AppDeleteEventByIdUsecase.execute({ id: motherId });
   finalizeBannerAction('la serie è stato rimossa', banner);
 }
 

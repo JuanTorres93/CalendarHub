@@ -6,15 +6,9 @@ const STORAGE_KEY = 'calendarEvents';
 
 export class LocalStorageEventsRepo extends EventsRepo {
   getById(id) {
-    const storedEvents = readRawEvents();
+    const storedEvent = readRawEvents().find((event) => event.id === id);
 
-    const storedEvent = storedEvents.find((event) => event.id === id);
-
-    if (!storedEvent) {
-      return null;
-    }
-
-    return Event.create(storedEvent);
+    return storedEvent ? Event.create(storedEvent) : null;
   }
 
   getAll() {

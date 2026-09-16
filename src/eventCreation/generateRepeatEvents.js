@@ -1,9 +1,9 @@
-import { getEvents } from '../utils/events/eventStorage.js';
 import dayjs from '../day.js';
+import { AppGetAllEventsUsecase } from '../interface-adapters/use-cases/AppGetAllEventsUsecase.js';
 
 export function getRepeatedEvents() {
   let arrayOfevents = [];
-  const events = getEvents();
+  const events = AppGetAllEventsUsecase.execute();
 
   const repeated = events.filter((event) => {
     return event.repeat !== null;

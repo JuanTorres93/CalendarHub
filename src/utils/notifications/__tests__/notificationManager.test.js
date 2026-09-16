@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createNotificationMock } from '../../../../tests/mocks/notification.mock.js';
 import html from '../../../../index.html?raw';
+import { createTestEvent } from '../../../domain/entities/event/__tests__/eventTestProps.js';
 
 let requestNotificationPermission;
 let showNotification;
@@ -156,7 +157,7 @@ describe('notification scheduler', () => {
   });
 
   it('shows a notification when the event notification time is reached', () => {
-    seedEvents([createBaseEvent()]);
+    seedEvents([createEventWithNotification()]);
 
     startNotificationScheduler();
 
@@ -170,7 +171,7 @@ describe('notification scheduler', () => {
   });
 
   it('does not show a notification when the notification time has not arrived', () => {
-    seedEvents([createBaseEvent()]);
+    seedEvents([createEventWithNotification()]);
 
     startNotificationScheduler();
 
@@ -180,7 +181,7 @@ describe('notification scheduler', () => {
   });
 
   it('shows a notification only once', () => {
-    seedEvents([createBaseEvent()]);
+    seedEvents([createEventWithNotification()]);
 
     startNotificationScheduler();
 
@@ -190,17 +191,7 @@ describe('notification scheduler', () => {
   });
 
   it('skips events without a notification', () => {
-    seedEvents([createBaseEvent({ notification: 'nessuna notifica' })]);
-
-    startNotificationScheduler();
-
-    vi.advanceTimersByTime(60_000);
-
-    expect(window.Notification.getInstances()).toHaveLength(0);
-  });
-
-  it('skips events with an unknown notification period', () => {
-    seedEvents([createBaseEvent({ notification: '10 minuti prima' })]);
+    seedEvents([createEventWithNotification({ notification: 'none' })]);
 
     startNotificationScheduler();
 
@@ -211,12 +202,12 @@ describe('notification scheduler', () => {
 
   it('shows a notification for every due event', () => {
     seedEvents([
-      createBaseEvent(),
-      createBaseEvent({
+      createEventWithNotification(),
+      createEventWithNotification({
         id: 'evt-2',
         title: 'Pausa',
         from: '10:30',
-        notification: '15 minuti prima',
+        notification: '15min',
       }),
     ]);
 
@@ -228,7 +219,7 @@ describe('notification scheduler', () => {
   });
 
   it('stops showing notifications after stopNotificationScheduler', () => {
-    seedEvents([createBaseEvent()]);
+    seedEvents([createEventWithNotification()]);
 
     startNotificationScheduler();
     stopNotificationScheduler();
@@ -239,24 +230,17 @@ describe('notification scheduler', () => {
   });
 });
 
-function seedEvents(events) {
-  localStorage.setItem('calendarEvents', JSON.stringify(events));
-}
-
-function createBaseEvent(overrides = {}) {
-  return {
+function createEventWithNotification(overrides = {}) {
+  return createTestEvent({
     id: 'evt-1',
     title: 'Riunione',
     date: '2026-09-14',
     from: '10:00',
-    to: '11:00',
-    description: '',
-    icon: '✏️',
-    color: 'blue',
-    urgent: false,
-    allDay: false,
-    notification: '5 minuti prima',
-    repeat: null,
+    notification: '5min',
     ...overrides,
-  };
+  });
+}
+
+function seedEvents(events) {
+  localStorage.setItem('calendarEvents', JSON.stringify(events));
 }

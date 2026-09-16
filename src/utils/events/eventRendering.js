@@ -1,11 +1,12 @@
+import { AppGetAllEventsUsecase } from '../../interface-adapters/use-cases/AppGetAllEventsUsecase.js';
 import { getRepeatedEvents } from '../../eventCreation/generateRepeatEvents.js';
 import createElement from '../helpers/createElement.js';
 import { timeToMinutes } from '../helpers/timeHelper.js';
-import { getEvents } from './eventStorage.js';
 
 export function getAllRenderableEvents() {
-  const eventsUpdated = getEvents();
+  const eventsUpdated = AppGetAllEventsUsecase.execute();
   const eventOccurrencies = getRepeatedEvents();
+
   return [...eventsUpdated, ...eventOccurrencies];
 }
 

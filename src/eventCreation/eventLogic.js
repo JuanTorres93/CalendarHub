@@ -20,7 +20,6 @@ import {
   validatorEventDraft,
 } from '../utils/events/eventDraft.js';
 import { renderEvents } from '../utils/events/eventRendering.js';
-import { getEvents } from '../utils/events/eventStorage.js';
 import { AppEventsRepo } from '../interface-adapters/repos/AppEventsRepo.js';
 import { formatDate } from '../utils/events/eventsUI.js';
 import { createMessage } from '../utils/helpers/createElement.js';
