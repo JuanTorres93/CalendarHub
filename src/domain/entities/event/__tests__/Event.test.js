@@ -325,6 +325,51 @@ describe('Event', () => {
     });
   });
 
+  describe('reset', () => {
+    let eventToReset;
+
+    beforeEach(() => {
+      eventToReset = Event.create({
+        ...EVENT_TEST_PROPS,
+        description: 'some description',
+        urgent: !EVENT_TEST_PROPS.urgent,
+        allDay: !EVENT_TEST_PROPS.allDay,
+        icon: '🎉',
+        color: 'red',
+        notification: '15min',
+        repeat: {
+          seriesId: 'series-id',
+          type: 'weekly',
+          interval: 1,
+          until: '2024-07-01',
+          weekdays: [1, 3],
+          customDates: [],
+          exceptions: [],
+        },
+      });
+    });
+
+    it('should reset all fields to their default values', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2024, 5, 1, 9, 45));
+
+      eventToReset.reset();
+
+      expect(eventToReset.id).toBe(EVENT_TEST_PROPS.id);
+      expect(eventToReset.title).toBe(EVENT_TEST_PROPS.title);
+      expect(eventToReset.description).toBe('');
+      expect(eventToReset.date).toBe('2024-06-01');
+      expect(eventToReset.from).toBe('09:00');
+      expect(eventToReset.to).toBe('10:00');
+      expect(eventToReset.icon).toBe('✏️');
+      expect(eventToReset.color).toBe('blue');
+      expect(eventToReset.urgent).toBe(false);
+      expect(eventToReset.allDay).toBe(false);
+      expect(eventToReset.notification).toBe('5min');
+      expect(eventToReset.repeat).toBeNull();
+    });
+  });
+
   it('should keep the repeat config if it is provided', async () => {
     const repeatConfig = {
       seriesId: 'series-id',

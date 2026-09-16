@@ -15,9 +15,11 @@ export class Event {
   }
 
   static create(props) {
+    const defaults = Event.defaultProps();
+
     const from = props?.from
       ? Time.create(props.from)
-      : Time.create(currentHour());
+      : Time.create(defaults.from);
     const to = props?.to
       ? Time.create(props.to)
       : Time.create(addOneHour(from.value));
@@ -33,33 +35,43 @@ export class Event {
 
       title: Text.create(props.title, TITLE_TEXT_OPTIONS),
       description: Text.create(
-        props?.description || '',
+        props?.description || defaults.description,
         DESCRIPTION_TEXT_OPTIONS,
       ),
 
-      date: props?.date ? Day.create(props.date) : Day.create(new Date()),
+      date: props?.date ? Day.create(props.date) : Day.create(defaults.date),
       from: from,
       to: to,
 
       notification: props.notification
         ? NotificationPeriod.create(props.notification)
-        : NotificationPeriod.create('5min'),
+        : NotificationPeriod.create(defaults.notification),
 
       urgent: props?.urgent
         ? Boolean.create(props.urgent)
-        : Boolean.create(false),
+        : Boolean.create(defaults.urgent),
       allDay: props?.allDay
         ? Boolean.create(props.allDay)
-        : Boolean.create(false),
+        : Boolean.create(defaults.allDay),
 
-      icon: props?.icon ? Icon.create(props.icon) : Icon.create('✏️'),
+      icon: props?.icon
+        ? Icon.create(props.icon)
+        : Icon.create(defaults.icon),
 
-      color: props?.color ? Color.create(props.color) : Color.create('blue'),
+      color: props?.color
+        ? Color.create(props.color)
+        : Color.create(defaults.color),
 
-      repeat: props?.repeat ? Repeat.create(props.repeat) : Repeat.create(null),
+      repeat: props?.repeat
+        ? Repeat.create(props.repeat)
+        : Repeat.create(defaults.repeat),
     };
 
     return new Event(validatedProps);
+  }
+
+  reset() {
+    this.update(Event.defaultProps());
   }
 
   update(updateProps) {
@@ -154,6 +166,28 @@ export class Event {
 
   get repeat() {
     return this.props.repeat.value;
+  }
+
+  static defaultProps() {
+    const from = currentHour();
+
+    return {
+      description: '',
+
+      date: new Date(),
+      from,
+      to: addOneHour(from),
+
+      notification: '5min',
+
+      urgent: false,
+      allDay: false,
+
+      icon: '✏️',
+      color: 'blue',
+
+      repeat: null,
+    };
   }
 }
 
