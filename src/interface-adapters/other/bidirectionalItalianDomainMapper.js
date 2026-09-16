@@ -22,6 +22,10 @@ export function toDomainNotification(italianValue) {
   return domainValue;
 }
 
+export function toDomainNotificationIfItalian(value) {
+  return ITALIAN_TO_DOMAIN[value] ?? value;
+}
+
 export function toItalianNotification(domainValue) {
   const italianValue = DOMAIN_TO_ITALIAN[domainValue];
 

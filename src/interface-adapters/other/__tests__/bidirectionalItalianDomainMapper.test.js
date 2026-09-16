@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   toDomainNotification,
+  toDomainNotificationIfItalian,
   toItalianNotification,
 } from '../bidirectionalItalianDomainMapper.js';
 
@@ -21,6 +22,20 @@ describe('bidirectionalItalianDomainMapper', () => {
 
     it('should throw for an unknown label', () => {
       expect(() => toDomainNotification('3 ore prima')).toThrow(Error);
+    });
+  });
+
+  describe('toDomainNotificationIfItalian', () => {
+    it.each([
+      ['nessuna notifica', 'none'],
+      ['5 minuti prima', '5min'],
+      ['1 ora prima', '1h'],
+    ])('should map "%s" to "%s"', (italian, domain) => {
+      expect(toDomainNotificationIfItalian(italian)).toBe(domain);
+    });
+
+    it('should return the value unchanged if it is already domain', () => {
+      expect(toDomainNotificationIfItalian('1h')).toBe('1h');
     });
   });
 

@@ -281,7 +281,7 @@ describe('Events', () => {
       await user.click(screen.getByTestId('event-save-button'));
 
       expect(getSavedEvents()).toContainEqual(
-        expect.objectContaining({ notification: '1 ora prima' }),
+        expect.objectContaining({ notification: '1h' }),
       );
     });
 

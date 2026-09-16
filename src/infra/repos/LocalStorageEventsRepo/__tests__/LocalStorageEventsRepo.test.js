@@ -46,6 +46,34 @@ describe('LocalStorageEventsRepo', () => {
 
       expect(fetchedEvent).toBeNull();
     });
+
+    it('should map legacy events with Italian notification to domain', async () => {
+      localStorage.clear();
+
+      localStorage.setItem(
+        'calendarEvents',
+        JSON.stringify([
+          {
+            id: 'legacy-event-id',
+            title: 'Legacy event',
+            date: '2026-09-14',
+            from: '10:00',
+            to: '11:00',
+            description: '',
+            icon: '✏️',
+            color: 'blue',
+            urgent: false,
+            allDay: false,
+            notification: '5 minuti prima',
+            repeat: null,
+          },
+        ]),
+      );
+
+      const fetchedEvent = await repo.getById('legacy-event-id');
+
+      expect(fetchedEvent.notification).toBe('5min');
+    });
   });
 
   describe('getAll', () => {
@@ -59,9 +87,9 @@ describe('LocalStorageEventsRepo', () => {
 
       const fetchedEvents = await repo.getAll();
 
-      expect(fetchedEvents.map((fetchedEvent) => fetchedEvent.toJSON())).toEqual(
-        [event.toJSON(), secondEvent.toJSON()],
-      );
+      expect(
+        fetchedEvents.map((fetchedEvent) => fetchedEvent.toJSON()),
+      ).toEqual([event.toJSON(), secondEvent.toJSON()]);
     });
 
     it('should return an empty array if no events are saved', async () => {

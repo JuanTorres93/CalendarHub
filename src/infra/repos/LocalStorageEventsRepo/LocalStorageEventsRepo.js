@@ -1,11 +1,12 @@
 import { EventsRepo } from '../../../application-layer/repos/EventsRepo.port.js';
 import { Event } from '../../../domain/entities/event/Event.js';
+import { toDomainNotificationIfItalian } from '../../../interface-adapters/other/bidirectionalItalianDomainMapper.js';
 
 const STORAGE_KEY = 'calendarEvents';
 
 export class LocalStorageEventsRepo extends EventsRepo {
   getById(id) {
-    const storedEvents = readEvents();
+    const storedEvents = readRawEvents();
 
     const storedEvent = storedEvents.find((event) => event.id === id);
 
@@ -17,11 +18,11 @@ export class LocalStorageEventsRepo extends EventsRepo {
   }
 
   getAll() {
-    return readEvents().map((storedEvent) => Event.create(storedEvent));
+    return readRawEvents().map((storedEvent) => Event.create(storedEvent));
   }
 
   save(event) {
-    const storedEvents = readEvents();
+    const storedEvents = readRawEvents();
     const eventData = event.toJSON();
 
     const existingEventIndex = storedEvents.findIndex(
@@ -42,7 +43,7 @@ export class LocalStorageEventsRepo extends EventsRepo {
   }
 
   deleteById(id) {
-    const storedEvents = readEvents();
+    const storedEvents = readRawEvents();
 
     writeEvents(storedEvents.filter((storedEvent) => storedEvent.id !== id));
   }
@@ -52,7 +53,7 @@ export class LocalStorageEventsRepo extends EventsRepo {
   }
 }
 
-function readEvents() {
+function readRawEvents() {
   const storedEvents = localStorage.getItem(STORAGE_KEY);
 
   if (!storedEvents) {
@@ -62,7 +63,13 @@ function readEvents() {
   try {
     const parsedEvents = JSON.parse(storedEvents);
 
-    return Array.isArray(parsedEvents) ? parsedEvents : [];
+    if (!Array.isArray(parsedEvents)) return [];
+
+    // MAP TEMPORARILY FROM ITALIAN TO DOMAIN
+    return parsedEvents.map((event) => ({
+      ...event,
+      notification: toDomainNotificationIfItalian(event.notification),
+    }));
   } catch {
     return [];
   }

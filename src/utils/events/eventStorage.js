@@ -1,26 +1,19 @@
+import { AppEventsRepo } from '../../interface-adapters/repos/AppEventsRepo.js';
 import { Event } from '../../domain/entities/event/Event.js';
 import { createMessage } from '../helpers/createElement.js';
 import { modalEvents } from '../helpers/dom/eventModalDom.js';
+import {
+  toDomainNotification,
+  toDomainNotificationIfItalian,
+  toItalianNotification,
+} from '../../interface-adapters/other/bidirectionalItalianDomainMapper.js';
 
 export function getEvents() {
   try {
-    const storedEvents = localStorage.getItem('calendarEvents');
-
-    if (!storedEvents) return [];
-
-    const parsedEvents = JSON.parse(storedEvents);
-
-    if (!Array.isArray(parsedEvents)) return [];
-
-    return parsedEvents.filter((event, index) => {
-      const isValid = isValidEvent(event);
-
-      if (!isValid) {
-        console.warn(`Invalid event at index ${index} in localStorage`);
-      }
-
-      return isValid;
-    });
+    return AppEventsRepo.getAll().map((eventEntity) => ({
+      ...eventEntity.toJSON(),
+      notification: toItalianNotification(eventEntity.notification),
+    }));
   } catch (error) {
     console.error('Unable to read calendar events from localStorage:', error);
     return [];
@@ -28,28 +21,16 @@ export function getEvents() {
 }
 
 export function saveEventsInLocalStorage(events) {
-  if (!Array.isArray(events)) {
-    createMessage(
-      'Salvataggio non riuscito: formato dei dati non valido.',
-      modalEvents,
-      document.body,
-    );
-    return false;
-  }
-
-  const hasValidEvents = events.every(isValidEvent);
-
-  if (!hasValidEvents) {
-    createMessage(
-      'Salvataggio non riuscito: i dati degli eventi non sono validi.',
-      modalEvents,
-      document.body,
-    );
-    return false;
-  }
+  const eventEntities = events.map((event) =>
+    Event.create({
+      ...event,
+      notification: toDomainNotificationIfItalian(event.notification),
+    }),
+  );
 
   try {
-    localStorage.setItem('calendarEvents', JSON.stringify(events));
+    AppEventsRepo.saveMultiple(eventEntities);
+
     return true;
   } catch (error) {
     console.error('Failed to save calendar events in localStorage:', error);
