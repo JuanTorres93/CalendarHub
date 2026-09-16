@@ -1,10 +1,14 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { Event } from '../Event';
 import { EVENT_TEST_PROPS } from './eventTestProps';
 import { ValidationDomainError } from '../../../common/domainErrors.js';
 import { NOTIFICATION_PERIODS } from '../../../value-objets/NotificationPeriod/NotificationPeriod.js';
 
 describe('Event', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('should create an event', () => {
     const event = Event.create(EVENT_TEST_PROPS);
 
@@ -140,6 +144,42 @@ describe('Event', () => {
 
       const today = new Date().toISOString().split('T')[0];
       expect(event.date).toBe(today);
+    });
+
+    it('should default from to the current hour if it is not provided', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2024, 5, 1, 14, 45));
+
+      const eventProps = { ...EVENT_TEST_PROPS };
+      delete eventProps.from;
+
+      const event = Event.create(eventProps);
+
+      expect(event.from).toBe('14:00');
+    });
+
+    it('should default to to the next hour if it is not provided', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2024, 5, 1, 14, 45));
+
+      const eventProps = { ...EVENT_TEST_PROPS };
+      delete eventProps.to;
+
+      const event = Event.create(eventProps);
+
+      expect(event.to).toBe('15:00');
+    });
+
+    it('should default to the next hour wrapping at midnight', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2024, 5, 1, 23, 45));
+
+      const eventProps = { ...EVENT_TEST_PROPS };
+      delete eventProps.to;
+
+      const event = Event.create(eventProps);
+
+      expect(event.to).toBe('00:00');
     });
   });
 

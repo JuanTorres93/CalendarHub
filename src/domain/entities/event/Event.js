@@ -26,8 +26,8 @@ export class Event {
       ),
 
       date: props?.date ? Day.create(props.date) : Day.create(new Date()),
-      from: Time.create(props.from),
-      to: Time.create(props.to),
+      from: props?.from ? Time.create(props.from) : Time.create(currentHour()),
+      to: props?.to ? Time.create(props.to) : Time.create(nextHour()),
 
       notification: props.notification
         ? NotificationPeriod.create(props.notification)
@@ -101,3 +101,14 @@ export class Event {
 
 const TITLE_TEXT_OPTIONS = { canBeEmpty: false };
 const DESCRIPTION_TEXT_OPTIONS = { maxLength: 200, canBeEmpty: true };
+
+function currentHour() {
+  const now = new Date();
+  return `${String(now.getHours()).padStart(2, '0')}:00`;
+}
+
+function nextHour() {
+  const now = new Date();
+  const hour = (now.getHours() + 1) % 24;
+  return `${String(hour).padStart(2, '0')}:00`;
+}
