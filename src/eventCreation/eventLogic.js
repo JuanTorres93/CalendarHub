@@ -401,6 +401,7 @@ export function saveEvent() {
 
         AppEventsRepo.save(motherEvent);
         AppEventsRepo.save(eventDraft);
+
         createMessage(
           "l'occorrenza è stata modificata!",
           modalEvents,
@@ -432,6 +433,7 @@ export function saveEvent() {
         });
 
         AppEventsRepo.save(eventDraft);
+
         createMessage(
           'la serie è stato modificata!',
           modalEvents,
