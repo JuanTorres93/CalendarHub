@@ -1,3 +1,4 @@
+import { ValidationDomainError } from '../../common/domainErrors.js';
 import { NotificationPeriod } from '../../value-objets/NotificationPeriod/NotificationPeriod.js';
 import { Text } from '../../value-objets/Text/Text.js';
 import { Id } from '../../value-objets/Id/Id.js';
@@ -14,6 +15,17 @@ export class Event {
   }
 
   static create(props) {
+    const from = props?.from
+      ? Time.create(props.from)
+      : Time.create(currentHour());
+    const to = props?.to
+      ? Time.create(props.to)
+      : Time.create(addOneHour(from.value));
+
+    if (toMinutes(to.value) <= toMinutes(from.value)) {
+      throw new ValidationDomainError('Event: to must be later than from');
+    }
+
     const validatedProps = {
       ...props,
 
@@ -26,8 +38,8 @@ export class Event {
       ),
 
       date: props?.date ? Day.create(props.date) : Day.create(new Date()),
-      from: props?.from ? Time.create(props.from) : Time.create(currentHour()),
-      to: props?.to ? Time.create(props.to) : Time.create(nextHour()),
+      from: from,
+      to: to,
 
       notification: props.notification
         ? NotificationPeriod.create(props.notification)
@@ -107,8 +119,13 @@ function currentHour() {
   return `${String(now.getHours()).padStart(2, '0')}:00`;
 }
 
-function nextHour() {
-  const now = new Date();
-  const hour = (now.getHours() + 1) % 24;
-  return `${String(hour).padStart(2, '0')}:00`;
+function addOneHour(time) {
+  const [hours, minutes] = time.split(':').map(Number);
+  const nextHour = (hours + 1) % 24;
+  return `${String(nextHour).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+}
+
+function toMinutes(time) {
+  const [hours, minutes] = time.split(':').map(Number);
+  return hours * 60 + minutes;
 }

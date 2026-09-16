@@ -148,38 +148,52 @@ describe('Event', () => {
 
     it('should default from to the current hour if it is not provided', () => {
       vi.useFakeTimers();
-      vi.setSystemTime(new Date(2024, 5, 1, 14, 45));
+      vi.setSystemTime(new Date(2024, 5, 1, 9, 45));
 
       const eventProps = { ...EVENT_TEST_PROPS };
       delete eventProps.from;
 
       const event = Event.create(eventProps);
 
-      expect(event.from).toBe('14:00');
+      expect(event.from).toBe('09:00');
     });
 
-    it('should default to to the next hour if it is not provided', () => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date(2024, 5, 1, 14, 45));
-
+    it('should default to to one hour after from if it is not provided', () => {
       const eventProps = { ...EVENT_TEST_PROPS };
       delete eventProps.to;
 
       const event = Event.create(eventProps);
 
-      expect(event.to).toBe('15:00');
+      expect(event.to).toBe('11:00');
     });
 
-    it('should default to the next hour wrapping at midnight', () => {
-      vi.useFakeTimers();
-      vi.setSystemTime(new Date(2024, 5, 1, 23, 45));
-
-      const eventProps = { ...EVENT_TEST_PROPS };
+    it('should default to to one hour after from preserving minutes', () => {
+      const eventProps = { ...EVENT_TEST_PROPS, from: '10:30' };
       delete eventProps.to;
 
       const event = Event.create(eventProps);
 
-      expect(event.to).toBe('00:00');
+      expect(event.to).toBe('11:30');
+    });
+  });
+
+  describe('from and to relationship', () => {
+    it('should throw validation error if to is earlier than from', () => {
+      const eventProps = { ...EVENT_TEST_PROPS, from: '11:00', to: '10:00' };
+
+      expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
+    });
+
+    it('should throw validation error if to equals from', () => {
+      const eventProps = { ...EVENT_TEST_PROPS, from: '10:00', to: '10:00' };
+
+      expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
+    });
+
+    it('should throw validation error if from and to cross midnight', () => {
+      const eventProps = { ...EVENT_TEST_PROPS, from: '23:30', to: '00:30' };
+
+      expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
     });
   });
 
