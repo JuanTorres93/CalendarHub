@@ -176,6 +176,24 @@ describe('Events', () => {
     );
   });
 
+  it('should create the event for the clicked day', async () => {
+    await user.click(screen.getByTestId('day-box-2026-09-07'));
+
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('event-popup-container')).toHaveClass(
+        'show-container',
+      ),
+    );
+
+    await user.type(screen.getByTestId('event-title-input'), 'Test event');
+
+    await user.click(screen.getByTestId('event-save-button'));
+
+    expect(getSavedEvents()).toContainEqual(
+      expect.objectContaining({ date: '2026-09-07' }),
+    );
+  });
+
   describe('Event creation', () => {
     beforeEach(async () => {
       localStorage.clear();

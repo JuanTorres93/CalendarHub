@@ -231,6 +231,8 @@ export function preCompiler(e) {
   const { date, time } = getData(e);
   const endTime = dayjs(time, 'HH:mm').add(1, 'hour').format('HH:mm');
 
+  globalEventState.date = date;
+
   header.firstElementChild.textContent = formatDate(date);
   header.firstElementChild.dataset.day = date;
   header.firstElementChild.nextElementSibling.textContent = time;
@@ -609,10 +611,10 @@ export function initEventFormEvents() {
   );
 
   saveBtn.addEventListener('click', (e) => {
-    const eventRawProps = getEventRawPropsFromForm(e);
+    const eventFormProps = getEventRawPropsFromForm(e);
 
     const createEventProps = {
-      ...eventRawProps,
+      ...eventFormProps,
       ...globalEventState,
     };
 
