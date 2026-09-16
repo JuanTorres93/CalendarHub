@@ -48,6 +48,33 @@ describe('LocalStorageEventsRepo', () => {
     });
   });
 
+  describe('getAll', () => {
+    it('should return all saved events', async () => {
+      const secondEvent = createTestEvent({
+        id: 'second-event-id',
+        title: 'Second event',
+      });
+
+      await repo.save(secondEvent);
+
+      const fetchedEvents = await repo.getAll();
+
+      expect(fetchedEvents.map((fetchedEvent) => fetchedEvent.toJSON())).toEqual(
+        [event.toJSON(), secondEvent.toJSON()],
+      );
+    });
+
+    it('should return an empty array if no events are saved', async () => {
+      localStorage.clear();
+
+      const emptyRepo = new LocalStorageEventsRepo();
+
+      const fetchedEvents = await emptyRepo.getAll();
+
+      expect(fetchedEvents).toEqual([]);
+    });
+  });
+
   describe('save', () => {
     it('should save a new event', async () => {
       const newEvent = createTestEvent({

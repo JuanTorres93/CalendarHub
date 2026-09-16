@@ -4,7 +4,7 @@ import { Event } from '../../../domain/entities/event/Event.js';
 const STORAGE_KEY = 'calendarEvents';
 
 export class LocalStorageEventsRepo extends EventsRepo {
-  async getById(id) {
+  getById(id) {
     const storedEvents = readEvents();
 
     const storedEvent = storedEvents.find((event) => event.id === id);
@@ -16,7 +16,11 @@ export class LocalStorageEventsRepo extends EventsRepo {
     return Event.create(storedEvent);
   }
 
-  async save(event) {
+  getAll() {
+    return readEvents().map((storedEvent) => Event.create(storedEvent));
+  }
+
+  save(event) {
     const storedEvents = readEvents();
     const eventData = event.toJSON();
 
@@ -33,11 +37,11 @@ export class LocalStorageEventsRepo extends EventsRepo {
     writeEvents(storedEvents);
   }
 
-  async saveMultiple(events) {
+  saveMultiple(events) {
     writeEvents(events.map((event) => event.toJSON()));
   }
 
-  async deleteById(id) {
+  deleteById(id) {
     const storedEvents = readEvents();
 
     writeEvents(storedEvents.filter((storedEvent) => storedEvent.id !== id));

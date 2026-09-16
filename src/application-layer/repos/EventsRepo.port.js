@@ -1,17 +1,21 @@
 export class EventsRepo {
-  async getById(id) {
+  getById(id) {
     throw new Error('EventsRepo.getById() not implemented');
   }
 
-  async save(event) {
+  getAll() {
+    throw new Error('EventsRepo.getAll() not implemented');
+  }
+
+  save(event) {
     throw new Error('EventsRepo.save() not implemented');
   }
 
-  async saveMultiple(events) {
+  saveMultiple(events) {
     throw new Error('EventsRepo.saveMultiple() not implemented');
   }
 
-  async deleteById(id) {
+  deleteById(id) {
     throw new Error('EventsRepo.deleteById() not implemented');
   }
 }
