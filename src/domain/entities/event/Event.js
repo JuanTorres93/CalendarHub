@@ -54,9 +54,7 @@ export class Event {
         ? Boolean.create(props.allDay)
         : Boolean.create(defaults.allDay),
 
-      icon: props?.icon
-        ? Icon.create(props.icon)
-        : Icon.create(defaults.icon),
+      icon: props?.icon ? Icon.create(props.icon) : Icon.create(defaults.icon),
 
       color: props?.color
         ? Color.create(props.color)
@@ -72,6 +70,10 @@ export class Event {
 
   reset() {
     this.update(Event.defaultProps());
+  }
+
+  updateIdDuringRefactor(id) {
+    this.props.id = Id.create(id);
   }
 
   update(updateProps) {
@@ -168,6 +170,23 @@ export class Event {
     return this.props.repeat.value;
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      title: this.title,
+      description: this.description,
+      date: this.date,
+      from: this.from,
+      to: this.to,
+      icon: this.icon,
+      color: this.color,
+      urgent: this.urgent,
+      allDay: this.allDay,
+      notification: this.notification,
+      repeat: this.repeat,
+    };
+  }
+
   static defaultProps() {
     const from = currentHour();
 
@@ -191,7 +210,8 @@ export class Event {
   }
 }
 
-const TITLE_TEXT_OPTIONS = { canBeEmpty: false };
+// TODO change to false when code is sufficiently decoupled
+const TITLE_TEXT_OPTIONS = { canBeEmpty: true };
 const DESCRIPTION_TEXT_OPTIONS = { maxLength: 200, canBeEmpty: true };
 
 function currentHour() {

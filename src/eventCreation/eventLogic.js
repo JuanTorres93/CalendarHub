@@ -1,72 +1,73 @@
 import dayjs from '../day.js';
 import {
+  toDomainNotification,
+  toItalianNotification,
+} from '../interface-adapters/other/bidirectionalItalianDomainMapper.js';
+import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
+import createCaroseul, {
+  renderColorList,
+  renderIconsList,
+  renderNotificationList,
+} from '../utils/events/createLists.js';
+import {
   eventDraft,
-  validateTimeRange,
-  timeDraft,
   initEventDraft,
   resetEventDraft,
-} from '../utils/events/eventDraft.js';
-import {
-  renderColorList,
-  renderNotificationList,
-  renderIconsList,
-} from '../utils/events/createLists.js';
-import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
-import {
+  timeDraft,
   updateEventDraft,
+  validateTimeRange,
   validatorEventDraft,
 } from '../utils/events/eventDraft.js';
-import { formatDate } from '../utils/events/eventsUI.js';
-import createCaroseul from '../utils/events/createLists.js';
-import { createMessage } from '../utils/helpers/createElement.js';
-import { nowTarget } from '../utils/isNow.js';
 import { renderEvents } from '../utils/events/eventRendering.js';
 import {
   getEvents,
   saveEventsInLocalStorage,
 } from '../utils/events/eventStorage.js';
-import { setTimeUIAndDraft } from '../utils/helpers/timeHelper.js';
-import openModal from './eventModal.js';
-import { initRepeatEvents, forceResetRepeatModalState } from './repeatEvent.js';
+import { formatDate } from '../utils/events/eventsUI.js';
+import { createMessage } from '../utils/helpers/createElement.js';
 import {
-  handleListSelection,
-  handleOutSideClick,
-} from '../utils/helpers/listSelection.js';
-import {
-  modalEvents,
-  modalOverlay,
-  header,
-  fromHourInput,
-  fromMinuteInput,
-  toHourInput,
-  toMinuteInput,
-  inputTitle,
-  inputDesc,
-  btnDesc,
-  showDesc,
-  categoryBtn,
-  colorLists,
-  colorPreview,
-  urgentBtn,
-  urgentCheckBox,
-  miniCalendarBtn,
   allDayBtn,
   allDayCheckBox,
-  timeSelectionContainer,
+  btnDesc,
+  categoryBtn,
+  closeBtn,
+  colorLists,
+  colorPreview,
+  fromHourInput,
+  fromMinuteInput,
+  header,
+  iconBtn,
+  iconsList,
+  inputDesc,
+  inputTitle,
   listedTimeBtnFrom,
   listedTimeBtnTo,
   listedTimeFrom,
   listedTimeTo,
-  repeatBtn,
+  miniCalendarBtn,
+  modalEvents,
+  modalInfoMode,
+  modalOverlay,
   notificationBtn,
   notificationList,
+  repeatBtn,
   saveBtn,
-  closeBtn,
-  modalInfoMode,
+  showDesc,
   smallMessage,
-  iconBtn,
-  iconsList,
+  timeSelectionContainer,
+  toHourInput,
+  toMinuteInput,
+  urgentBtn,
+  urgentCheckBox,
 } from '../utils/helpers/dom/eventModalDom.js';
+import {
+  handleListSelection,
+  handleOutSideClick,
+} from '../utils/helpers/listSelection.js';
+import { setTimeUIAndDraft } from '../utils/helpers/timeHelper.js';
+import { nowTarget } from '../utils/isNow.js';
+import openModal from './eventModal.js';
+import { forceResetRepeatModalState, initRepeatEvents } from './repeatEvent.js';
 
 import {
   repeatContainer as repeatModal,
@@ -246,14 +247,22 @@ export function preCompilerEdit(event, mode) {
 
   resetEventDraft();
 
+  const updateEventEntityProps = {};
+
   EVENT_DRAFT_FIELDS.forEach((field) => {
     if (!Object.hasOwn(event, field)) return;
 
-    const value = event[field];
-
-    eventDraft[field] =
-      field === 'repeat' && value !== null ? structuredClone(value) : value;
+    updateEventEntityProps[field] =
+      field === 'repeat' && event['repeat'] !== null
+        ? structuredClone(event['repeat'])
+        : event[field];
   });
+
+  updateEventEntityProps.notification = toDomainNotification(
+    event.notification,
+  );
+
+  eventDraft.update(updateEventEntityProps);
 
   editingEventId = event.id;
 
@@ -263,7 +272,7 @@ export function preCompilerEdit(event, mode) {
       ? event.originalEventId
       : event.id;
     editingOccurrenceDate = event.date;
-    eventDraft.repeat = null;
+    eventDraft.update({ repeat: null });
   }
 
   if (mode === 'edit-series') {
@@ -367,22 +376,27 @@ export function saveEvent() {
   } else {
     const events = getEvents();
 
+    eventDraft.updateIdDuringRefactor(
+      formMode === 'edit' || formMode === 'edit-series'
+        ? editingEventId
+        : crypto.randomUUID(),
+    );
+
+    const jsonEventDraft = {
+      ...eventDraft.toJSON(),
+      notification: toItalianNotification(eventDraft.notification),
+    };
+
     switch (formMode) {
       case 'create': {
-        const newEvent = {
-          id: crypto.randomUUID(),
-          ...eventDraft,
-        };
-        events.push(newEvent);
+        events.push(jsonEventDraft);
         saveEventsInLocalStorage(events);
         break;
       }
 
       case 'edit': {
         const updatedEvents = events.map((event) => {
-          return event.id === editingEventId
-            ? { id: editingEventId, ...eventDraft }
-            : event;
+          return event.id === editingEventId ? jsonEventDraft : event;
         });
 
         saveEventsInLocalStorage(updatedEvents);
@@ -404,11 +418,7 @@ export function saveEvent() {
             },
           };
         });
-        const newEvent = {
-          id: crypto.randomUUID(),
-          ...eventDraft,
-        };
-        updatedEvents.push(newEvent);
+        updatedEvents.push(jsonEventDraft);
         saveEventsInLocalStorage(updatedEvents);
         createMessage(
           "l'occorrenza è stata modificata!",
@@ -435,8 +445,7 @@ export function saveEvent() {
         const updatedEvents = events.map((event) => {
           return event.id === editingEventId
             ? {
-                ...eventDraft,
-                id: editingEventId,
+                ...jsonEventDraft,
 
                 repeat: {
                   ...eventDraft.repeat,
@@ -599,7 +608,7 @@ export function initEventFormEvents() {
     notificationList,
     '.single-notification',
     (li) => {
-      updateEventDraft('notification', li.innerText);
+      updateEventDraft('notification', toDomainNotification(li.innerText));
       notificationBtn.innerText = li.innerText;
     },
     'show-container',

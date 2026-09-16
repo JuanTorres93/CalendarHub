@@ -1,29 +1,29 @@
-import dayjs from "../day.js";
+import dayjs from '../day.js';
 import {
   repeatEventsDraft,
   updateRepeatDraft,
   initRepeatDraft,
   clearRepeatDraft,
   validatorRepeatDraft,
-} from "../utils/events/repeatEventsDraft.js";
+} from '../utils/events/repeatEventsDraft.js';
 import {
   handleListSelection,
   handleOutSideClick,
-} from "../utils/helpers/listSelection.js";
+} from '../utils/helpers/listSelection.js';
 import {
   updateIntervaltext,
   unitlDateDefault,
-} from "../utils/events/repeatEventsUi.js";
-import { createMessage } from "../utils/helpers/createElement.js";
-import { createDayOfWeek } from "../utils/events/createLists.js";
-import { openMiniCalendar } from "../miniCalendar/miniCalendar.js";
+} from '../utils/events/repeatEventsUi.js';
+import { createMessage } from '../utils/helpers/createElement.js';
+import { createDayOfWeek } from '../utils/events/createLists.js';
+import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
 import {
   getStoredCustomDates,
   initCustomDateRemoval,
   clearDatesStates,
-} from "./repeatcustomDates.js";
-import { eventDraft } from "../utils/events/eventDraft.js";
-import { hydrateCustomDates } from "./repeatcustomDates.js";
+} from './repeatcustomDates.js';
+import { eventDraft } from '../utils/events/eventDraft.js';
+import { hydrateCustomDates } from './repeatcustomDates.js';
 
 import {
   repeatContainer,
@@ -41,19 +41,19 @@ import {
   repeatOverlay,
   closeBtn,
   saveBtn,
-} from "../utils/helpers/dom/repeatModalDom.js";
+} from '../utils/helpers/dom/repeatModalDom.js';
 
-import { header } from "../utils/helpers/dom/eventModalDom.js";
+import { header } from '../utils/helpers/dom/eventModalDom.js';
 
 let editMode = false;
-let repeatUiState = "default";
+let repeatUiState = 'default';
 let selectedDays = [];
 let temporanyStorageForCustomDates = [];
 
 function removeClassHelper(sections) {
   sections.forEach((section) => {
-    if (section.classList.contains("show-repeat-section")) {
-      section.classList.remove("show-repeat-section");
+    if (section.classList.contains('show-repeat-section')) {
+      section.classList.remove('show-repeat-section');
     }
   });
 }
@@ -66,30 +66,30 @@ function repeatModalUiState(state) {
     customContainer,
   ];
   switch (state) {
-    case "default":
+    case 'default':
       removeClassHelper(sections);
       break;
-    case "daily":
+    case 'daily':
       removeClassHelper(sections);
-      intervalContainer.classList.add("show-repeat-section");
-      untilContainer.classList.add("show-repeat-section");
+      intervalContainer.classList.add('show-repeat-section');
+      untilContainer.classList.add('show-repeat-section');
       break;
-    case "weekly":
+    case 'weekly':
       repeatEventsDraft.weekdays = [...selectedDays];
       removeClassHelper(sections);
-      intervalContainer.classList.add("show-repeat-section");
-      untilContainer.classList.add("show-repeat-section");
-      weeklyContainer.classList.add("show-repeat-section");
+      intervalContainer.classList.add('show-repeat-section');
+      untilContainer.classList.add('show-repeat-section');
+      weeklyContainer.classList.add('show-repeat-section');
       break;
-    case "monthly":
+    case 'monthly':
       removeClassHelper(sections);
-      intervalContainer.classList.add("show-repeat-section");
-      untilContainer.classList.add("show-repeat-section");
+      intervalContainer.classList.add('show-repeat-section');
+      untilContainer.classList.add('show-repeat-section');
       break;
-    case "custom":
+    case 'custom':
       repeatEventsDraft.customDates = getStoredCustomDates();
       removeClassHelper(sections);
-      customContainer.classList.add("show-repeat-section");
+      customContainer.classList.add('show-repeat-section');
       break;
   }
 }
@@ -105,13 +105,13 @@ export function rehydrateRepeatModal() {
   modeBtn.innerText = repeatDraftInfo.type;
   intervalInput.value = repeatDraftInfo.interval;
   updateIntervaltext(repeatDraftInfo.type, repeatDraftInfo.interval);
-  const days = repeatContainer.querySelectorAll(".weekly-repetion-item");
+  const days = repeatContainer.querySelectorAll('.weekly-repetion-item');
   days.forEach((item) => {
     if (repeatDraftInfo.weekdays.includes(Number(item.dataset.dayIndex))) {
-      item.classList.add("weekly-repetion-item-selected");
+      item.classList.add('weekly-repetion-item-selected');
     }
   });
-  unitlDateDefault("edit", repeatDraftInfo.until);
+  unitlDateDefault('edit', repeatDraftInfo.until);
 
   hydrateCustomDates(repeatDraftInfo.customDates);
   repeatEventsDraft.type = repeatDraftInfo.type;
@@ -127,13 +127,13 @@ export function rehydrateRepeatModal() {
 function intervalInputValidator(state, interval) {
   if (!Number.isInteger(interval) || interval < 1) {
     createMessage(
-      "inserisci un intervallo valido",
+      'inserisci un intervallo valido',
       intervalContainer,
       repeatContainer,
     );
     return false;
   }
-  if (state === "daily" && interval > 30) {
+  if (state === 'daily' && interval > 30) {
     createMessage(
       "l'intervallo giornaliero non può superare 30 giorni",
       intervalContainer,
@@ -142,7 +142,7 @@ function intervalInputValidator(state, interval) {
     return false;
   }
 
-  if (state === "weekly" && interval > 12) {
+  if (state === 'weekly' && interval > 12) {
     createMessage(
       "l'intervallo settimanale non può superare 12 settimane",
       intervalContainer,
@@ -151,7 +151,7 @@ function intervalInputValidator(state, interval) {
     return false;
   }
 
-  if (state === "monthly" && interval > 24) {
+  if (state === 'monthly' && interval > 24) {
     createMessage(
       "l'intervallo mensile non può superare 24 mesi",
       intervalContainer,
@@ -164,29 +164,29 @@ function intervalInputValidator(state, interval) {
 }
 
 function resetRepeatModalState() {
-  repeatUiState = "default";
+  repeatUiState = 'default';
   editMode = false;
   selectedDays = [];
 
   clearRepeatDraft();
 
-  modeBtn.innerText = "";
-  intervalInput.value = "";
+  modeBtn.innerText = '';
+  intervalInput.value = '';
 
-  modeList.classList.remove("show-mode-list");
+  modeList.classList.remove('show-mode-list');
 
   dayOfWeekList
-    .querySelectorAll(".weekly-repetion-item-selected")
-    .forEach((item) => item.classList.remove("weekly-repetion-item-selected"));
+    .querySelectorAll('.weekly-repetion-item-selected')
+    .forEach((item) => item.classList.remove('weekly-repetion-item-selected'));
 
-  repeatModalUiState("default");
+  repeatModalUiState('default');
 }
 
 //devo aggiungfere la funzione per chiudere
 
 function closeRepeatEvent() {
-  repeatContainer.classList.remove("show-repeat-modal");
-  repeatOverlay.classList.remove("show-repeat-overlay");
+  repeatContainer.classList.remove('show-repeat-modal');
+  repeatOverlay.classList.remove('show-repeat-overlay');
   if (editMode) {
     return;
   }
@@ -206,9 +206,10 @@ function saveRepeatEvent() {
   } else {
     repeatEventsDraft.seriesId = crypto.randomUUID();
     //fare una copia e passargli quella, funziona rispetto a passargli direttamente il valore el repeatEventDraft, perchè poi lo stato alla chiusura vine pulito, canceellando gli stessi valori. mantre la copia usando un altro ogetto di memoria non viene pulito alla chiususra.
-    eventDraft.repeat = {
-      ...repeatEventsDraft,
-    };
+    eventDraft.update({
+      repeat: repeatEventsDraft,
+    });
+
     closeRepeatEvent();
   }
 }
@@ -216,45 +217,45 @@ function saveRepeatEvent() {
 export function initRepeatEvents() {
   createDayOfWeek();
   handleOutSideClick(
-    ".repeat-mode-list, .repeat-mode-btn",
+    '.repeat-mode-list, .repeat-mode-btn',
     modeList,
-    "show-mode-list",
+    'show-mode-list',
   );
 
-  modeBtn.addEventListener("click", () => {
-    modeList.classList.toggle("show-mode-list");
+  modeBtn.addEventListener('click', () => {
+    modeList.classList.toggle('show-mode-list');
   });
 
   handleListSelection(
     modeList,
-    ".repeat-mode-list-item",
+    '.repeat-mode-list-item',
     (li) => {
       repeatUiState = li.dataset.repeatType;
-      const date = unitlDateDefault("normal");
+      const date = unitlDateDefault('normal');
       initRepeatDraft(repeatUiState, date);
       intervalInput.value = repeatEventsDraft.interval;
       modeBtn.innerText = li.innerText;
       repeatModalUiState(repeatUiState);
       updateIntervaltext(repeatUiState, repeatEventsDraft.interval);
     },
-    "show-mode-list",
+    'show-mode-list',
   );
 
-  intervalInput.addEventListener("change", () => {
+  intervalInput.addEventListener('change', () => {
     const newValue = Number(intervalInput.value);
     if (!intervalInputValidator(repeatUiState, newValue)) {
       intervalInput.value = repeatEventsDraft.interval;
       return;
     }
 
-    updateRepeatDraft("interval", newValue);
+    updateRepeatDraft('interval', newValue);
     updateIntervaltext(repeatUiState, repeatEventsDraft.interval);
   });
 
-  dayOfWeekList.addEventListener("click", (e) => {
-    const li = e.target.closest(".weekly-repetion-item");
+  dayOfWeekList.addEventListener('click', (e) => {
+    const li = e.target.closest('.weekly-repetion-item');
     if (!li) return;
-    const selected = li.classList.toggle("weekly-repetion-item-selected");
+    const selected = li.classList.toggle('weekly-repetion-item-selected');
     const dayIndex = Number(li.dataset.dayIndex);
     if (selected) {
       if (selectedDays.includes(dayIndex)) return;
@@ -265,33 +266,33 @@ export function initRepeatEvents() {
         selectedDays = selectedDays.filter((day) => day !== dayIndex);
       }
     }
-    updateRepeatDraft("weekdays", selectedDays);
+    updateRepeatDraft('weekdays', selectedDays);
   });
-  untilMiniCalendarBtn.addEventListener("click", () => {
+  untilMiniCalendarBtn.addEventListener('click', () => {
     if (editMode) {
       const untilDateRestored = unitlDateDefault(
-        "edit",
+        'edit',
         eventDraft.repeat.until,
       );
-      openMiniCalendar("event", untilDateRestored, "repeat-until");
+      openMiniCalendar('event', untilDateRestored, 'repeat-until');
     } else {
-      const date = unitlDateDefault("normal");
-      openMiniCalendar("event", date, "repeat-until");
+      const date = unitlDateDefault('normal');
+      openMiniCalendar('event', date, 'repeat-until');
     }
   });
 
-  customMiniCalendarBtn.addEventListener("click", () => {
+  customMiniCalendarBtn.addEventListener('click', () => {
     const date = header.firstElementChild.dataset.day;
-    openMiniCalendar("event", date, "custom-dates");
+    openMiniCalendar('event', date, 'custom-dates');
   });
 
   initCustomDateRemoval();
 
-  closeBtn.addEventListener("click", () => {
+  closeBtn.addEventListener('click', () => {
     closeRepeatEvent();
   });
 
-  saveBtn.addEventListener("click", () => {
+  saveBtn.addEventListener('click', () => {
     saveRepeatEvent();
   });
 }

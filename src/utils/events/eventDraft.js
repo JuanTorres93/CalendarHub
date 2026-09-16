@@ -2,6 +2,7 @@ import { AppIdGenerator } from '../../interface-adapters/services/AppIdGenerator
 import { createMessage } from '../helpers/createElement.js';
 import { timeToMinutes } from '../helpers/timeHelper.js';
 
+import { Event } from '../../domain/entities/event/Event.js';
 import {
   dateRow,
   eventForm as eventContainer,
@@ -12,66 +13,22 @@ import {
   toHourInput,
   toMinuteInput,
 } from '../helpers/dom/eventModalDom.js';
-import { Event } from '../../domain/entities/event/Event.js';
-import { toItalianNotification } from '../../interface-adapters/other/bidirectionalItalianDomainMapper.js';
 
-export const eventDraft = {
+export const eventDraft = Event.create({
+  id: AppIdGenerator.generateId(),
   title: '',
-  date: '',
-  from: '',
-  to: '',
-  description: '',
-  icon: '✏️',
-  color: 'blue',
-  urgent: false,
-  allDay: false,
-  repeat: null,
-  notification: '5 minuti prima',
-};
+});
 
 export function initEventDraft(date, time, endTime) {
-  const event = Event.create({
-    id: AppIdGenerator.generateId(),
-    title: 'Go back to blank when finished refactor',
+  eventDraft.update({
     date,
     from: time,
     to: endTime,
   });
-
-  // TODO handle this empty string when refactor advances
-  eventDraft.title = '';
-
-  eventDraft.date = event.date;
-  eventDraft.from = event.from;
-  eventDraft.to = event.to;
-  eventDraft.description = event.description;
-  eventDraft.icon = event.icon;
-  eventDraft.color = event.color;
-  eventDraft.urgent = event.urgent;
-  eventDraft.allDay = event.allDay;
-  eventDraft.repeat = event.repeat;
-  eventDraft.notification = toItalianNotification(event.notification);
 }
 
 export function resetEventDraft() {
-  const event = Event.create({
-    id: AppIdGenerator.generateId(),
-    title: 'Go back to blank when finished refactor',
-  });
-
-  // TODO handle all these empty strings when refactor advances
-  eventDraft.title = '';
-  eventDraft.date = '';
-  eventDraft.from = '';
-  eventDraft.to = '';
-
-  eventDraft.description = event.description;
-  eventDraft.icon = event.icon;
-  eventDraft.color = event.color;
-  eventDraft.urgent = event.urgent;
-  eventDraft.allDay = event.allDay;
-  eventDraft.repeat = event.repeat;
-  eventDraft.notification = toItalianNotification(event.notification);
+  eventDraft.reset();
 }
 
 export const timeDraft = {
@@ -80,8 +37,9 @@ export const timeDraft = {
 };
 
 export function updateEventDraft(field, value) {
-  // if(!value)return
-  eventDraft[field] = value;
+  eventDraft.update({
+    [field]: value,
+  });
 }
 
 export function validateTimeRange(timeDraft) {
@@ -107,7 +65,6 @@ export function validateTimeRange(timeDraft) {
     );
     timeDraft.to.hour = '';
     timeDraft.to.minute = '';
-    updateEventDraft('to', '');
     toHourInput.value = '';
     toMinuteInput.value = '';
 
