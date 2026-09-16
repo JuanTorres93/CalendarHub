@@ -98,6 +98,40 @@ describe('LocalStorageEventsRepo', () => {
     });
   });
 
+  describe('saveMultiple', () => {
+    it('should save multiple events', async () => {
+      const secondEvent = createTestEvent({
+        id: 'second-event-id',
+        title: 'Second event',
+      });
+
+      await repo.saveMultiple([event, secondEvent]);
+
+      const fetchedEvent = await repo.getById(event.id);
+      const fetchedSecondEvent = await repo.getById(secondEvent.id);
+
+      expect(fetchedEvent.toJSON()).toEqual(event.toJSON());
+      expect(fetchedSecondEvent.toJSON()).toEqual(secondEvent.toJSON());
+    });
+
+    it('should replace the stored events with the given ones', async () => {
+      const replacementEvent = createTestEvent({
+        id: 'replacement-event-id',
+        title: 'Replacement event',
+      });
+
+      await repo.saveMultiple([replacementEvent]);
+
+      const fetchedEvent = await repo.getById(event.id);
+      const fetchedReplacementEvent = await repo.getById(replacementEvent.id);
+
+      expect(fetchedEvent).toBeNull();
+      expect(fetchedReplacementEvent.toJSON()).toEqual(
+        replacementEvent.toJSON(),
+      );
+    });
+  });
+
   describe('deleteById', () => {
     it('should delete the event with the given id', async () => {
       await repo.deleteById(event.id);

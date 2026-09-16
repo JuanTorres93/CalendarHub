@@ -1,7 +1,7 @@
 import { EventsRepo } from '../../../application-layer/repos/EventsRepo.port.js';
 import { Event } from '../../../domain/entities/event/Event.js';
 
-const STORAGE_KEY = 'calendarEventsRepo';
+const STORAGE_KEY = 'calendarEvents';
 
 export class LocalStorageEventsRepo extends EventsRepo {
   async getById(id) {
@@ -31,6 +31,10 @@ export class LocalStorageEventsRepo extends EventsRepo {
     }
 
     writeEvents(storedEvents);
+  }
+
+  async saveMultiple(events) {
+    writeEvents(events.map((event) => event.toJSON()));
   }
 
   async deleteById(id) {
