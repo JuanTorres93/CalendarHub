@@ -25,13 +25,13 @@ export class Event {
         DESCRIPTION_TEXT_OPTIONS,
       ),
 
-      date: Day.create(props.date),
+      date: props?.date ? Day.create(props.date) : Day.create(new Date()),
       from: Time.create(props.from),
       to: Time.create(props.to),
 
       notification: props.notification
         ? NotificationPeriod.create(props.notification)
-        : NotificationPeriod.create('none'),
+        : NotificationPeriod.create('5min'),
 
       urgent: props?.urgent
         ? Boolean.create(props.urgent)
@@ -44,9 +44,7 @@ export class Event {
 
       color: props?.color ? Color.create(props.color) : Color.create('blue'),
 
-      repeat: props?.repeat
-        ? Repeat.create(props.repeat)
-        : Repeat.create(null),
+      repeat: props?.repeat ? Repeat.create(props.repeat) : Repeat.create(null),
     };
 
     return new Event(validatedProps);

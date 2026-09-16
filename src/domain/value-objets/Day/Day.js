@@ -53,6 +53,14 @@ function toDayProps(day) {
     };
   }
 
+  if (day instanceof Date) {
+    return {
+      year: day.getFullYear(),
+      month: day.getMonth() + 1,
+      day: day.getDate(),
+    };
+  }
+
   if (typeof day === 'string') {
     const match = day.match(DATE_PATTERN);
 
@@ -71,7 +79,7 @@ function toDayProps(day) {
 
   if (day === null || day === undefined || typeof day !== 'object') {
     throw new ValidationDomainError(
-      'Day: value must be an object with year, month and day or a string in YYYY-MM-DD format',
+      'Day: value must be an object with year, month and day, a Date or a string in YYYY-MM-DD format',
     );
   }
 

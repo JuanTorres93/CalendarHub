@@ -91,6 +91,35 @@ describe('Day', () => {
     });
   });
 
+  describe('Date input', () => {
+    it('should create a Day from a Date instance', () => {
+      const day = Day.create(new Date(2024, 5, 1));
+
+      expect(day).toBeInstanceOf(Day);
+      expect(day.value).toBe('2024-06-01');
+    });
+
+    it('should ignore the time part of the Date', () => {
+      const day = Day.create(new Date(2024, 5, 1, 23, 59, 59));
+
+      expect(day).toBeInstanceOf(Day);
+      expect(day.value).toBe('2024-06-01');
+    });
+
+    it('should consider a Day created from Date equal to one created from string', () => {
+      const day1 = Day.create(new Date(2024, 5, 1));
+      const day2 = Day.create('2024-06-01');
+
+      expect(day1.equals(day2)).toBe(true);
+    });
+
+    it('should throw validation error for an invalid Date', () => {
+      expect(() => Day.create(new Date('not a date'))).toThrow(
+        ValidationDomainError,
+      );
+    });
+  });
+
   describe('YYYY-MM-DD string input', () => {
     it('should create a Day from a YYYY-MM-DD string', () => {
       const day = Day.create('2024-06-01');

@@ -14,6 +14,7 @@ describe('Event', () => {
   it.each(
     [
       'description',
+      'date',
       'icon',
       'color',
       'urgent',
@@ -76,58 +77,70 @@ describe('Event', () => {
     },
   );
 
-  it('should default to "none" notification if it is not provided', async () => {
-    const eventProps = { ...EVENT_TEST_PROPS };
-    delete eventProps.notification;
+  describe('Default values', () => {
+    it('should default to 5 min notification if it is not provided', async () => {
+      const eventProps = { ...EVENT_TEST_PROPS };
+      delete eventProps.notification;
 
-    const event = Event.create(eventProps);
+      const event = Event.create(eventProps);
 
-    expect(event.notification).toBe('none');
-  });
+      expect(event.notification).toBe('5min');
+    });
 
-  it('urgent should default to false if it is not provided', async () => {
-    const eventProps = { ...EVENT_TEST_PROPS };
-    delete eventProps.urgent;
+    it('urgent should default to false if it is not provided', async () => {
+      const eventProps = { ...EVENT_TEST_PROPS };
+      delete eventProps.urgent;
 
-    const event = Event.create(eventProps);
+      const event = Event.create(eventProps);
 
-    expect(event.urgent).toBe(false);
-  });
+      expect(event.urgent).toBe(false);
+    });
 
-  it('allDay should default to false if it is not provided', async () => {
-    const eventProps = { ...EVENT_TEST_PROPS };
-    delete eventProps.allDay;
+    it('allDay should default to false if it is not provided', async () => {
+      const eventProps = { ...EVENT_TEST_PROPS };
+      delete eventProps.allDay;
 
-    const event = Event.create(eventProps);
+      const event = Event.create(eventProps);
 
-    expect(event.allDay).toBe(false);
-  });
+      expect(event.allDay).toBe(false);
+    });
 
-  it('icon should default to pencil icon if it is not provided', async () => {
-    const eventProps = { ...EVENT_TEST_PROPS };
-    delete eventProps.icon;
+    it('icon should default to pencil icon if it is not provided', async () => {
+      const eventProps = { ...EVENT_TEST_PROPS };
+      delete eventProps.icon;
 
-    const event = Event.create(eventProps);
+      const event = Event.create(eventProps);
 
-    expect(event.icon).toBe('✏️');
-  });
+      expect(event.icon).toBe('✏️');
+    });
 
-  it('color should default to blue if not provided', async () => {
-    const eventProps = { ...EVENT_TEST_PROPS };
-    delete eventProps.color;
+    it('color should default to blue if not provided', async () => {
+      const eventProps = { ...EVENT_TEST_PROPS };
+      delete eventProps.color;
 
-    const event = Event.create(eventProps);
+      const event = Event.create(eventProps);
 
-    expect(event.color).toBe('blue');
-  });
+      expect(event.color).toBe('blue');
+    });
 
-  it('should set default repeat to null', async () => {
-    const eventProps = { ...EVENT_TEST_PROPS };
-    delete eventProps.repeat;
+    it('should set default repeat to null', async () => {
+      const eventProps = { ...EVENT_TEST_PROPS };
+      delete eventProps.repeat;
 
-    const event = Event.create(eventProps);
+      const event = Event.create(eventProps);
 
-    expect(event.repeat).toBeNull();
+      expect(event.repeat).toBeNull();
+    });
+
+    it('should default the date to today if it is not provided', async () => {
+      const eventProps = { ...EVENT_TEST_PROPS };
+      delete eventProps.date;
+
+      const event = Event.create(eventProps);
+
+      const today = new Date().toISOString().split('T')[0];
+      expect(event.date).toBe(today);
+    });
   });
 
   it('should keep the repeat config if it is provided', async () => {
