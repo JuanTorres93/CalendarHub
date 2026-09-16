@@ -14,11 +14,11 @@ beforeEach(async () => {
   document.body.innerHTML = html;
 
   vi.resetModules();
-  ({ injectJavascriptToMainHtml } = await import('../injectJavascriptToMainHtml.js'));
+  ({ injectJavascriptToMainHtml } =
+    await import('../injectJavascriptToMainHtml.js'));
 
   injectJavascriptToMainHtml();
 });
-
 
 it('should display next month name when clicking next month button', async () => {
   const nextMonthButton = screen.getByTestId('next-month-button');
@@ -46,14 +46,18 @@ it('should display previous month name when clicking previous month button', asy
 
 it('should show mini calendar when clicking month name', async () => {
   const monthDisplay = screen.getByTestId('month-display');
-  const monthButton = within(monthDisplay).getByTestId('show-mini-calendar-button');
+  const monthButton = within(monthDisplay).getByTestId(
+    'show-mini-calendar-button',
+  );
   const miniCalendarContainer = screen.getByTestId('mini-calendar-container');
 
   expect(miniCalendarContainer.children.length).toBe(0);
 
   await user.click(monthButton);
 
-  await vi.waitFor(() => expect(miniCalendarContainer.children.length).toBeGreaterThan(0));
+  await vi.waitFor(() =>
+    expect(miniCalendarContainer.children.length).toBeGreaterThan(0),
+  );
 });
 
 describe('View switching', () => {
@@ -61,52 +65,52 @@ describe('View switching', () => {
     const dayView = screen.getByTestId('day-view');
     const monthView = screen.getByTestId('month-view');
     const weekView = screen.getByTestId('week-view');
-  
+
     const dayButton = screen.getByTestId('day-button');
-  
+
     await expectInitialMonthlyView();
-  
+
     await user.click(dayButton);
-  
+
     await vi.waitFor(() => expect(dayView).toHaveClass('show-section'));
-  
+
     await vi.waitFor(() => expect(monthView).not.toHaveClass('show-section'));
     await vi.waitFor(() => expect(weekView).not.toHaveClass('show-section'));
   });
-  
+
   it('should switch to week view when clicking week button', async () => {
     const dayView = screen.getByTestId('day-view');
     const monthView = screen.getByTestId('month-view');
     const weekView = screen.getByTestId('week-view');
-  
+
     const weekButton = screen.getByTestId('week-button');
-    
+
     await expectInitialMonthlyView();
-  
+
     await user.click(weekButton);
-  
+
     await vi.waitFor(() => expect(weekView).toHaveClass('show-section'));
-  
+
     await vi.waitFor(() => expect(monthView).not.toHaveClass('show-section'));
     await vi.waitFor(() => expect(dayView).not.toHaveClass('show-section'));
   });
-  
+
   it('should switch to month view when clicking month button', async () => {
     const dayView = screen.getByTestId('day-view');
     const monthView = screen.getByTestId('month-view');
     const weekView = screen.getByTestId('week-view');
-  
+
     const monthButton = screen.getByTestId('month-button');
-  
+
     await expectInitialMonthlyView();
 
     // Change to week view first
     await user.click(screen.getByTestId('week-button'));
-  
+
     await user.click(monthButton);
-  
+
     await vi.waitFor(() => expect(monthView).toHaveClass('show-section'));
-  
+
     await vi.waitFor(() => expect(weekView).not.toHaveClass('show-section'));
     await vi.waitFor(() => expect(dayView).not.toHaveClass('show-section'));
   });
@@ -120,7 +124,7 @@ describe('View switching', () => {
     await vi.waitFor(() => expect(weekView).not.toHaveClass('show-section'));
     await vi.waitFor(() => expect(dayView).not.toHaveClass('show-section'));
   }
-})
+});
 
 describe('Day highlighting', () => {
   it('should highlight the current day in the month view', async () => {
@@ -132,14 +136,16 @@ describe('Day highlighting', () => {
   it('should highlight another day when clicking number button', async () => {
     const anotherDayButton = screen.getByTestId('day-number-button-2026-09-15');
 
-    expect(screen.getByTestId('day-box-2026-09-15')).not.toHaveClass('selected');
+    expect(screen.getByTestId('day-box-2026-09-15')).not.toHaveClass(
+      'selected',
+    );
 
     await user.click(anotherDayButton);
 
     const anotherDayBox = screen.getByTestId('day-box-2026-09-15');
     expect(anotherDayBox).toHaveClass('selected');
-  })
-})
+  });
+});
 
 describe('Events', () => {
   it('should open event modal when clicking day box', async () => {
@@ -151,7 +157,7 @@ describe('Events', () => {
     await user.click(dayBox);
 
     await vi.waitFor(() => expect(eventModal).toHaveClass('show-container'));
-  })
+  });
 
   it('should close event modal when clicking close button', async () => {
     const dayBox = screen.getByTestId('day-box-2026-09-14');
@@ -165,8 +171,10 @@ describe('Events', () => {
 
     await user.click(screen.getByTestId('event-close-button'));
 
-    await vi.waitFor(() => expect(eventModal).not.toHaveClass('show-container'));
-  })
+    await vi.waitFor(() =>
+      expect(eventModal).not.toHaveClass('show-container'),
+    );
+  });
 
   describe('Event creation', () => {
     beforeEach(async () => {
@@ -176,19 +184,26 @@ describe('Events', () => {
 
       await user.type(screen.getByTestId('event-title-input'), 'Test event');
     });
-    
+
     it('should save event name', async () => {
       await user.click(screen.getByTestId('event-save-button'));
 
-      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ title: 'Test event' }));
+      expect(getSavedEvents()).toContainEqual(
+        expect.objectContaining({ title: 'Test event' }),
+      );
     });
 
     it('should save event description', async () => {
-      await user.type(screen.getByTestId('event-description-input'), 'Test description');
+      await user.type(
+        screen.getByTestId('event-description-input'),
+        'Test description',
+      );
 
       await user.click(screen.getByTestId('event-save-button'));
 
-      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ description: 'Test description' }));
+      expect(getSavedEvents()).toContainEqual(
+        expect.objectContaining({ description: 'Test description' }),
+      );
     });
 
     it('should save event start time', async () => {
@@ -199,7 +214,9 @@ describe('Events', () => {
 
       await user.click(screen.getByTestId('event-save-button'));
 
-      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ from: '08:00' }));
+      expect(getSavedEvents()).toContainEqual(
+        expect.objectContaining({ from: '08:00' }),
+      );
     });
 
     it('should save event end time', async () => {
@@ -210,7 +227,9 @@ describe('Events', () => {
 
       await user.click(screen.getByTestId('event-save-button'));
 
-      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ to: '22:00' }));
+      expect(getSavedEvents()).toContainEqual(
+        expect.objectContaining({ to: '22:00' }),
+      );
     });
 
     it('should save event icon', async () => {
@@ -219,7 +238,9 @@ describe('Events', () => {
 
       await user.click(screen.getByTestId('event-save-button'));
 
-      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ icon: '💼' }));
+      expect(getSavedEvents()).toContainEqual(
+        expect.objectContaining({ icon: '💼' }),
+      );
     });
 
     it('should save event color', async () => {
@@ -228,7 +249,9 @@ describe('Events', () => {
 
       await user.click(screen.getByTestId('event-save-button'));
 
-      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ color: 'red' }));
+      expect(getSavedEvents()).toContainEqual(
+        expect.objectContaining({ color: 'red' }),
+      );
     });
 
     it('should save urgent flag', async () => {
@@ -236,7 +259,9 @@ describe('Events', () => {
 
       await user.click(screen.getByTestId('event-save-button'));
 
-      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ urgent: true }));
+      expect(getSavedEvents()).toContainEqual(
+        expect.objectContaining({ urgent: true }),
+      );
     });
 
     it('should save all day flag', async () => {
@@ -244,7 +269,9 @@ describe('Events', () => {
 
       await user.click(screen.getByTestId('event-save-button'));
 
-      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ allDay: true }));
+      expect(getSavedEvents()).toContainEqual(
+        expect.objectContaining({ allDay: true }),
+      );
     });
 
     it('should save notification', async () => {
@@ -253,7 +280,9 @@ describe('Events', () => {
 
       await user.click(screen.getByTestId('event-save-button'));
 
-      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ notification: '1 ora prima' }));
+      expect(getSavedEvents()).toContainEqual(
+        expect.objectContaining({ notification: '1 ora prima' }),
+      );
     });
 
     it('should save repeat configuration', async () => {
@@ -267,7 +296,9 @@ describe('Events', () => {
       await user.click(screen.getByTestId('event-save-button'));
 
       expect(getSavedEvents()).toContainEqual(
-        expect.objectContaining({ repeat: expect.objectContaining({ type: 'daily', interval: 1 }) })
+        expect.objectContaining({
+          repeat: expect.objectContaining({ type: 'daily', interval: 1 }),
+        }),
       );
     });
 
@@ -281,16 +312,20 @@ describe('Events', () => {
 
       await user.click(screen.getByTestId('event-save-button'));
 
-      expect(getSavedEvents()).toContainEqual(expect.objectContaining({ date: '2026-09-20' }));
+      expect(getSavedEvents()).toContainEqual(
+        expect.objectContaining({ date: '2026-09-20' }),
+      );
     });
-  })
+  });
 });
 
 describe('Today button', () => {
   it('should return to the current month when clicking today button', async () => {
     const monthDisplay = screen.getByTestId('month-display');
 
-    await vi.waitFor(() => expect(monthDisplay).toHaveTextContent(/settembre/i));
+    await vi.waitFor(() =>
+      expect(monthDisplay).toHaveTextContent(/settembre/i),
+    );
 
     await user.click(screen.getByTestId('next-month-button'));
 
@@ -298,13 +333,17 @@ describe('Today button', () => {
 
     await user.click(screen.getByTestId('today-button'));
 
-    await vi.waitFor(() => expect(monthDisplay).toHaveTextContent(/settembre/i));
+    await vi.waitFor(() =>
+      expect(monthDisplay).toHaveTextContent(/settembre/i),
+    );
   });
 
   it('should highlight the current day after clicking today button', async () => {
     const monthDisplay = screen.getByTestId('month-display');
 
-    await vi.waitFor(() => expect(monthDisplay).toHaveTextContent(/settembre/i));
+    await vi.waitFor(() =>
+      expect(monthDisplay).toHaveTextContent(/settembre/i),
+    );
 
     await user.click(screen.getByTestId('next-month-button'));
 
@@ -312,11 +351,15 @@ describe('Today button', () => {
 
     await user.click(screen.getByTestId('day-number-button-2026-10-05'));
 
-    await vi.waitFor(() => expect(screen.getByTestId('day-box-2026-10-05')).toHaveClass('selected'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('day-box-2026-10-05')).toHaveClass('selected'),
+    );
 
     await user.click(screen.getByTestId('today-button'));
 
-    await vi.waitFor(() => expect(screen.getByTestId('day-box-2026-09-14')).toHaveClass('selected'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('day-box-2026-09-14')).toHaveClass('selected'),
+    );
   });
 });
 
@@ -328,7 +371,9 @@ describe('Todo list', () => {
   async function openTodoPanel() {
     await user.click(screen.getByTestId('new-todo-button'));
 
-    await vi.waitFor(() => expect(screen.getByTestId('todo-panel')).toHaveClass('show-modal'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('todo-panel')).toHaveClass('show-modal'),
+    );
 
     await user.click(screen.getByTestId('todo-new-list-button'));
   }
@@ -336,7 +381,9 @@ describe('Todo list', () => {
   it('should open todo panel when clicking new todo button', async () => {
     await user.click(screen.getByTestId('new-todo-button'));
 
-    await vi.waitFor(() => expect(screen.getByTestId('todo-panel')).toHaveClass('show-modal'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('todo-panel')).toHaveClass('show-modal'),
+    );
   });
 
   it('should create a todo list when entering a title', async () => {
@@ -348,10 +395,12 @@ describe('Todo list', () => {
 
     await user.tab();
 
-    expect(getSavedTodos()).toContainEqual(expect.objectContaining({
-      title: 'Test list',
-      date: '2026-09-14',
-    }));
+    expect(getSavedTodos()).toContainEqual(
+      expect.objectContaining({
+        title: 'Test list',
+        date: '2026-09-14',
+      }),
+    );
   });
 
   it('should add an activity to the todo list', async () => {
@@ -367,13 +416,19 @@ describe('Todo list', () => {
 
     await user.click(screen.getByTestId('todo-add-item-button'));
 
-    expect(getSavedTodos()[0].items).toContainEqual(expect.objectContaining({
-      title: 'Test activity',
-      completed: false,
-    }));
+    expect(getSavedTodos()[0].items).toContainEqual(
+      expect.objectContaining({
+        title: 'Test activity',
+        completed: false,
+      }),
+    );
 
     await vi.waitFor(() =>
-      expect(within(screen.getByTestId('todo-items-container')).getByText('Test activity')).toBeInTheDocument()
+      expect(
+        within(screen.getByTestId('todo-items-container')).getByText(
+          'Test activity',
+        ),
+      ).toBeInTheDocument(),
     );
   });
 });
@@ -384,11 +439,15 @@ describe('Week and day navigation', () => {
 
     const weekDisplay = screen.getByTestId('week-display');
 
-    await vi.waitFor(() => expect(weekDisplay).toHaveTextContent(/14 settembre - 20 settembre/i));
+    await vi.waitFor(() =>
+      expect(weekDisplay).toHaveTextContent(/14 settembre - 20 settembre/i),
+    );
 
     await user.click(screen.getByTestId('previous-week-button'));
 
-    await vi.waitFor(() => expect(weekDisplay).toHaveTextContent(/07 settembre - 13 settembre/i));
+    await vi.waitFor(() =>
+      expect(weekDisplay).toHaveTextContent(/07 settembre - 13 settembre/i),
+    );
   });
 
   it('should display next week when clicking next week button', async () => {
@@ -396,11 +455,15 @@ describe('Week and day navigation', () => {
 
     const weekDisplay = screen.getByTestId('week-display');
 
-    await vi.waitFor(() => expect(weekDisplay).toHaveTextContent(/14 settembre - 20 settembre/i));
+    await vi.waitFor(() =>
+      expect(weekDisplay).toHaveTextContent(/14 settembre - 20 settembre/i),
+    );
 
     await user.click(screen.getByTestId('next-week-button'));
 
-    await vi.waitFor(() => expect(weekDisplay).toHaveTextContent(/21 settembre - 27 settembre/i));
+    await vi.waitFor(() =>
+      expect(weekDisplay).toHaveTextContent(/21 settembre - 27 settembre/i),
+    );
   });
 
   it('should display previous day when clicking previous day button', async () => {
@@ -408,11 +471,15 @@ describe('Week and day navigation', () => {
 
     const dayDisplay = screen.getByTestId('day-display');
 
-    await vi.waitFor(() => expect(dayDisplay).toHaveTextContent(/14 settembre/i));
+    await vi.waitFor(() =>
+      expect(dayDisplay).toHaveTextContent(/14 settembre/i),
+    );
 
     await user.click(screen.getByTestId('previous-day-button'));
 
-    await vi.waitFor(() => expect(dayDisplay).toHaveTextContent(/13 settembre/i));
+    await vi.waitFor(() =>
+      expect(dayDisplay).toHaveTextContent(/13 settembre/i),
+    );
   });
 
   it('should display next day when clicking next day button', async () => {
@@ -420,11 +487,15 @@ describe('Week and day navigation', () => {
 
     const dayDisplay = screen.getByTestId('day-display');
 
-    await vi.waitFor(() => expect(dayDisplay).toHaveTextContent(/14 settembre/i));
+    await vi.waitFor(() =>
+      expect(dayDisplay).toHaveTextContent(/14 settembre/i),
+    );
 
     await user.click(screen.getByTestId('next-day-button'));
 
-    await vi.waitFor(() => expect(dayDisplay).toHaveTextContent(/15 settembre/i));
+    await vi.waitFor(() =>
+      expect(dayDisplay).toHaveTextContent(/15 settembre/i),
+    );
   });
 });
 
@@ -433,7 +504,9 @@ describe('Mini calendar from navbar', () => {
     await user.click(screen.getByTestId('show-mini-calendar-button'));
 
     await vi.waitFor(() =>
-      expect(screen.getByTestId('mini-calendar-dialog')).toHaveClass('show-mini-calendar')
+      expect(screen.getByTestId('mini-calendar-dialog')).toHaveClass(
+        'show-mini-calendar',
+      ),
     );
   }
 
@@ -444,14 +517,18 @@ describe('Mini calendar from navbar', () => {
   it('should open mini calendar when clicking month display', async () => {
     await openMiniCalendar();
 
-    expect(screen.getByTestId('mini-calendar-layer')).toHaveClass('show-mini-calendar-layer');
+    expect(screen.getByTestId('mini-calendar-layer')).toHaveClass(
+      'show-mini-calendar-layer',
+    );
   });
 
   it('should open mini calendar when clicking week display', async () => {
     await user.click(screen.getByTestId('show-week-mini-calendar-button'));
 
     await vi.waitFor(() =>
-      expect(screen.getByTestId('mini-calendar-dialog')).toHaveClass('show-mini-calendar')
+      expect(screen.getByTestId('mini-calendar-dialog')).toHaveClass(
+        'show-mini-calendar',
+      ),
     );
   });
 
@@ -459,7 +536,9 @@ describe('Mini calendar from navbar', () => {
     await user.click(screen.getByTestId('show-day-mini-calendar-button'));
 
     await vi.waitFor(() =>
-      expect(screen.getByTestId('mini-calendar-dialog')).toHaveClass('show-mini-calendar')
+      expect(screen.getByTestId('mini-calendar-dialog')).toHaveClass(
+        'show-mini-calendar',
+      ),
     );
   });
 
@@ -467,7 +546,9 @@ describe('Mini calendar from navbar', () => {
     await user.click(screen.getByTestId('show-year-mini-calendar-button'));
 
     await vi.waitFor(() =>
-      expect(screen.getByTestId('mini-calendar-dialog')).toHaveClass('show-mini-calendar')
+      expect(screen.getByTestId('mini-calendar-dialog')).toHaveClass(
+        'show-mini-calendar',
+      ),
     );
   });
 
@@ -478,7 +559,9 @@ describe('Mini calendar from navbar', () => {
 
     await user.click(document.querySelector('.mini-save-btn'));
 
-    await vi.waitFor(() => expect(screen.getByTestId('month-display')).toHaveTextContent(/ottobre/i));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('month-display')).toHaveTextContent(/ottobre/i),
+    );
   });
 
   it('should change the displayed month when selecting a month in the mini calendar carousel', async () => {
@@ -490,7 +573,9 @@ describe('Mini calendar from navbar', () => {
 
     await user.click(document.querySelector('.mini-save-btn'));
 
-    await vi.waitFor(() => expect(screen.getByTestId('month-display')).toHaveTextContent(/ottobre/i));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('month-display')).toHaveTextContent(/ottobre/i),
+    );
   });
 
   it('should change the displayed year when selecting a year in the mini calendar carousel', async () => {
@@ -503,16 +588,24 @@ describe('Mini calendar from navbar', () => {
     await user.click(document.querySelector('.mini-save-btn'));
 
     await vi.waitFor(() =>
-      expect(screen.getByTestId('show-year-mini-calendar-button')).toHaveTextContent('2027')
+      expect(
+        screen.getByTestId('show-year-mini-calendar-button'),
+      ).toHaveTextContent('2027'),
     );
   });
 });
 
 describe('Event banner', () => {
   async function openEventBanner(testId) {
-    await user.click(within(screen.getByTestId('day-box-2026-09-14')).getByTestId(testId));
+    await user.click(
+      within(screen.getByTestId('day-box-2026-09-14')).getByTestId(testId),
+    );
 
-    await vi.waitFor(() => expect(screen.getByTestId('event-banner')).toHaveClass('show-option-banner'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('event-banner')).toHaveClass(
+        'show-option-banner',
+      ),
+    );
   }
 
   it('should show edit and delete options when clicking an event', async () => {
@@ -521,7 +614,9 @@ describe('Event banner', () => {
     await openEventBanner('monthly-event-evt-base');
 
     expect(screen.getByTestId('event-banner-edit-button')).toBeInTheDocument();
-    expect(screen.getByTestId('event-banner-delete-button')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('event-banner-delete-button'),
+    ).toBeInTheDocument();
   });
 
   it('should edit an event when confirming the preloaded form', async () => {
@@ -542,7 +637,9 @@ describe('Event banner', () => {
 
     await user.click(screen.getByTestId('event-save-button'));
 
-    await vi.waitFor(() => expect(eventModal).not.toHaveClass('show-container'));
+    await vi.waitFor(() =>
+      expect(eventModal).not.toHaveClass('show-container'),
+    );
 
     expect(getSavedEvents()).toEqual([
       expect.objectContaining({ id: 'evt-base', title: 'Edited event' }),
@@ -557,7 +654,11 @@ describe('Event banner', () => {
     await user.click(screen.getByTestId('event-banner-delete-button'));
 
     await vi.waitFor(() => expect(getSavedEvents()).toEqual([]));
-    await vi.waitFor(() => expect(screen.getByTestId('event-banner')).not.toHaveClass('show-option-banner'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('event-banner')).not.toHaveClass(
+        'show-option-banner',
+      ),
+    );
   });
 
   it('should delete a single occurrence when confirming single deletion', async () => {
@@ -577,9 +678,17 @@ describe('Event banner', () => {
 
     await seedAndRender([seriesEvent]);
 
-    await user.click(within(screen.getByTestId('day-box-2026-09-15')).getByTestId('monthly-event-series-1-2026-09-15'));
+    await user.click(
+      within(screen.getByTestId('day-box-2026-09-15')).getByTestId(
+        'monthly-event-series-1-2026-09-15',
+      ),
+    );
 
-    await vi.waitFor(() => expect(screen.getByTestId('event-banner')).toHaveClass('show-option-banner'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('event-banner')).toHaveClass(
+        'show-option-banner',
+      ),
+    );
 
     await user.click(screen.getByTestId('event-banner-delete-single-button'));
 
@@ -606,9 +715,17 @@ describe('Event banner', () => {
 
     await seedAndRender([seriesEvent]);
 
-    await user.click(within(screen.getByTestId('day-box-2026-09-15')).getByTestId('monthly-event-series-1-2026-09-15'));
+    await user.click(
+      within(screen.getByTestId('day-box-2026-09-15')).getByTestId(
+        'monthly-event-series-1-2026-09-15',
+      ),
+    );
 
-    await vi.waitFor(() => expect(screen.getByTestId('event-banner')).toHaveClass('show-option-banner'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('event-banner')).toHaveClass(
+        'show-option-banner',
+      ),
+    );
 
     await user.click(screen.getByTestId('event-banner-delete-series-button'));
 
@@ -618,75 +735,100 @@ describe('Event banner', () => {
 
 describe('Repeated events generation', () => {
   it('should generate daily occurrences respecting interval, until and exceptions', async () => {
-    const occurrences = await seedSeries(createSeriesEvent({
-      seriesId: 'series-d',
-      type: 'daily',
-      interval: 3,
-      weekdays: [],
-      customDates: [],
-      exceptions: ['2026-09-17'],
-      until: '2026-09-20',
-    }));
+    const occurrences = await seedSeries(
+      createSeriesEvent({
+        seriesId: 'series-d',
+        type: 'daily',
+        interval: 3,
+        weekdays: [],
+        customDates: [],
+        exceptions: ['2026-09-17'],
+        until: '2026-09-20',
+      }),
+    );
 
-    expect(occurrences.map(occurrence => occurrence.date)).toEqual(['2026-09-20']);
+    expect(occurrences.map((occurrence) => occurrence.date)).toEqual([
+      '2026-09-20',
+    ]);
   });
 
   it('should generate weekly occurrences on selected weekdays', async () => {
-    const occurrences = await seedSeries(createSeriesEvent({
-      seriesId: 'series-w',
-      type: 'weekly',
-      interval: 1,
-      weekdays: [1, 3],
-      customDates: [],
-      exceptions: [],
-      until: '2026-09-27',
-    }));
+    const occurrences = await seedSeries(
+      createSeriesEvent({
+        seriesId: 'series-w',
+        type: 'weekly',
+        interval: 1,
+        weekdays: [1, 3],
+        customDates: [],
+        exceptions: [],
+        until: '2026-09-27',
+      }),
+    );
 
-    expect(occurrences.map(occurrence => occurrence.date)).toEqual(['2026-09-16', '2026-09-21', '2026-09-23']);
+    expect(occurrences.map((occurrence) => occurrence.date)).toEqual([
+      '2026-09-16',
+      '2026-09-21',
+      '2026-09-23',
+    ]);
   });
 
   it('should generate monthly occurrences adding one month per interval', async () => {
-    const occurrences = await seedSeries(createSeriesEvent({
-      seriesId: 'series-m',
-      type: 'monthly',
-      interval: 1,
-      weekdays: [],
-      customDates: [],
-      exceptions: [],
-      until: '2026-11-30',
-    }));
+    const occurrences = await seedSeries(
+      createSeriesEvent({
+        seriesId: 'series-m',
+        type: 'monthly',
+        interval: 1,
+        weekdays: [],
+        customDates: [],
+        exceptions: [],
+        until: '2026-11-30',
+      }),
+    );
 
-    expect(occurrences.map(occurrence => occurrence.date)).toEqual(['2026-10-14', '2026-11-14']);
+    expect(occurrences.map((occurrence) => occurrence.date)).toEqual([
+      '2026-10-14',
+      '2026-11-14',
+    ]);
   });
 
   it('should generate custom occurrences from the custom dates, skipping exceptions', async () => {
-    const occurrences = await seedSeries(createSeriesEvent({
-      seriesId: 'series-c',
-      type: 'custom',
-      interval: 1,
-      weekdays: [],
-      customDates: ['2026-09-18', '2026-09-20', '2026-09-25'],
-      exceptions: ['2026-09-18'],
-      until: '2026-12-31',
-    }));
+    const occurrences = await seedSeries(
+      createSeriesEvent({
+        seriesId: 'series-c',
+        type: 'custom',
+        interval: 1,
+        weekdays: [],
+        customDates: ['2026-09-18', '2026-09-20', '2026-09-25'],
+        exceptions: ['2026-09-18'],
+        until: '2026-12-31',
+      }),
+    );
 
-    expect(occurrences.map(occurrence => occurrence.date)).toEqual(['2026-09-20', '2026-09-25']);
+    expect(occurrences.map((occurrence) => occurrence.date)).toEqual([
+      '2026-09-20',
+      '2026-09-25',
+    ]);
   });
 
   it('should render repeated occurrences in the month view', async () => {
     await seedAndRender([createSeriesEvent()]);
 
     expect(
-      within(screen.getByTestId('day-box-2026-09-15')).getByTestId('monthly-event-series-1-2026-09-15')
+      within(screen.getByTestId('day-box-2026-09-15')).getByTestId(
+        'monthly-event-series-1-2026-09-15',
+      ),
     ).toBeInTheDocument();
 
     expect(
-      within(screen.getByTestId('day-box-2026-09-20')).getByTestId('monthly-event-series-1-2026-09-20')
+      within(screen.getByTestId('day-box-2026-09-20')).getByTestId(
+        'monthly-event-series-1-2026-09-20',
+      ),
     ).toBeInTheDocument();
   });
 
   async function getGeneratedOccurrences() {
-    const { getRepeatedEvents } = await import('../eventCreation/generateRepeatEvents.js');
+    const { getRepeatedEvents } =
+      await import('../eventCreation/generateRepeatEvents.js');
     return getRepeatedEvents();
   }
 
@@ -711,7 +853,6 @@ describe('Repeated events generation', () => {
     localStorage.setItem('calendarEvents', JSON.stringify([seriesEvent]));
     return getGeneratedOccurrences();
   }
-
 });
 
 describe('Event repeat modes', () => {
@@ -726,9 +867,15 @@ describe('Event repeat modes', () => {
 
     await saveEventWithTitle('Weekly event');
 
-    expect(getSavedEvents()).toContainEqual(expect.objectContaining({
-      repeat: expect.objectContaining({ type: 'weekly', interval: 1, weekdays: [1, 3] }),
-    }));
+    expect(getSavedEvents()).toContainEqual(
+      expect.objectContaining({
+        repeat: expect.objectContaining({
+          type: 'weekly',
+          interval: 1,
+          weekdays: [1, 3],
+        }),
+      }),
+    );
   });
 
   it('should save a monthly repeat with the default interval', async () => {
@@ -739,9 +886,11 @@ describe('Event repeat modes', () => {
 
     await saveEventWithTitle('Monthly event');
 
-    expect(getSavedEvents()).toContainEqual(expect.objectContaining({
-      repeat: expect.objectContaining({ type: 'monthly', interval: 1 }),
-    }));
+    expect(getSavedEvents()).toContainEqual(
+      expect.objectContaining({
+        repeat: expect.objectContaining({ type: 'monthly', interval: 1 }),
+      }),
+    );
   });
 
   it('should save a custom repeat with the selected custom dates', async () => {
@@ -755,18 +904,22 @@ describe('Event repeat modes', () => {
 
     await user.click(document.querySelector('.mini-save-btn'));
 
-    expect(screen.getByTestId('custom-date-item-2026-09-20')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('custom-date-item-2026-09-20'),
+    ).toBeInTheDocument();
 
     await user.click(screen.getByTestId('event-repeat-save-button'));
 
     await saveEventWithTitle('Custom event');
 
-    expect(getSavedEvents()).toContainEqual(expect.objectContaining({
-      repeat: expect.objectContaining({
-        type: 'custom',
-        customDates: ['2026-09-20'],
+    expect(getSavedEvents()).toContainEqual(
+      expect.objectContaining({
+        repeat: expect.objectContaining({
+          type: 'custom',
+          customDates: ['2026-09-20'],
+        }),
       }),
-    }));
+    );
   });
 
   it('should save the repeat until the date chosen in the mini calendar', async () => {
@@ -784,9 +937,11 @@ describe('Event repeat modes', () => {
 
     await saveEventWithTitle('Until event');
 
-    expect(getSavedEvents()).toContainEqual(expect.objectContaining({
-      repeat: expect.objectContaining({ until: '2026-10-20' }),
-    }));
+    expect(getSavedEvents()).toContainEqual(
+      expect.objectContaining({
+        repeat: expect.objectContaining({ until: '2026-10-20' }),
+      }),
+    );
   });
 
   async function openRepeatModal() {
@@ -794,7 +949,11 @@ describe('Event repeat modes', () => {
 
     await user.click(screen.getByTestId('event-repeat-button'));
 
-    await vi.waitFor(() => expect(screen.getByTestId('event-repeat-modal')).toHaveClass('show-repeat-modal'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('event-repeat-modal')).toHaveClass(
+        'show-repeat-modal',
+      ),
+    );
   }
 
   async function selectRepeatMode(testId) {
@@ -808,19 +967,20 @@ describe('Event repeat modes', () => {
 
     await user.click(screen.getByTestId('event-save-button'));
   }
-
 });
 
 describe('Event form validation', () => {
   it('should not save the event when the title is empty', async () => {
     await openEventForm();
 
+    await user.clear(screen.getByTestId('event-title-input'));
+
     await user.click(screen.getByTestId('event-save-button'));
 
     expect(getSavedEvents()).toEqual([]);
 
     await vi.waitFor(() =>
-      expect(screen.getAllByTestId('info-alert').length).toBeGreaterThan(0)
+      expect(screen.getAllByTestId('info-alert').length).toBeGreaterThan(0),
     );
   });
 
@@ -838,7 +998,7 @@ describe('Event form validation', () => {
     expect(getSavedEvents()).toEqual([]);
 
     await vi.waitFor(() =>
-      expect(screen.getAllByTestId('info-alert').length).toBeGreaterThan(0)
+      expect(screen.getAllByTestId('info-alert').length).toBeGreaterThan(0),
     );
   });
 
@@ -851,11 +1011,13 @@ describe('Event form validation', () => {
 
     await user.click(screen.getByTestId('event-save-button'));
 
-    expect(getSavedEvents()).toContainEqual(expect.objectContaining({
-      allDay: true,
-      from: '00:00',
-      to: '23:59',
-    }));
+    expect(getSavedEvents()).toContainEqual(
+      expect.objectContaining({
+        allDay: true,
+        from: '00:00',
+        to: '23:59',
+      }),
+    );
   });
 });
 
@@ -863,10 +1025,14 @@ describe('Todo list interactions', () => {
   it('should show a badge with the list count on days with todo lists', async () => {
     await seedTodos([createTodoList()]);
 
-    const badge = within(screen.getByTestId('day-box-2026-09-14')).getByTestId('todo-badge-2026-09-14');
+    const badge = within(screen.getByTestId('day-box-2026-09-14')).getByTestId(
+      'todo-badge-2026-09-14',
+    );
     expect(badge).toHaveTextContent('1');
     expect(
-      within(screen.getByTestId('day-box-2026-09-15')).queryByTestId('todo-badge-2026-09-15')
+      within(screen.getByTestId('day-box-2026-09-15')).queryByTestId(
+        'todo-badge-2026-09-15',
+      ),
     ).not.toBeInTheDocument();
   });
 
@@ -876,11 +1042,19 @@ describe('Todo list interactions', () => {
       createTodoList({ id: 'todo-2', title: 'List two' }),
     ]);
 
-    await user.click(within(screen.getByTestId('day-box-2026-09-14')).getByTestId('todo-badge-2026-09-14'));
+    await user.click(
+      within(screen.getByTestId('day-box-2026-09-14')).getByTestId(
+        'todo-badge-2026-09-14',
+      ),
+    );
 
     const menu = screen.getByTestId('todo-contextual-menu');
-    expect(within(menu).getByTestId('todo-menu-item-todo-1')).toBeInTheDocument();
-    expect(within(menu).getByTestId('todo-menu-item-todo-2')).toBeInTheDocument();
+    expect(
+      within(menu).getByTestId('todo-menu-item-todo-1'),
+    ).toBeInTheDocument();
+    expect(
+      within(menu).getByTestId('todo-menu-item-todo-2'),
+    ).toBeInTheDocument();
   });
 
   it('should rehydrate a todo list when clicking it in the contextual menu', async () => {
@@ -942,18 +1116,24 @@ describe('Todo list interactions', () => {
 
     expect(getSavedTodos()).toEqual([]);
     expect(
-      within(screen.getByTestId('day-box-2026-09-14')).queryByTestId('todo-badge-2026-09-14')
+      within(screen.getByTestId('day-box-2026-09-14')).queryByTestId(
+        'todo-badge-2026-09-14',
+      ),
     ).not.toBeInTheDocument();
   });
 
   it('should close the todo panel when clicking the close button', async () => {
     await user.click(screen.getByTestId('new-todo-button'));
 
-    await vi.waitFor(() => expect(screen.getByTestId('todo-panel')).toHaveClass('show-modal'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('todo-panel')).toHaveClass('show-modal'),
+    );
 
     await user.click(screen.getByTestId('todo-close-button'));
 
-    await vi.waitFor(() => expect(screen.getByTestId('todo-panel')).not.toHaveClass('show-modal'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('todo-panel')).not.toHaveClass('show-modal'),
+    );
   });
 
   function createTodoList(overrides = {}) {
@@ -969,18 +1149,24 @@ describe('Todo list interactions', () => {
   async function seedTodos(todos) {
     localStorage.setItem('todoEvents', JSON.stringify(todos));
 
-    const { initRenderBadge } = await import('../to-do-list/toDoBadgeRendering.js');
+    const { initRenderBadge } =
+      await import('../to-do-list/toDoBadgeRendering.js');
     initRenderBadge();
   }
 
   async function openTodoFromBadge() {
-    await user.click(within(screen.getByTestId('day-box-2026-09-14')).getByTestId('todo-badge-2026-09-14'));
+    await user.click(
+      within(screen.getByTestId('day-box-2026-09-14')).getByTestId(
+        'todo-badge-2026-09-14',
+      ),
+    );
 
     await user.click(screen.getByTestId('todo-menu-item-todo-1'));
 
-    await vi.waitFor(() => expect(screen.getByTestId('todo-panel')).toHaveClass('show-modal'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('todo-panel')).toHaveClass('show-modal'),
+    );
   }
-
 });
 
 describe('Loader', () => {
@@ -1027,5 +1213,9 @@ async function seedAndRender(events) {
 async function openEventForm() {
   await user.click(screen.getByTestId('day-box-2026-09-14'));
 
-  await vi.waitFor(() => expect(screen.getByTestId('event-popup-container')).toHaveClass('show-container'));
+  await vi.waitFor(() =>
+    expect(screen.getByTestId('event-popup-container')).toHaveClass(
+      'show-container',
+    ),
+  );
 }
