@@ -1,54 +1,54 @@
-import { getAllRenderableEvents } from "../events/eventRendering.js";
-import dayjs from "../../day.js";
+import { getAllRenderableEvents } from '../events/eventRendering.js';
+import dayjs from '../../day.js';
 
 const NOTIFICATION_CHECK_INTERVAL = 30_000;
 let notificationSchedulerId = null;
 let lastNotificationCheck = null;
 
 export async function requestNotificationPermission() {
-  if (!("Notification" in window)) {
-    return "unsupported";
+  if (!('Notification' in window)) {
+    return 'unsupported';
   }
 
   if (!window.isSecureContext) {
-    return "insecure";
+    return 'insecure';
   }
 
-  if (Notification.permission === "granted") {
-    return "granted";
+  if (Notification.permission === 'granted') {
+    return 'granted';
   }
 
-  if (Notification.permission === "denied") {
-    return "denied";
+  if (Notification.permission === 'denied') {
+    return 'denied';
   }
 
   try {
     return await Notification.requestPermission();
   } catch (error) {
-    console.error("Errore durante la richiesta del permesso", error);
-    return "error";
+    console.error('Errore durante la richiesta del permesso', error);
+    return 'error';
   }
 }
 
 export function showNotification(title, option = {}) {
-  if (!("Notification" in window)) {
+  if (!('Notification' in window)) {
     return false;
   }
 
-  if (Notification.permission !== "granted") {
+  if (Notification.permission !== 'granted') {
     return false;
   }
   try {
     const notification = new Notification(title, option);
 
-    notification.addEventListener("click", () => {
+    notification.addEventListener('click', () => {
       window.focus();
       notification.close();
     });
 
     return true;
   } catch (error) {
-    console.error("Errore durante la creazione della notifica:", error);
+    console.error('Errore durante la creazione della notifica:', error);
     return false;
   }
 }
@@ -71,7 +71,7 @@ function getNotificationTimestamp(event) {
 
   const eventStart = dayjs(
     `${event.date} ${event.from}`,
-    "YYYY-MM-DD HH:mm",
+    'YYYY-MM-DD HH:mm',
     true,
   );
 
@@ -102,7 +102,7 @@ function checkDueNotifications() {
   const allEvents = getAllRenderableEvents();
 
   const eventWithNotification = allEvents.filter(
-    (events) => events.notification !== "nessuna notifica",
+    (events) => events.notification !== 'nessuna notifica',
   );
 
   eventWithNotification.forEach((event) => {
@@ -131,17 +131,17 @@ function checkDueNotifications() {
 
 function getNotificationOffsetMs(notificationTime) {
   switch (notificationTime) {
-    case "5 minuti prima":
+    case '5 minuti prima':
       return 5 * 60 * 1000;
-    case "15 minuti prima":
+    case '15 minuti prima':
       return 15 * 60 * 1000;
-    case "1 ora prima":
+    case '1 ora prima':
       return 60 * 60 * 1000;
-    case "2 ore prima":
+    case '2 ore prima':
       return 60 * 2 * 60 * 1000;
-    case "4 ore prima":
+    case '4 ore prima':
       return 60 * 4 * 60 * 1000;
-    case "24 ore prima":
+    case '24 ore prima':
       return 60 * 24 * 60 * 1000;
 
     default:
