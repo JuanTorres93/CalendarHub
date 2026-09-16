@@ -4,6 +4,8 @@ import {
   toItalianNotification,
 } from '../interface-adapters/other/bidirectionalItalianDomainMapper.js';
 import { AppGetEventByIdUsecase } from '../interface-adapters/use-cases/AppGetEventByIdUsecase.js';
+import { AppUpdateEventUsecase } from '../interface-adapters/use-cases/AppUpdateEventUsecase.js';
+
 import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
 import createCaroseul, {
   renderColorList,
@@ -382,15 +384,6 @@ export function saveEvent() {
     );
 
     switch (globalEventState.mode) {
-      case 'edit': {
-        AppEventsRepo.save(eventDraft);
-        createMessage(
-          "l'evento è stato modificato!",
-          modalEvents,
-          document.body,
-        );
-        break;
-      }
       case 'edit-single-occurrence': {
         const motherEvent = AppGetEventByIdUsecase.execute({
           id: editingMotherEventId,
@@ -618,16 +611,28 @@ export function initEventFormEvents() {
       ...globalEventState,
     };
 
-    if (
-      globalEventState.mode === 'create' &&
-      // TODO This should be removed and enabled again entity in entity when decoupling allows it
-      createEventProps.title
-    ) {
-      try {
+    // TODO NEXT: Seguir eliminando todo rastro de eventDraft de la aplicación
+    try {
+      if (
+        globalEventState.mode === 'create' &&
+        // TODO This should be removed and enabled again entity in entity when decoupling allows it
+        createEventProps.title
+      ) {
         AppCreateEventUsecase.execute(createEventProps);
-      } catch (error) {
-        handleKnownErrors(error);
+      } else if (globalEventState.mode === 'edit') {
+        AppUpdateEventUsecase.execute({
+          id: editingEventId,
+          eventRawProps: createEventProps,
+        });
+
+        createMessage(
+          "l'evento è stato modificato!",
+          modalEvents,
+          document.body,
+        );
       }
+    } catch (error) {
+      handleKnownErrors(error);
     }
 
     saveEvent();
