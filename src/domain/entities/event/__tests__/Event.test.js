@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { Event } from '../Event';
 import { EVENT_TEST_PROPS } from './eventTestProps';
 import { ValidationDomainError } from '../../../common/domainErrors.js';
@@ -9,30 +9,57 @@ describe('Event', () => {
     vi.useRealTimers();
   });
 
-  it('should create an event', () => {
-    const event = Event.create(EVENT_TEST_PROPS);
+  describe('Validation', () => {
+    it('should create an event', () => {
+      const event = Event.create(EVENT_TEST_PROPS);
 
-    expect(event).toBeInstanceOf(Event);
-  });
+      expect(event).toBeInstanceOf(Event);
+    });
 
-  it.each(
-    [
-      'description',
-      'date',
-      'icon',
-      'color',
-      'urgent',
-      'allDay',
-      'notification',
-      'repeat',
-    ].map((property) => [property, property]),
-  )('should create event if no %s is passed', (propertyKey, property) => {
-    const eventProps = { ...EVENT_TEST_PROPS };
-    delete eventProps[propertyKey];
+    it.each(
+      [
+        'description',
+        'date',
+        'icon',
+        'color',
+        'urgent',
+        'allDay',
+        'notification',
+        'repeat',
+      ].map((property) => [property, property]),
+    )('should create event if no %s is passed', (propertyKey, property) => {
+      const eventProps = { ...EVENT_TEST_PROPS };
+      delete eventProps[propertyKey];
 
-    const event = Event.create(eventProps);
+      const event = Event.create(eventProps);
 
-    expect(event).toBeInstanceOf(Event);
+      expect(event).toBeInstanceOf(Event);
+    });
+
+    it('title should not be empty', async () => {
+      const emptyTitle = '';
+      const eventProps = { ...EVENT_TEST_PROPS, title: emptyTitle };
+
+      expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
+    });
+
+    it('description should not exceed 200 characters', async () => {
+      const longDescription = 'a'.repeat(201);
+      const eventProps = { ...EVENT_TEST_PROPS, description: longDescription };
+
+      expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
+    });
+
+    it.each(NOTIFICATION_PERIODS.map((period) => [period, period]))(
+      'should create event for %s notification period',
+      (notification, period) => {
+        const eventProps = { ...EVENT_TEST_PROPS, notification: period };
+
+        const event = Event.create(eventProps);
+
+        expect(event).toBeInstanceOf(Event);
+      },
+    );
   });
 
   describe('properties', () => {
@@ -55,31 +82,6 @@ describe('Event', () => {
       expect(event).toHaveProperty(key, value);
     });
   });
-
-  it('title should not be empty', async () => {
-    const emptyTitle = '';
-    const eventProps = { ...EVENT_TEST_PROPS, title: emptyTitle };
-
-    expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
-  });
-
-  it('description should not exceed 200 characters', async () => {
-    const longDescription = 'a'.repeat(201);
-    const eventProps = { ...EVENT_TEST_PROPS, description: longDescription };
-
-    expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
-  });
-
-  it.each(NOTIFICATION_PERIODS.map((period) => [period, period]))(
-    'should create event for %s notification period',
-    (notification, period) => {
-      const eventProps = { ...EVENT_TEST_PROPS, notification: period };
-
-      const event = Event.create(eventProps);
-
-      expect(event).toBeInstanceOf(Event);
-    },
-  );
 
   describe('Default values', () => {
     it('should default to 5 min notification if it is not provided', async () => {
@@ -194,6 +196,95 @@ describe('Event', () => {
       const eventProps = { ...EVENT_TEST_PROPS, from: '23:30', to: '00:30' };
 
       expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
+    });
+  });
+
+  describe('update', () => {
+    let eventToUpdate;
+
+    beforeEach(() => {
+      eventToUpdate = Event.create(EVENT_TEST_PROPS);
+    });
+
+    it('should update the title of the event', () => {
+      const newTitle = 'Updated Title';
+      eventToUpdate.update({ title: newTitle });
+      expect(eventToUpdate.title).toBe(newTitle);
+    });
+
+    it('should update the description of the event', async () => {
+      const newDescription = 'Updated Description';
+      eventToUpdate.update({ description: newDescription });
+      expect(eventToUpdate.description).toBe(newDescription);
+    });
+
+    it('should update date of the event', async () => {
+      const newDate = '2024-07-01';
+      eventToUpdate.update({ date: newDate });
+
+      expect(eventToUpdate.date).toBe(newDate);
+    });
+
+    it('should update the from time of the event', async () => {
+      const newFrom = '09:00';
+      eventToUpdate.update({ from: newFrom });
+      expect(eventToUpdate.from).toBe(newFrom);
+    });
+
+    it('should update the to time of the event', async () => {
+      const newTo = '12:00';
+      eventToUpdate.update({ to: newTo });
+      expect(eventToUpdate.to).toBe(newTo);
+    });
+
+    it('should update the notification of the event', async () => {
+      const newNotification = '15min';
+      eventToUpdate.update({ notification: newNotification });
+
+      expect(eventToUpdate.notification).toBe(newNotification);
+    });
+
+    it('should update urgent of the event', async () => {
+      const newUrgent = true;
+      eventToUpdate.update({ urgent: newUrgent });
+
+      expect(eventToUpdate.urgent).toBe(newUrgent);
+    });
+
+    it('should update allDay of the event', async () => {
+      const newAllDay = true;
+      eventToUpdate.update({ allDay: newAllDay });
+
+      expect(eventToUpdate.allDay).toBe(newAllDay);
+    });
+
+    it('should update icon of the event', async () => {
+      const newIcon = '🎉';
+      eventToUpdate.update({ icon: newIcon });
+
+      expect(eventToUpdate.icon).toBe(newIcon);
+    });
+
+    it('should update color of the event', async () => {
+      const newColor = 'red';
+      eventToUpdate.update({ color: newColor });
+
+      expect(eventToUpdate.color).toBe(newColor);
+    });
+
+    it('should update repeat of the event', async () => {
+      const newRepeat = {
+        seriesId: 'series-id',
+        type: 'weekly',
+        interval: 1,
+        until: '2024-07-01',
+        weekdays: [1, 3],
+        customDates: [],
+        exceptions: ['2024-06-20'],
+      };
+      eventToUpdate.update({ repeat: newRepeat });
+
+      expect(eventToUpdate.repeat).toEqual(newRepeat);
     });
   });
 

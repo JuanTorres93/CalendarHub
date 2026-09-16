@@ -62,6 +62,52 @@ export class Event {
     return new Event(validatedProps);
   }
 
+  update(updateProps) {
+    if (updateProps.title) {
+      this.props.title = Text.create(updateProps.title, TITLE_TEXT_OPTIONS);
+    }
+    if (updateProps.description) {
+      this.props.description = Text.create(
+        updateProps.description,
+        DESCRIPTION_TEXT_OPTIONS,
+      );
+    }
+
+    if (updateProps.date) {
+      this.props.date = Day.create(updateProps.date);
+    }
+    if (updateProps.from) {
+      this.props.from = Time.create(updateProps.from);
+    }
+    if (updateProps.to) {
+      this.props.to = Time.create(updateProps.to);
+    }
+
+    if (updateProps.notification) {
+      this.props.notification = NotificationPeriod.create(
+        updateProps.notification,
+      );
+    }
+
+    if (updateProps.urgent) {
+      this.props.urgent = Boolean.create(updateProps.urgent);
+    }
+    if (updateProps.allDay) {
+      this.props.allDay = Boolean.create(updateProps.allDay);
+    }
+
+    if (updateProps.icon) {
+      this.props.icon = Icon.create(updateProps.icon);
+    }
+    if (updateProps.color) {
+      this.props.color = Color.create(updateProps.color);
+    }
+
+    if (updateProps.repeat) {
+      this.props.repeat = Repeat.create(updateProps.repeat);
+    }
+  }
+
   get id() {
     return this.props.id.value;
   }
