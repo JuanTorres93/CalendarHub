@@ -177,17 +177,11 @@ describe('Events', () => {
   });
 
   it('should create the event for the clicked day', async () => {
-    await user.click(screen.getByTestId('day-box-2026-09-07'));
+    await openEventForm('day-box-2026-09-07');
 
-    await vi.waitFor(() =>
-      expect(screen.getByTestId('event-popup-container')).toHaveClass(
-        'show-container',
-      ),
-    );
+    await editTitle('Test event');
 
-    await user.type(screen.getByTestId('event-title-input'), 'Test event');
-
-    await user.click(screen.getByTestId('event-save-button'));
+    await saveEventForm();
 
     expect(getSavedEvents()).toContainEqual(
       expect.objectContaining({ date: '2026-09-07' }),
@@ -321,12 +315,7 @@ describe('Events', () => {
     });
 
     it('should save selected date', async () => {
-      await user.click(screen.getByTestId('event-date-button'));
-
-      const miniGrid = document.querySelector('.mini-boxes-container');
-      await user.click(within(miniGrid).getByTestId('day-box-2026-09-20'));
-
-      await user.click(document.querySelector('.mini-save-btn'));
+      await changeEventDate('day-box-2026-09-20');
 
       await user.click(screen.getByTestId('event-save-button'));
 
@@ -614,22 +603,10 @@ describe('Mini calendar from navbar', () => {
 });
 
 describe('Event banner', () => {
-  async function openEventBanner(testId) {
-    await user.click(
-      within(screen.getByTestId('day-box-2026-09-14')).getByTestId(testId),
-    );
-
-    await vi.waitFor(() =>
-      expect(screen.getByTestId('event-banner')).toHaveClass(
-        'show-option-banner',
-      ),
-    );
-  }
-
   it('should show edit and delete options when clicking an event', async () => {
     await seedAndRender([createBaseEvent()]);
 
-    await openEventBanner('monthly-event-evt-base');
+    await openEventBanner('2026-09-14', 'monthly-event-evt-base');
 
     expect(screen.getByTestId('event-banner-edit-button')).toBeInTheDocument();
     expect(
@@ -640,24 +617,15 @@ describe('Event banner', () => {
   it('should edit an event when confirming the preloaded form', async () => {
     await seedAndRender([createBaseEvent()]);
 
-    await openEventBanner('monthly-event-evt-base');
+    await openEventBanner('2026-09-14', 'monthly-event-evt-base');
 
-    await user.click(screen.getByTestId('event-banner-edit-button'));
+    await openEditForm('event-banner-edit-button');
 
-    const eventModal = screen.getByTestId('event-popup-container');
-    await vi.waitFor(() => expect(eventModal).toHaveClass('show-container'));
+    expect(screen.getByTestId('event-title-input')).toHaveValue('Base event');
 
-    const titleInput = screen.getByTestId('event-title-input');
-    expect(titleInput).toHaveValue('Base event');
+    await editTitle('Edited event');
 
-    await user.clear(titleInput);
-    await user.type(titleInput, 'Edited event');
-
-    await user.click(screen.getByTestId('event-save-button'));
-
-    await vi.waitFor(() =>
-      expect(eventModal).not.toHaveClass('show-container'),
-    );
+    await saveEventForm();
 
     expect(getSavedEvents()).toEqual([
       expect.objectContaining({ id: 'evt-base', title: 'Edited event' }),
@@ -665,60 +633,26 @@ describe('Event banner', () => {
   });
 
   it('should edit a single occurrence creating an independent event and excluding it from the series', async () => {
-    const seriesEvent = createBaseEvent({
-      id: 'evt-series',
-      title: 'Series event',
-      repeat: {
-        seriesId: 'series-1',
-        type: 'daily',
-        interval: 1,
-        weekdays: [],
-        customDates: [],
-        exceptions: ['2026-09-16'],
-        until: '2026-09-20',
-      },
-    });
+    await seedAndRender([
+      createSeriesEvent({ exceptions: ['2026-09-16'] }),
+    ]);
 
-    await seedAndRender([seriesEvent]);
+    await openEventBanner('2026-09-15', 'monthly-event-series-1-2026-09-15');
 
-    await user.click(
-      within(screen.getByTestId('day-box-2026-09-15')).getByTestId(
-        'monthly-event-series-1-2026-09-15',
-      ),
-    );
+    await openEditForm('event-banner-edit-single-button');
 
-    await vi.waitFor(() =>
-      expect(screen.getByTestId('event-banner')).toHaveClass(
-        'show-option-banner',
-      ),
-    );
+    expect(screen.getByTestId('event-title-input')).toHaveValue('Series event');
 
-    await user.click(screen.getByTestId('event-banner-edit-single-button'));
+    await editTitle('Edited occurrence');
 
-    const eventModal = screen.getByTestId('event-popup-container');
-    await vi.waitFor(() => expect(eventModal).toHaveClass('show-container'));
-
-    const titleInput = screen.getByTestId('event-title-input');
-    expect(titleInput).toHaveValue('Series event');
-
-    await user.clear(titleInput);
-    await user.type(titleInput, 'Edited occurrence');
-
-    await user.click(screen.getByTestId('event-save-button'));
-
-    await vi.waitFor(() =>
-      expect(eventModal).not.toHaveClass('show-container'),
-    );
+    await saveEventForm();
 
     const savedEvents = getSavedEvents();
 
     expect(savedEvents).toHaveLength(2);
 
     const motherEvent = savedEvents.find((event) => event.id === 'evt-series');
-    expect(motherEvent.repeat.exceptions).toEqual([
-      '2026-09-16',
-      '2026-09-15',
-    ]);
+    expect(motherEvent.repeat.exceptions).toEqual(['2026-09-16', '2026-09-15']);
 
     expect(savedEvents).toContainEqual(
       expect.objectContaining({
@@ -730,50 +664,19 @@ describe('Event banner', () => {
   });
 
   it('should edit the series when confirming the edit series form', async () => {
-    const seriesEvent = createBaseEvent({
-      id: 'evt-series',
-      title: 'Series event',
-      repeat: {
-        seriesId: 'series-1',
-        type: 'daily',
-        interval: 1,
-        weekdays: [],
-        customDates: [],
-        exceptions: ['2026-09-17'],
-        until: '2026-09-20',
-      },
-    });
+    await seedAndRender([
+      createSeriesEvent({ exceptions: ['2026-09-17'] }),
+    ]);
 
-    await seedAndRender([seriesEvent]);
+    await openEventBanner('2026-09-15', 'monthly-event-series-1-2026-09-15');
 
-    await user.click(
-      within(screen.getByTestId('day-box-2026-09-15')).getByTestId(
-        'monthly-event-series-1-2026-09-15',
-      ),
-    );
+    await openEditForm('event-banner-edit-series-button');
 
-    await vi.waitFor(() =>
-      expect(screen.getByTestId('event-banner')).toHaveClass(
-        'show-option-banner',
-      ),
-    );
+    expect(screen.getByTestId('event-title-input')).toHaveValue('Series event');
 
-    await user.click(screen.getByTestId('event-banner-edit-series-button'));
+    await editTitle('Edited series');
 
-    const eventModal = screen.getByTestId('event-popup-container');
-    await vi.waitFor(() => expect(eventModal).toHaveClass('show-container'));
-
-    const titleInput = screen.getByTestId('event-title-input');
-    expect(titleInput).toHaveValue('Series event');
-
-    await user.clear(titleInput);
-    await user.type(titleInput, 'Edited series');
-
-    await user.click(screen.getByTestId('event-save-button'));
-
-    await vi.waitFor(() =>
-      expect(eventModal).not.toHaveClass('show-container'),
-    );
+    await saveEventForm();
 
     expect(getSavedEvents()).toEqual([
       expect.objectContaining({
@@ -787,51 +690,17 @@ describe('Event banner', () => {
   });
 
   it('should clear the series exceptions when the repeat pattern changes', async () => {
-    const seriesEvent = createBaseEvent({
-      id: 'evt-series',
-      title: 'Series event',
-      repeat: {
-        seriesId: 'series-1',
-        type: 'daily',
-        interval: 1,
-        weekdays: [],
-        customDates: [],
-        exceptions: ['2026-09-17'],
-        until: '2026-09-20',
-      },
-    });
+    await seedAndRender([
+      createSeriesEvent({ exceptions: ['2026-09-17'] }),
+    ]);
 
-    await seedAndRender([seriesEvent]);
+    await openEventBanner('2026-09-15', 'monthly-event-series-1-2026-09-15');
 
-    await user.click(
-      within(screen.getByTestId('day-box-2026-09-15')).getByTestId(
-        'monthly-event-series-1-2026-09-15',
-      ),
-    );
+    await openEditForm('event-banner-edit-series-button');
 
-    await vi.waitFor(() =>
-      expect(screen.getByTestId('event-banner')).toHaveClass(
-        'show-option-banner',
-      ),
-    );
+    await changeEventDate('day-box-2026-09-16');
 
-    await user.click(screen.getByTestId('event-banner-edit-series-button'));
-
-    const eventModal = screen.getByTestId('event-popup-container');
-    await vi.waitFor(() => expect(eventModal).toHaveClass('show-container'));
-
-    await user.click(screen.getByTestId('event-date-button'));
-
-    const miniGrid = document.querySelector('.mini-boxes-container');
-    await user.click(within(miniGrid).getByTestId('day-box-2026-09-16'));
-
-    await user.click(document.querySelector('.mini-save-btn'));
-
-    await user.click(screen.getByTestId('event-save-button'));
-
-    await vi.waitFor(() =>
-      expect(eventModal).not.toHaveClass('show-container'),
-    );
+    await saveEventForm();
 
     expect(getSavedEvents()).toEqual([
       expect.objectContaining({
@@ -847,7 +716,7 @@ describe('Event banner', () => {
   it('should delete an event when confirming deletion', async () => {
     await seedAndRender([createBaseEvent()]);
 
-    await openEventBanner('monthly-event-evt-base');
+    await openEventBanner('2026-09-14', 'monthly-event-evt-base');
 
     await user.click(screen.getByTestId('event-banner-delete-button'));
 
@@ -1401,6 +1270,23 @@ function createBaseEvent(overrides = {}) {
   };
 }
 
+function createSeriesEvent(repeatOverrides = {}) {
+  return createBaseEvent({
+    id: 'evt-series',
+    title: 'Series event',
+    repeat: {
+      seriesId: 'series-1',
+      type: 'daily',
+      interval: 1,
+      weekdays: [],
+      customDates: [],
+      exceptions: [],
+      until: '2026-09-20',
+      ...repeatOverrides,
+    },
+  });
+}
+
 async function seedAndRender(events) {
   localStorage.setItem('calendarEvents', JSON.stringify(events));
 
@@ -1408,12 +1294,60 @@ async function seedAndRender(events) {
   renderEvents();
 }
 
-async function openEventForm() {
-  await user.click(screen.getByTestId('day-box-2026-09-14'));
+async function openEventForm(dayTestId = 'day-box-2026-09-14') {
+  await user.click(screen.getByTestId(dayTestId));
 
   await vi.waitFor(() =>
     expect(screen.getByTestId('event-popup-container')).toHaveClass(
       'show-container',
     ),
   );
+}
+
+async function openEventBanner(day, eventTestId) {
+  await user.click(
+    within(screen.getByTestId(`day-box-${day}`)).getByTestId(eventTestId),
+  );
+
+  await vi.waitFor(() =>
+    expect(screen.getByTestId('event-banner')).toHaveClass(
+      'show-option-banner',
+    ),
+  );
+}
+
+async function openEditForm(buttonTestId) {
+  await user.click(screen.getByTestId(buttonTestId));
+
+  await vi.waitFor(() =>
+    expect(screen.getByTestId('event-popup-container')).toHaveClass(
+      'show-container',
+    ),
+  );
+}
+
+async function saveEventForm() {
+  await user.click(screen.getByTestId('event-save-button'));
+
+  await vi.waitFor(() =>
+    expect(screen.getByTestId('event-popup-container')).not.toHaveClass(
+      'show-container',
+    ),
+  );
+}
+
+async function editTitle(title) {
+  const titleInput = screen.getByTestId('event-title-input');
+
+  await user.clear(titleInput);
+  await user.type(titleInput, title);
+}
+
+async function changeEventDate(dayTestId) {
+  await user.click(screen.getByTestId('event-date-button'));
+
+  const miniGrid = document.querySelector('.mini-boxes-container');
+  await user.click(within(miniGrid).getByTestId(dayTestId));
+
+  await user.click(document.querySelector('.mini-save-btn'));
 }
