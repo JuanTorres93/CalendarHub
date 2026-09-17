@@ -33,10 +33,6 @@ export function initEventDraft(date, time, endTime) {
   });
 }
 
-export function resetEventDraft() {
-  eventDraft.reset();
-}
-
 export const timeDraft = {
   from: { hour: '', minute: '' },
   to: { hour: '', minute: '' },

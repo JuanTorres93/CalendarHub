@@ -17,7 +17,6 @@ import {
   eventDraft,
   globalEventState,
   initEventDraft,
-  resetEventDraft,
   timeDraft,
   updateEventDraft,
   validateTimeRange,
@@ -191,7 +190,6 @@ export function resetEventModal() {
   }
 
   classRemovalHelper(sections);
-  resetEventDraft();
 
   iconBtn.innerText = '✏️';
   inputTitle.value = '';
@@ -254,8 +252,6 @@ export function preCompilerEdit(event, mode) {
   globalEventState.mode = mode;
 
   renderModeTextInfo(globalEventState.mode, event.title);
-
-  resetEventDraft();
 
   const updateEventEntityProps = {};
 
