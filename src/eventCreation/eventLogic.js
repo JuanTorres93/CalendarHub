@@ -3,8 +3,9 @@ import {
   toDomainNotification,
   toItalianNotification,
 } from '../interface-adapters/other/bidirectionalItalianDomainMapper.js';
-import { AppGetEventByIdUsecase } from '../interface-adapters/use-cases/AppGetEventByIdUsecase.js';
 import { AppUpdateEventUsecase } from '../interface-adapters/use-cases/AppUpdateEventUsecase.js';
+import { AppUpdateSingleEventOccurrenceUsecase } from '../interface-adapters/use-cases/AppUpdateSingleEventOccurrenceUsecase.js';
+import { AppUpdateEventSeriesUsecase } from '../interface-adapters/use-cases/AppUpdateEventSeriesUsecase.js';
 
 import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
 import createCaroseul, {
@@ -23,7 +24,6 @@ import {
   validatorEventDraft,
 } from '../utils/events/eventDraft.js';
 import { renderEvents } from '../utils/events/eventRendering.js';
-import { AppEventsRepo } from '../interface-adapters/repos/AppEventsRepo.js';
 import { AppCreateEventUsecase } from '../interface-adapters/use-cases/AppCreateEventUsecase.js';
 import { handleKnownErrors } from '../interface-adapters/other/handleKnownErrors.js';
 import { formatDate } from '../utils/events/eventsUI.js';
@@ -165,6 +165,10 @@ function classRemovalHelper(sections) {
 
 export function resetEventModal() {
   globalEventState.mode = 'create';
+  delete globalEventState.date;
+  delete globalEventState.repeat;
+  delete globalEventState.notification;
+  delete globalEventState.allDay;
 
   editingEventId = null;
   editingMotherEventId = null;
@@ -375,76 +379,9 @@ export function saveEvent() {
 
   if (!isValid) {
     return;
-  } else {
-    eventDraft.updateIdDuringRefactor(
-      globalEventState.mode === 'edit' ||
-        globalEventState.mode === 'edit-series'
-        ? editingEventId
-        : crypto.randomUUID(),
-    );
-
-    switch (globalEventState.mode) {
-      case 'edit-single-occurrence': {
-        const motherEvent = AppGetEventByIdUsecase.execute({
-          id: editingMotherEventId,
-        });
-
-        motherEvent.update({
-          repeat: {
-            ...motherEvent.repeat,
-            exceptions: [
-              ...motherEvent.repeat.exceptions,
-              editingOccurrenceDate,
-            ],
-          },
-        });
-
-        AppEventsRepo.save(motherEvent);
-        AppEventsRepo.save(eventDraft);
-
-        createMessage(
-          "l'occorrenza è stata modificata!",
-          modalEvents,
-          document.body,
-        );
-        break;
-      }
-      case 'edit-series': {
-        const patternChanged =
-          originalSeriesDate !== eventDraft.date ||
-          JSON.stringify({
-            type: originalRepeatSnapshot.type,
-            interval: originalRepeatSnapshot.interval,
-            weekdays: originalRepeatSnapshot.weekdays,
-            customDates: originalRepeatSnapshot.customDates,
-          }) !==
-            JSON.stringify({
-              type: eventDraft.repeat.type,
-              interval: eventDraft.repeat.interval,
-              weekdays: eventDraft.repeat.weekdays,
-              customDates: eventDraft.repeat.customDates,
-            });
-
-        eventDraft.update({
-          repeat: {
-            ...eventDraft.repeat,
-            exceptions: patternChanged ? [] : originalRepeatSnapshot.exceptions,
-          },
-        });
-
-        AppEventsRepo.save(eventDraft);
-
-        createMessage(
-          'la serie è stato modificata!',
-          modalEvents,
-          document.body,
-        );
-        break;
-      }
-    }
-
-    closeModal();
   }
+
+  closeModal();
 }
 
 export function initEventFormEvents() {
@@ -613,7 +550,6 @@ export function initEventFormEvents() {
       ...globalEventState,
     };
 
-    // TODO NEXT: Seguir eliminando todo rastro de eventDraft de la aplicación
     try {
       if (
         globalEventState.mode === 'create' &&
@@ -629,6 +565,31 @@ export function initEventFormEvents() {
 
         createMessage(
           "l'evento è stato modificato!",
+          modalEvents,
+          document.body,
+        );
+      } else if (globalEventState.mode === 'edit-single-occurrence') {
+        AppUpdateSingleEventOccurrenceUsecase.execute({
+          motherEventId: editingMotherEventId,
+          occurrenceDate: editingOccurrenceDate,
+          eventRawProps: createEventProps,
+        });
+
+        createMessage(
+          "l'occorrenza è stata modificata!",
+          modalEvents,
+          document.body,
+        );
+      } else if (globalEventState.mode === 'edit-series') {
+        AppUpdateEventSeriesUsecase.execute({
+          id: editingEventId,
+          originalRepeat: originalRepeatSnapshot,
+          originalDate: originalSeriesDate,
+          eventRawProps: createEventProps,
+        });
+
+        createMessage(
+          'la serie è stato modificata!',
           modalEvents,
           document.body,
         );
