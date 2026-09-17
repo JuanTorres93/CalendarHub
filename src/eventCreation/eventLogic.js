@@ -556,11 +556,7 @@ export function initEventFormEvents() {
     let feedbackMessage = '';
 
     try {
-      if (
-        globalEventState.mode === 'create' &&
-        // TODO This should be removed and enabled again entity in entity when decoupling allows it
-        createEventProps.title
-      ) {
+      if (globalEventState.mode === 'create') {
         AppCreateEventUsecase.execute(createEventProps);
       } else if (globalEventState.mode === 'edit') {
         AppUpdateEventUsecase.execute({

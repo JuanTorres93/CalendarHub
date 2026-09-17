@@ -22,13 +22,9 @@ export class Event {
       ? Boolean.create(props.allDay)
       : Boolean.create(defaults.allDay);
 
-    const from = allDay.value
-      ? Time.create('00:00')
-      : Time.create(props.from);
+    const from = allDay.value ? Time.create('00:00') : Time.create(props.from);
 
-    const to = allDay.value
-      ? Time.create('23:59')
-      : Time.create(props.to);
+    const to = allDay.value ? Time.create('23:59') : Time.create(props.to);
 
     if (toMinutes(to.value) <= toMinutes(from.value)) {
       throw new ValidationDomainError('Event: to must be later than from', {
@@ -216,8 +212,7 @@ export class Event {
   }
 }
 
-// TODO change to false when code is sufficiently decoupled
-const TITLE_TEXT_OPTIONS = { canBeEmpty: true };
+const TITLE_TEXT_OPTIONS = { canBeEmpty: false };
 const DESCRIPTION_TEXT_OPTIONS = { maxLength: 200, canBeEmpty: true };
 
 function currentHour() {

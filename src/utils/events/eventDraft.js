@@ -20,7 +20,7 @@ export const globalEventState = {
 
 export const eventDraft = Event.create({
   id: AppIdGenerator.generateId(),
-  title: '',
+  title: 'draft',
   from: '00:00',
   to: '01:00',
 });

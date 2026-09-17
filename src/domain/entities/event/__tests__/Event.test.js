@@ -36,13 +36,12 @@ describe('Event', () => {
       expect(event).toBeInstanceOf(Event);
     });
 
-    // TODO uncomment when decoupling of code allows it
-    //it('title should not be empty', async () => {
-    //  const emptyTitle = '';
-    //  const eventProps = { ...EVENT_TEST_PROPS, title: emptyTitle };
+    it('title should not be empty', async () => {
+      const emptyTitle = '';
+      const eventProps = { ...EVENT_TEST_PROPS, title: emptyTitle };
 
-    //  expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
-    //});
+      expect(() => Event.create(eventProps)).toThrow(ValidationDomainError);
+    });
 
     it('description should not exceed 200 characters', async () => {
       const longDescription = 'a'.repeat(201);
