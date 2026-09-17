@@ -1,14 +1,9 @@
-import { Repeat } from '../../domain/value-objets/Repeat/Repeat.js';
 import { createMessage } from '../helpers/createElement.js';
 import {
   customContainer,
   repeatContainer,
 } from '../helpers/dom/repeatModalDom.js';
 import { eventDraft } from './eventDraft.js';
-
-export const voRepeatDraft = {
-  repeat: Repeat.create(null),
-};
 
 export const initRepeatDraft = (type, date) => {
   const props = {
@@ -26,28 +21,22 @@ export const initRepeatDraft = (type, date) => {
     seriesId: 'fake-init-id',
   };
 
-  voRepeatDraft.repeat = Repeat.create(repeatProps);
-
   eventDraft.update({ repeat: repeatProps });
 };
 
 export const clearRepeatDraft = () => {
-  voRepeatDraft.repeat = Repeat.create(null);
-
   eventDraft.update({ repeat: null });
 };
 
 export function updateRepeatDraft(field, value) {
-  if (!voRepeatDraft.repeat.toJSON()) {
+  if (!eventDraft.repeat) {
     initRepeatDraft('daily', new Date());
   }
 
   const repeatProps = {
-    ...voRepeatDraft.repeat.toJSON(),
+    ...eventDraft.repeat,
     [field]: value,
   };
-
-  voRepeatDraft.repeat = Repeat.create(repeatProps);
 
   eventDraft.update({ repeat: repeatProps });
 }

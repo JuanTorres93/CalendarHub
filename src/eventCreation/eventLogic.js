@@ -74,8 +74,6 @@ import {
   repeatContainer as repeatModal,
   repeatOverlay,
 } from '../utils/helpers/dom/repeatModalDom.js';
-import { voRepeatDraft } from '../utils/events/repeatEventsDraft.js';
-import { Repeat } from '../domain/value-objets/Repeat/Repeat.js';
 
 const outsideDropdowns = [
   {
@@ -265,11 +263,6 @@ export function preCompilerEdit(event, mode) {
   });
 
   eventDraft.update(updateEventEntityProps);
-  if (eventDraft?.repeat) {
-    voRepeatDraft.repeat = Repeat.create({
-      ...eventDraft.repeat,
-    });
-  }
 
   editingEventId = event.id;
 

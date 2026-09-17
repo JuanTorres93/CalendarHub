@@ -3,7 +3,6 @@ import {
   initRepeatDraft,
   clearRepeatDraft,
   validatorRepeatDraft,
-  voRepeatDraft,
 } from '../utils/events/repeatEventsDraft.js';
 import {
   handleListSelection,
@@ -218,15 +217,7 @@ function saveRepeatEvent(e) {
   } else {
     const seriesId = crypto.randomUUID();
 
-    const current = voRepeatDraft.repeat.toJSON();
     const currentFromDraft = eventDraft.repeat;
-
-    if (current) {
-      voRepeatDraft.repeat = Repeat.create({
-        ...current,
-        seriesId,
-      });
-    }
 
     if (currentFromDraft) {
       eventDraft.update({ repeat: { ...currentFromDraft, seriesId } });
