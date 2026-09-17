@@ -25,14 +25,6 @@ export const eventDraft = Event.create({
   to: '01:00',
 });
 
-export function initEventDraft(date, time, endTime) {
-  eventDraft.update({
-    date,
-    from: time,
-    to: endTime,
-  });
-}
-
 export const timeDraft = {
   from: { hour: '', minute: '' },
   to: { hour: '', minute: '' },

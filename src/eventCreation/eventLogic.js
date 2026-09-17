@@ -3,10 +3,12 @@ import {
   toDomainNotification,
   toItalianNotification,
 } from '../interface-adapters/other/bidirectionalItalianDomainMapper.js';
+import { AppUpdateEventSeriesUsecase } from '../interface-adapters/use-cases/AppUpdateEventSeriesUsecase.js';
 import { AppUpdateEventUsecase } from '../interface-adapters/use-cases/AppUpdateEventUsecase.js';
 import { AppUpdateSingleEventOccurrenceUsecase } from '../interface-adapters/use-cases/AppUpdateSingleEventOccurrenceUsecase.js';
-import { AppUpdateEventSeriesUsecase } from '../interface-adapters/use-cases/AppUpdateEventSeriesUsecase.js';
 
+import { handleKnownErrors } from '../interface-adapters/other/handleKnownErrors.js';
+import { AppCreateEventUsecase } from '../interface-adapters/use-cases/AppCreateEventUsecase.js';
 import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
 import createCaroseul, {
   renderColorList,
@@ -16,15 +18,12 @@ import createCaroseul, {
 import {
   eventDraft,
   globalEventState,
-  initEventDraft,
   timeDraft,
   updateEventDraft,
   validateTimeRange,
   validatorEventDraft,
 } from '../utils/events/eventDraft.js';
 import { renderEvents } from '../utils/events/eventRendering.js';
-import { AppCreateEventUsecase } from '../interface-adapters/use-cases/AppCreateEventUsecase.js';
-import { handleKnownErrors } from '../interface-adapters/other/handleKnownErrors.js';
 import { formatDate } from '../utils/events/eventsUI.js';
 import { createMessage } from '../utils/helpers/createElement.js';
 import {
@@ -244,7 +243,6 @@ export function preCompiler(e) {
   setTimeUIAndDraft(timeDraft, 'from', time);
   setTimeUIAndDraft(timeDraft, 'to', endTime);
 
-  initEventDraft(date, time, endTime);
   renderModeTextInfo(globalEventState.mode);
 }
 
