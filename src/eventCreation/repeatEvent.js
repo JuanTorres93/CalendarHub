@@ -219,11 +219,17 @@ function saveRepeatEvent(e) {
     const seriesId = crypto.randomUUID();
 
     const current = voRepeatDraft.repeat.toJSON();
+    const currentFromDraft = eventDraft.repeat;
+
     if (current) {
       voRepeatDraft.repeat = Repeat.create({
         ...current,
         seriesId,
       });
+    }
+
+    if (currentFromDraft) {
+      eventDraft.update({ repeat: { ...currentFromDraft, seriesId } });
     }
 
     globalEventState.repeatForm = {
@@ -232,12 +238,7 @@ function saveRepeatEvent(e) {
       seriesId,
     };
 
-    globalEventState.repeat = { ...voRepeatDraft.repeat.toJSON() };
-
-    //fare una copia e passargli quella, funziona rispetto a passargli direttamente il valore el repeatEventDraft, perchè poi lo stato alla chiusura vine pulito, canceellando gli stessi valori. mantre la copia usando un altro ogetto di memoria non viene pulito alla chiususra.
-    eventDraft.update({
-      repeat: voRepeatDraft.repeat.toJSON(),
-    });
+    globalEventState.repeat = { ...eventDraft.repeat };
 
     closeRepeatEvent();
   }
@@ -278,11 +279,11 @@ export function initRepeatEvents() {
 
       initRepeatDraft(repeatUiState, date);
 
-      intervalInput.value = voRepeatDraft.repeat.toJSON().interval;
+      intervalInput.value = eventDraft.repeat.interval;
       modeBtn.innerText = li.innerText;
 
       repeatModalUiState(repeatUiState);
-      updateIntervaltext(repeatUiState, voRepeatDraft.repeat.toJSON().interval);
+      updateIntervaltext(repeatUiState, eventDraft.repeat.interval);
     },
     'show-mode-list',
   );
@@ -290,12 +291,12 @@ export function initRepeatEvents() {
   intervalInput.addEventListener('change', () => {
     const newValue = Number(intervalInput.value);
     if (!intervalInputValidator(repeatUiState, newValue)) {
-      intervalInput.value = voRepeatDraft.repeat.toJSON().interval;
+      intervalInput.value = eventDraft.repeat.interval;
       return;
     }
 
     updateRepeatDraft('interval', newValue);
-    updateIntervaltext(repeatUiState, voRepeatDraft.repeat.toJSON().interval);
+    updateIntervaltext(repeatUiState, eventDraft.repeat.interval);
   });
 
   dayOfWeekList.addEventListener('click', (e) => {
