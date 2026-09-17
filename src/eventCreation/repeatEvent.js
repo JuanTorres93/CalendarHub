@@ -1,5 +1,4 @@
 import {
-  repeatEventsDraft,
   updateRepeatDraft,
   initRepeatDraft,
   clearRepeatDraft,
@@ -76,9 +75,6 @@ function repeatModalUiState(state) {
     case 'weekly':
       updateRepeatDraft('weekdays', [...selectedDays]);
 
-      // Legacy code
-      repeatEventsDraft.weekdays = [...selectedDays];
-
       removeClassHelper(sections);
       intervalContainer.classList.add('show-repeat-section');
       untilContainer.classList.add('show-repeat-section');
@@ -91,9 +87,6 @@ function repeatModalUiState(state) {
       break;
     case 'custom':
       updateRepeatDraft('customDates', getStoredCustomDates());
-
-      // Legacy code
-      repeatEventsDraft.customDates = getStoredCustomDates();
 
       removeClassHelper(sections);
       customContainer.classList.add('show-repeat-section');
@@ -233,13 +226,11 @@ function saveRepeatEvent() {
       });
     }
 
-    repeatEventsDraft.seriesId = seriesId;
-
-    globalEventState.repeat = { ...repeatEventsDraft };
+    globalEventState.repeat = { ...voRepeatDraft.repeat.toJSON() };
 
     //fare una copia e passargli quella, funziona rispetto a passargli direttamente il valore el repeatEventDraft, perchè poi lo stato alla chiusura vine pulito, canceellando gli stessi valori. mantre la copia usando un altro ogetto di memoria non viene pulito alla chiususra.
     eventDraft.update({
-      repeat: repeatEventsDraft,
+      repeat: voRepeatDraft.repeat.toJSON(),
     });
 
     closeRepeatEvent();
@@ -267,11 +258,11 @@ export function initRepeatEvents() {
 
       initRepeatDraft(repeatUiState, date);
 
-      intervalInput.value = repeatEventsDraft.interval;
+      intervalInput.value = voRepeatDraft.repeat.interval;
       modeBtn.innerText = li.innerText;
 
       repeatModalUiState(repeatUiState);
-      updateIntervaltext(repeatUiState, repeatEventsDraft.interval);
+      updateIntervaltext(repeatUiState, voRepeatDraft.repeat.interval);
     },
     'show-mode-list',
   );
@@ -279,12 +270,12 @@ export function initRepeatEvents() {
   intervalInput.addEventListener('change', () => {
     const newValue = Number(intervalInput.value);
     if (!intervalInputValidator(repeatUiState, newValue)) {
-      intervalInput.value = repeatEventsDraft.interval;
+      intervalInput.value = voRepeatDraft.repeat.interval;
       return;
     }
 
     updateRepeatDraft('interval', newValue);
-    updateIntervaltext(repeatUiState, repeatEventsDraft.interval);
+    updateIntervaltext(repeatUiState, voRepeatDraft.repeat.interval);
   });
 
   dayOfWeekList.addEventListener('click', (e) => {
