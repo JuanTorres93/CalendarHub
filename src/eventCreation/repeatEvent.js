@@ -1,6 +1,5 @@
 import dayjs from '../day.js';
 import {
-  repeatEventsDraft,
   updateRepeatDraft,
   initRepeatDraft,
   clearRepeatDraft,
@@ -75,7 +74,7 @@ function repeatModalUiState(state) {
       untilContainer.classList.add('show-repeat-section');
       break;
     case 'weekly':
-      repeatEventsDraft.weekdays = [...selectedDays];
+      updateRepeatDraft('weekdays', [...selectedDays]);
       removeClassHelper(sections);
       intervalContainer.classList.add('show-repeat-section');
       untilContainer.classList.add('show-repeat-section');
@@ -87,7 +86,7 @@ function repeatModalUiState(state) {
       untilContainer.classList.add('show-repeat-section');
       break;
     case 'custom':
-      repeatEventsDraft.customDates = getStoredCustomDates();
+      updateRepeatDraft('customDates', getStoredCustomDates());
       removeClassHelper(sections);
       customContainer.classList.add('show-repeat-section');
       break;
@@ -114,12 +113,6 @@ export function rehydrateRepeatModal() {
   unitlDateDefault('edit', repeatDraftInfo.until);
 
   hydrateCustomDates(repeatDraftInfo.customDates);
-  repeatEventsDraft.type = repeatDraftInfo.type;
-  repeatEventsDraft.interval = repeatDraftInfo.interval;
-  repeatEventsDraft.weekdays = [...repeatDraftInfo.weekdays];
-  // repeatEventsDraft.customDates = [...repeatDraftInfo.customDates]
-  repeatEventsDraft.until = repeatDraftInfo.until;
-  repeatEventsDraft.exceptions = [...repeatDraftInfo.exceptions];
   selectedDays = [...repeatDraftInfo.weekdays];
 }
 
@@ -204,14 +197,14 @@ function saveRepeatEvent() {
   if (!isValid) {
     return;
   } else {
-    repeatEventsDraft.seriesId = crypto.randomUUID();
-
-    globalEventState.repeat = { ...repeatEventsDraft };
-
-    //fare una copia e passargli quella, funziona rispetto a passargli direttamente il valore el repeatEventDraft, perchè poi lo stato alla chiusura vine pulito, canceellando gli stessi valori. mantre la copia usando un altro ogetto di memoria non viene pulito alla chiususra.
     eventDraft.update({
-      repeat: repeatEventsDraft,
+      repeat: {
+        ...eventDraft.repeat,
+        seriesId: crypto.randomUUID(),
+      },
     });
+
+    globalEventState.repeat = { ...eventDraft.repeat };
 
     closeRepeatEvent();
   }
@@ -236,10 +229,10 @@ export function initRepeatEvents() {
       repeatUiState = li.dataset.repeatType;
       const date = unitlDateDefault('normal');
       initRepeatDraft(repeatUiState, date);
-      intervalInput.value = repeatEventsDraft.interval;
+      intervalInput.value = eventDraft.repeat.interval;
       modeBtn.innerText = li.innerText;
       repeatModalUiState(repeatUiState);
-      updateIntervaltext(repeatUiState, repeatEventsDraft.interval);
+      updateIntervaltext(repeatUiState, eventDraft.repeat.interval);
     },
     'show-mode-list',
   );
@@ -247,12 +240,12 @@ export function initRepeatEvents() {
   intervalInput.addEventListener('change', () => {
     const newValue = Number(intervalInput.value);
     if (!intervalInputValidator(repeatUiState, newValue)) {
-      intervalInput.value = repeatEventsDraft.interval;
+      intervalInput.value = eventDraft.repeat.interval;
       return;
     }
 
     updateRepeatDraft('interval', newValue);
-    updateIntervaltext(repeatUiState, repeatEventsDraft.interval);
+    updateIntervaltext(repeatUiState, eventDraft.repeat.interval);
   });
 
   dayOfWeekList.addEventListener('click', (e) => {
