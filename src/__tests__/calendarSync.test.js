@@ -663,6 +663,28 @@ describe('Event banner', () => {
     );
   });
 
+  it('should keep the occurrence day when editing a single occurrence', async () => {
+    await seedAndRender([createSeriesEvent()]);
+
+    await openEventForm('day-box-2026-09-20');
+    await user.click(screen.getByTestId('event-close-button'));
+
+    await openEventBanner('2026-09-15', 'monthly-event-series-1-2026-09-15');
+
+    await openEditForm('event-banner-edit-single-button');
+
+    await editTitle('Edited occurrence');
+
+    await saveEventForm();
+
+    const savedEvents = getSavedEvents();
+    const newEvent = savedEvents.find(
+      (event) => event.title === 'Edited occurrence',
+    );
+
+    expect(newEvent.date).toBe('2026-09-15');
+  });
+
   it('should edit the series when confirming the edit series form', async () => {
     await seedAndRender([
       createSeriesEvent({ exceptions: ['2026-09-17'] }),
