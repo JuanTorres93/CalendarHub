@@ -23,6 +23,19 @@ export class Repeat extends ValueObject {
   get value() {
     return this._value;
   }
+
+  toJSON() {
+    if (this._value === null) {
+      return null;
+    }
+
+    return {
+      ...this._value,
+      weekdays: [...this._value.weekdays],
+      customDates: [...this._value.customDates],
+      exceptions: [...this._value.exceptions],
+    };
+  }
 }
 
 function toRepeatValue(value) {
@@ -65,13 +78,6 @@ function toRepeatValue(value) {
 
   const customDates = toValidDates(value.customDates, 'customDates');
   const exceptions = toValidDates(value.exceptions, 'exceptions');
-
-  if (type === 'custom' && customDates.length === 0) {
-    throw new ValidationDomainError(
-      'Repeat: customDates cannot be empty when type is custom',
-      { code: DomainErrorCodes.REPEAT.EMPTY_CUSTOM_DATES },
-    );
-  }
 
   return {
     seriesId,

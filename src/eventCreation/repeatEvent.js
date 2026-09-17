@@ -1,10 +1,10 @@
-import dayjs from '../day.js';
 import {
   repeatEventsDraft,
   updateRepeatDraft,
   initRepeatDraft,
   clearRepeatDraft,
   validatorRepeatDraft,
+  voRepeatDraft,
 } from '../utils/events/repeatEventsDraft.js';
 import {
   handleListSelection,
@@ -24,6 +24,7 @@ import {
 } from './repeatcustomDates.js';
 import { eventDraft, globalEventState } from '../utils/events/eventDraft.js';
 import { hydrateCustomDates } from './repeatcustomDates.js';
+import { Repeat } from '../domain/value-objets/Repeat/Repeat.js';
 
 import {
   repeatContainer,
@@ -37,7 +38,6 @@ import {
   dayOfWeekList,
   untilMiniCalendarBtn,
   customMiniCalendarBtn,
-  customList,
   repeatOverlay,
   closeBtn,
   saveBtn,
@@ -48,7 +48,6 @@ import { header } from '../utils/helpers/dom/eventModalDom.js';
 let editMode = false;
 let repeatUiState = 'default';
 let selectedDays = [];
-let temporanyStorageForCustomDates = [];
 
 function removeClassHelper(sections) {
   sections.forEach((section) => {
@@ -75,7 +74,11 @@ function repeatModalUiState(state) {
       untilContainer.classList.add('show-repeat-section');
       break;
     case 'weekly':
+      updateRepeatDraft('weekdays', [...selectedDays]);
+
+      // Legacy code
       repeatEventsDraft.weekdays = [...selectedDays];
+
       removeClassHelper(sections);
       intervalContainer.classList.add('show-repeat-section');
       untilContainer.classList.add('show-repeat-section');
@@ -87,7 +90,11 @@ function repeatModalUiState(state) {
       untilContainer.classList.add('show-repeat-section');
       break;
     case 'custom':
+      updateRepeatDraft('customDates', getStoredCustomDates());
+
+      // Legacy code
       repeatEventsDraft.customDates = getStoredCustomDates();
+
       removeClassHelper(sections);
       customContainer.classList.add('show-repeat-section');
       break;
@@ -96,30 +103,42 @@ function repeatModalUiState(state) {
 
 export function rehydrateRepeatModal() {
   editMode = true;
+
+  // Legacy code
   const repeatDraftInfo = eventDraft.repeat;
   if (repeatDraftInfo === null) return;
+
+  initRepeatDraft(
+    repeatDraftInfo.type,
+    repeatDraftInfo.until,
+    repeatDraftInfo.seriesId,
+  );
 
   repeatUiState = repeatDraftInfo.type;
   repeatModalUiState(repeatUiState);
 
   modeBtn.innerText = repeatDraftInfo.type;
   intervalInput.value = repeatDraftInfo.interval;
+
   updateIntervaltext(repeatDraftInfo.type, repeatDraftInfo.interval);
+
   const days = repeatContainer.querySelectorAll('.weekly-repetion-item');
   days.forEach((item) => {
     if (repeatDraftInfo.weekdays.includes(Number(item.dataset.dayIndex))) {
       item.classList.add('weekly-repetion-item-selected');
     }
   });
+
   unitlDateDefault('edit', repeatDraftInfo.until);
 
   hydrateCustomDates(repeatDraftInfo.customDates);
-  repeatEventsDraft.type = repeatDraftInfo.type;
-  repeatEventsDraft.interval = repeatDraftInfo.interval;
-  repeatEventsDraft.weekdays = [...repeatDraftInfo.weekdays];
-  // repeatEventsDraft.customDates = [...repeatDraftInfo.customDates]
-  repeatEventsDraft.until = repeatDraftInfo.until;
-  repeatEventsDraft.exceptions = [...repeatDraftInfo.exceptions];
+
+  updateRepeatDraft('type', repeatDraftInfo.type);
+  updateRepeatDraft('interval', repeatDraftInfo.interval);
+  updateRepeatDraft('weekdays', [...repeatDraftInfo.weekdays]);
+  updateRepeatDraft('until', repeatDraftInfo.until);
+  updateRepeatDraft('exceptions', [...repeatDraftInfo.exceptions]);
+
   selectedDays = [...repeatDraftInfo.weekdays];
 }
 
@@ -204,7 +223,17 @@ function saveRepeatEvent() {
   if (!isValid) {
     return;
   } else {
-    repeatEventsDraft.seriesId = crypto.randomUUID();
+    const seriesId = crypto.randomUUID();
+
+    const current = voRepeatDraft.repeat.toJSON();
+    if (current) {
+      voRepeatDraft.repeat = Repeat.create({
+        ...current,
+        seriesId,
+      });
+    }
+
+    repeatEventsDraft.seriesId = seriesId;
 
     globalEventState.repeat = { ...repeatEventsDraft };
 
@@ -235,9 +264,12 @@ export function initRepeatEvents() {
     (li) => {
       repeatUiState = li.dataset.repeatType;
       const date = unitlDateDefault('normal');
+
       initRepeatDraft(repeatUiState, date);
+
       intervalInput.value = repeatEventsDraft.interval;
       modeBtn.innerText = li.innerText;
+
       repeatModalUiState(repeatUiState);
       updateIntervaltext(repeatUiState, repeatEventsDraft.interval);
     },

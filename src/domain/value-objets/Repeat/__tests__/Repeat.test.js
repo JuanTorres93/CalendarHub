@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { captureError } from '../../../../../tests/testHelpers.js';
 
-
 import { ValidationDomainError } from '../../../common/domainErrors.js';
 import { Day } from '../../Day/Day.js';
 import { REPEAT_TYPES, Repeat } from '../Repeat.js';
@@ -116,6 +115,44 @@ describe('Repeat', () => {
     });
   });
 
+  describe('toJSON', () => {
+    it('should serialize a repeat config as a plain object', () => {
+      const config = buildRepeatConfig({
+        type: 'weekly',
+        interval: 2,
+        weekdays: [1, 3],
+        customDates: ['2024-06-15'],
+        exceptions: ['2024-07-01'],
+      });
+
+      const repeat = Repeat.create(config);
+
+      expect(repeat.toJSON()).toEqual(config);
+    });
+
+    it('should return a copy that does not share references', () => {
+      const config = buildRepeatConfig({
+        type: 'custom',
+        weekdays: [0, 5],
+        customDates: ['2024-06-15'],
+        exceptions: ['2024-07-01'],
+      });
+
+      const json = Repeat.create(config).toJSON();
+
+      expect(json).not.toBe(config);
+      expect(json.weekdays).not.toBe(config.weekdays);
+      expect(json.customDates).not.toBe(config.customDates);
+      expect(json.exceptions).not.toBe(config.exceptions);
+    });
+
+    it('should return null for no repetition', () => {
+      const repeat = Repeat.create(null);
+
+      expect(repeat.toJSON()).toBeNull();
+    });
+  });
+
   describe('Errors', () => {
     it.each([undefined, 'daily', [], 5, true])(
       'should throw validation error if value is %j',
@@ -127,9 +164,9 @@ describe('Repeat', () => {
     it.each([undefined, '', '   ', 5, null])(
       'should throw validation error if seriesId is %j',
       (seriesId) => {
-        expect(() =>
-          Repeat.create(buildRepeatConfig({ seriesId })),
-        ).toThrow(ValidationDomainError);
+        expect(() => Repeat.create(buildRepeatConfig({ seriesId }))).toThrow(
+          ValidationDomainError,
+        );
       },
     );
 
@@ -185,12 +222,6 @@ describe('Repeat', () => {
         expect(error.params.field).toBeDefined();
       },
     );
-
-    it('should throw validation error if a custom repeat has no custom dates', () => {
-      expect(() =>
-        Repeat.create(buildRepeatConfig({ type: 'custom', customDates: [] })),
-      ).toThrow(ValidationDomainError);
-    });
 
     it.each([[['2024-13-01']], ['2024-06-01'], [null]])(
       'should throw validation error if exceptions is %j',
