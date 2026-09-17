@@ -211,7 +211,7 @@ export function forceResetRepeatModalState() {
   clearDatesStates();
 }
 
-function saveRepeatEvent() {
+function saveRepeatEvent(e) {
   const isValid = validatorRepeatDraft();
   if (!isValid) {
     return;
@@ -226,6 +226,12 @@ function saveRepeatEvent() {
       });
     }
 
+    globalEventState.repeatForm = {
+      ...getRepeatRawPropsFromForm(e),
+      ...globalEventState.repeatForm,
+      seriesId,
+    };
+
     globalEventState.repeat = { ...voRepeatDraft.repeat.toJSON() };
 
     //fare una copia e passargli quella, funziona rispetto a passargli direttamente il valore el repeatEventDraft, perchè poi lo stato alla chiusura vine pulito, canceellando gli stessi valori. mantre la copia usando un altro ogetto di memoria non viene pulito alla chiususra.
@@ -235,6 +241,14 @@ function saveRepeatEvent() {
 
     closeRepeatEvent();
   }
+}
+
+function getRepeatRawPropsFromForm(e) {
+  const formData = new FormData(e.target.closest('form'));
+
+  return {
+    interval: formData.get('event-repeat-interval'),
+  };
 }
 
 export function initRepeatEvents() {
@@ -254,15 +268,21 @@ export function initRepeatEvents() {
     '.repeat-mode-list-item',
     (li) => {
       repeatUiState = li.dataset.repeatType;
+
+      globalEventState.repeatForm = {
+        ...globalEventState.repeatForm,
+        type: li.dataset.repeatType,
+      };
+
       const date = unitlDateDefault('normal');
 
       initRepeatDraft(repeatUiState, date);
 
-      intervalInput.value = voRepeatDraft.repeat.interval;
+      intervalInput.value = voRepeatDraft.repeat.toJSON().interval;
       modeBtn.innerText = li.innerText;
 
       repeatModalUiState(repeatUiState);
-      updateIntervaltext(repeatUiState, voRepeatDraft.repeat.interval);
+      updateIntervaltext(repeatUiState, voRepeatDraft.repeat.toJSON().interval);
     },
     'show-mode-list',
   );
@@ -270,12 +290,12 @@ export function initRepeatEvents() {
   intervalInput.addEventListener('change', () => {
     const newValue = Number(intervalInput.value);
     if (!intervalInputValidator(repeatUiState, newValue)) {
-      intervalInput.value = voRepeatDraft.repeat.interval;
+      intervalInput.value = voRepeatDraft.repeat.toJSON().interval;
       return;
     }
 
     updateRepeatDraft('interval', newValue);
-    updateIntervaltext(repeatUiState, voRepeatDraft.repeat.interval);
+    updateIntervaltext(repeatUiState, voRepeatDraft.repeat.toJSON().interval);
   });
 
   dayOfWeekList.addEventListener('click', (e) => {
@@ -293,6 +313,11 @@ export function initRepeatEvents() {
       }
     }
     updateRepeatDraft('weekdays', selectedDays);
+
+    globalEventState.repeatForm = {
+      ...globalEventState.repeatForm,
+      weekdays: [...selectedDays],
+    };
   });
   untilMiniCalendarBtn.addEventListener('click', () => {
     if (editMode) {
@@ -318,7 +343,7 @@ export function initRepeatEvents() {
     closeRepeatEvent();
   });
 
-  saveBtn.addEventListener('click', () => {
-    saveRepeatEvent();
+  saveBtn.addEventListener('click', (e) => {
+    saveRepeatEvent(e);
   });
 }

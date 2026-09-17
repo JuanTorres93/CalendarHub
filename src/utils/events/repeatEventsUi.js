@@ -1,6 +1,7 @@
 import { formatDate } from "./eventsUI.js";
 import { createMessage } from "../helpers/createElement.js";
 import { updateRepeatDraft } from "./repeatEventsDraft.js";
+import { globalEventState } from "./eventDraft.js";
 import dateValidator from "../helpers/dateValidator.js";
 import dayjs from "../../day.js";
 import { header } from "../helpers/dom/eventModalDom.js";
@@ -43,11 +44,23 @@ export const unitlDateDefault = (type, currentDate) => {
     const month = dayjs(date).add(1, "month").format("YYYY-MM-DD");
     dateDisplayed = formatDate(month);
     untilText.innerText = dateDisplayed;
+
+    globalEventState.repeatForm = {
+      ...globalEventState.repeatForm,
+      until: month,
+    };
+
     return month;
   }
   if (type === "edit") {
     dateDisplayed = formatDate(currentDate);
     untilText.innerText = dateDisplayed;
+
+    globalEventState.repeatForm = {
+      ...globalEventState.repeatForm,
+      until: currentDate,
+    };
+
     return currentDate;
   }
 };
@@ -65,6 +78,12 @@ export function updateUntilUIAndDraft(date) {
     );
   } else {
     untilText.innerText = dateDisplayed;
+
+    globalEventState.repeatForm = {
+      ...globalEventState.repeatForm,
+      until: date,
+    };
+
     updateRepeatDraft("until", date);
   }
 }

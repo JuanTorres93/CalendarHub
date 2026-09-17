@@ -1,6 +1,7 @@
 import { createMessage } from "../utils/helpers/createElement.js";
 import createElement from "../utils/helpers/createElement.js";
 import { updateRepeatDraft } from "../utils/events/repeatEventsDraft.js";
+import { globalEventState } from "../utils/events/eventDraft.js";
 import { formatDate } from "../utils/events/eventsUI.js";
 import dateValidator from "../utils/helpers/dateValidator.js";
 import {
@@ -66,6 +67,11 @@ export function initCustomDateRemoval() {
 
 function syncCustomDatesDraft() {
   updateRepeatDraft("customDates", [...listOfDates]);
+
+  globalEventState.repeatForm = {
+    ...globalEventState.repeatForm,
+    customDates: [...listOfDates],
+  };
 }
 
 export function getStoredCustomDates() {
