@@ -31,6 +31,8 @@ export const timeDraft = {
 };
 
 export function updateEventDraft(field, value) {
+  globalEventState[field] = value;
+
   eventDraft.update({
     [field]: value,
   });
@@ -86,6 +88,9 @@ export function validatorEventDraft() {
       return false;
     }
   } else {
+    globalEventState.from = '00:00';
+    globalEventState.to = '23:59';
+
     updateEventDraft('from', '00:00');
     updateEventDraft('to', '23:59');
   }

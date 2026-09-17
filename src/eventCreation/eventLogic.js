@@ -331,6 +331,9 @@ function inputTimeHelper(timeDraft, caseType, input, classType) {
   const current = timeDraft[classType];
   if (current.hour !== '' && current.minute !== '') {
     const finalTime = `${current.hour}:${current.minute}`;
+
+    globalEventState[classType] = finalTime;
+
     updateEventDraft(classType, finalTime);
   }
 }
@@ -354,6 +357,9 @@ function inputTimeReader(timeDraft) {
 
 function applySelectedTime(timeDraft, type, time) {
   setTimeUIAndDraft(timeDraft, type, time);
+
+  globalEventState[type] = time;
+
   updateEventDraft(type, time);
 }
 
@@ -401,6 +407,9 @@ export function initEventFormEvents() {
       globalEventState.icon = li.innerText;
 
       iconBtn.innerText = li.innerText;
+
+      globalEventState.icon = li.innerText;
+
       updateEventDraft('icon', li.innerText);
     },
     'show-icons-list',
@@ -413,10 +422,14 @@ export function initEventFormEvents() {
   inputTitle.addEventListener('change', () => {
     title = inputTitle.value;
 
+    globalEventState.title = title;
+
     updateEventDraft('title', title);
   });
   inputDesc.addEventListener('change', () => {
     desc = inputDesc.value;
+
+    globalEventState.description = desc;
 
     updateEventDraft('description', desc);
   });
@@ -431,6 +444,9 @@ export function initEventFormEvents() {
       globalEventState.color = li.dataset.color;
 
       colorPreview.style.backgroundColor = li.dataset.color;
+
+      globalEventState.color = li.dataset.color;
+
       updateEventDraft('color', li.dataset.color);
     },
     'show-color-list',

@@ -1,36 +1,36 @@
-import { formatDate } from "./eventsUI.js";
-import { createMessage } from "../helpers/createElement.js";
-import { updateRepeatDraft } from "./repeatEventsDraft.js";
-import { globalEventState } from "./eventDraft.js";
-import dateValidator from "../helpers/dateValidator.js";
-import dayjs from "../../day.js";
-import { header } from "../helpers/dom/eventModalDom.js";
+import { formatDate } from './eventsUI.js';
+import { createMessage } from '../helpers/createElement.js';
+import { updateRepeatDraft } from './repeatEventsDraft.js';
+import { globalEventState } from './eventDraft.js';
+import dateValidator from '../helpers/dateValidator.js';
+import dayjs from '../../day.js';
+import { header } from '../helpers/dom/eventModalDom.js';
 import {
   repeatContainer,
   intervalText,
   untilContainer,
   untilText,
-} from "../helpers/dom/repeatModalDom.js";
+} from '../helpers/dom/repeatModalDom.js';
 
 export function updateIntervaltext(state, interval) {
-  if (state === "custom") return;
-  if (state === "daily") {
+  if (state === 'custom') return;
+  if (state === 'daily') {
     if (interval === 1) {
-      intervalText.innerText = "ogni giorno";
+      intervalText.innerText = 'ogni giorno';
     } else {
       intervalText.innerText = `ogni ${interval} giorni`;
     }
   }
-  if (state === "weekly") {
+  if (state === 'weekly') {
     if (interval === 1) {
-      intervalText.innerText = "ogni settimana";
+      intervalText.innerText = 'ogni settimana';
     } else {
       intervalText.innerText = `ogni ${interval} settimane`;
     }
   }
-  if (state === "monthly") {
+  if (state === 'monthly') {
     if (interval === 1) {
-      intervalText.innerText = "ogni mese";
+      intervalText.innerText = 'ogni mese';
     } else {
       intervalText.innerText = `ogni ${interval} mesi`;
     }
@@ -39,9 +39,9 @@ export function updateIntervaltext(state, interval) {
 
 export const unitlDateDefault = (type, currentDate) => {
   let dateDisplayed;
-  if (type === "normal") {
+  if (type === 'normal') {
     const date = header.firstElementChild.dataset.day;
-    const month = dayjs(date).add(1, "month").format("YYYY-MM-DD");
+    const month = dayjs(date).add(1, 'month').format('YYYY-MM-DD');
     dateDisplayed = formatDate(month);
     untilText.innerText = dateDisplayed;
 
@@ -52,7 +52,7 @@ export const unitlDateDefault = (type, currentDate) => {
 
     return month;
   }
-  if (type === "edit") {
+  if (type === 'edit') {
     dateDisplayed = formatDate(currentDate);
     untilText.innerText = dateDisplayed;
 
@@ -79,11 +79,8 @@ export function updateUntilUIAndDraft(date) {
   } else {
     untilText.innerText = dateDisplayed;
 
-    globalEventState.repeatForm = {
-      ...globalEventState.repeatForm,
-      until: date,
-    };
+    globalEventState.repeatForm.until = date;
 
-    updateRepeatDraft("until", date);
+    updateRepeatDraft('until', date);
   }
 }

@@ -72,6 +72,8 @@ function repeatModalUiState(state) {
       untilContainer.classList.add('show-repeat-section');
       break;
     case 'weekly':
+      globalEventState.repeatForm.weekdays = [...selectedDays];
+
       updateRepeatDraft('weekdays', [...selectedDays]);
 
       removeClassHelper(sections);
@@ -85,6 +87,8 @@ function repeatModalUiState(state) {
       untilContainer.classList.add('show-repeat-section');
       break;
     case 'custom':
+      globalEventState.repeatForm.customDates = getStoredCustomDates();
+
       updateRepeatDraft('customDates', getStoredCustomDates());
 
       removeClassHelper(sections);
@@ -124,6 +128,12 @@ export function rehydrateRepeatModal() {
   unitlDateDefault('edit', repeatDraftInfo.until);
 
   hydrateCustomDates(repeatDraftInfo.customDates);
+
+  globalEventState.repeatForm.type = repeatDraftInfo.type;
+  globalEventState.repeatForm.interval = repeatDraftInfo.interval;
+  globalEventState.repeatForm.weekdays = [...repeatDraftInfo.weekdays];
+  globalEventState.repeatForm.until = repeatDraftInfo.until;
+  globalEventState.repeatForm.exceptions = [...repeatDraftInfo.exceptions];
 
   updateRepeatDraft('type', repeatDraftInfo.type);
   updateRepeatDraft('interval', repeatDraftInfo.interval);
@@ -286,6 +296,8 @@ export function initRepeatEvents() {
       return;
     }
 
+    globalEventState.repeatForm.interval = newValue;
+
     updateRepeatDraft('interval', newValue);
     updateIntervaltext(repeatUiState, eventDraft.repeat.interval);
   });
@@ -304,13 +316,12 @@ export function initRepeatEvents() {
         selectedDays = selectedDays.filter((day) => day !== dayIndex);
       }
     }
-    updateRepeatDraft('weekdays', selectedDays);
 
-    globalEventState.repeatForm = {
-      ...globalEventState.repeatForm,
-      weekdays: [...selectedDays],
-    };
+    globalEventState.repeatForm.weekdays = [...selectedDays];
+
+    updateRepeatDraft('weekdays', selectedDays);
   });
+
   untilMiniCalendarBtn.addEventListener('click', () => {
     if (editMode) {
       const untilDateRestored = unitlDateDefault(

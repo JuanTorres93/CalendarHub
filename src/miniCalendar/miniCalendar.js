@@ -109,6 +109,8 @@ function commitMiniDate() {
       overlay.setDate(dayjs(miniLocalDate));
       break;
     case 'event-date':
+      globalEventState.date = selectedDate;
+
       updateEventDraft('date', selectedDate);
       updateEventDateUI(selectedDate);
       break;
