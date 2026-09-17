@@ -1,8 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { LocalStorageEventsRepo } from '../../../infra/repos/LocalStorageEventsRepo/LocalStorageEventsRepo.js';
-import { Event } from '../../../domain/entities/event/Event.js';
-import { EVENT_TEST_PROPS } from '../../../domain/entities/event/__tests__/eventTestProps.js';
+import { createTestEvent } from '../../../domain/entities/event/__tests__/eventTestProps.js';
 import { NotFoundDomainError } from '../../../domain/common/domainErrors.js';
 
 import { UpdateEventUsecase } from '../UpdateEvent.usecase.js';
@@ -18,7 +17,7 @@ describe('UpdateEventUsecase', () => {
     eventsRepo = new LocalStorageEventsRepo();
     updateEventUsecase = new UpdateEventUsecase(eventsRepo);
 
-    event = Event.create(EVENT_TEST_PROPS);
+    event = createTestEvent();
     eventsRepo.save(event);
   });
 

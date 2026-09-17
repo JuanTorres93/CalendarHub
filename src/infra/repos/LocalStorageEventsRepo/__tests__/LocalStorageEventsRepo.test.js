@@ -1,24 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { LocalStorageEventsRepo } from '../LocalStorageEventsRepo.js';
-import { Event } from '../../../../domain/entities/event/Event.js';
-
-const createTestEvent = (overrides = {}) =>
-  Event.create({
-    id: 'test-event-id',
-    title: 'Test event',
-    description: 'Test event description',
-    date: '2026-09-14',
-    from: '10:00',
-    to: '11:00',
-    icon: '✏️',
-    color: 'blue',
-    urgent: false,
-    allDay: false,
-    notification: '5min',
-    repeat: null,
-    ...overrides,
-  });
+import { createTestEvent } from '../../../../domain/entities/event/__tests__/eventTestProps.js';
 
 describe('LocalStorageEventsRepo', () => {
   let repo;
