@@ -30,14 +30,6 @@ export const timeDraft = {
   to: { hour: '', minute: '' },
 };
 
-export function updateEventDraft(field, value) {
-  globalEventState[field] = value;
-
-  eventDraft.update({
-    [field]: value,
-  });
-}
-
 export function validateTimeRange(timeDraft) {
   const from = timeDraft.from;
   const to = timeDraft.to;
@@ -70,16 +62,21 @@ export function validateTimeRange(timeDraft) {
 }
 
 export function validatorEventDraft() {
-  if (!eventDraft.title) {
+  if (!globalEventState.title) {
     createMessage('inserisci un titolo', inputTitle, firstRow);
     return false;
   }
-  if (!eventDraft.date) {
+  if (!globalEventState.date) {
     createMessage('seleziona una data', dateRow, modalEvents);
     return false;
   }
-  if (!eventDraft.allDay) {
-    if (!eventDraft.from || !eventDraft.to) {
+  if (!globalEventState.allDay) {
+    if (
+      timeDraft.from.hour === '' ||
+      timeDraft.from.minute === '' ||
+      timeDraft.to.hour === '' ||
+      timeDraft.to.minute === ''
+    ) {
       createMessage('inserisci entrambi gli orari', timeRow, modalEvents);
       return false;
     }

@@ -19,7 +19,6 @@ import {
   eventDraft,
   globalEventState,
   timeDraft,
-  updateEventDraft,
   validateTimeRange,
   validatorEventDraft,
 } from '../utils/events/eventDraft.js';
@@ -248,6 +247,17 @@ export function preCompiler(e) {
 export function preCompilerEdit(event, mode) {
   globalEventState.mode = mode;
 
+  globalEventState.title = event.title;
+  globalEventState.description = event.description;
+  globalEventState.date = event.date;
+  globalEventState.from = event.from;
+  globalEventState.to = event.to;
+  globalEventState.icon = event.icon;
+  globalEventState.color = event.color;
+  globalEventState.urgent = event.urgent;
+  globalEventState.allDay = event.allDay;
+  globalEventState.notification = event.notification;
+
   renderModeTextInfo(globalEventState.mode, event.title);
 
   const updateEventEntityProps = {};
@@ -416,8 +426,6 @@ export function initEventFormEvents() {
     title = inputTitle.value;
 
     globalEventState.title = title;
-
-    updateEventDraft('title', title);
   });
   inputDesc.addEventListener('change', () => {
     desc = inputDesc.value;

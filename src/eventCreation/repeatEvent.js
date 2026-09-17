@@ -294,7 +294,6 @@ export function initRepeatEvents() {
 
     globalEventState.repeatForm.interval = newValue;
 
-    updateRepeatDraft('interval', newValue);
     updateIntervaltext(repeatUiState, eventDraft.repeat.interval);
   });
 
