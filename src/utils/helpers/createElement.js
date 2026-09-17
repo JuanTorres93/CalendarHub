@@ -7,6 +7,7 @@ function createElement(father, elClass, el, tag, options = {}) {
     container.innerHTML = el;
   } else {
     container.innerText = el;
+    container.textContent = el;
   }
 
   if (options.dataset) {
@@ -31,8 +32,8 @@ export function createMessage(message, container, father, type) {
   const top = containerRect.top - fatherRect.top;
   const left = containerRect.left - fatherRect.left;
 
-  const alert = createElement(father, "missing-info-alert", message, "p", {
-    attributes: { "data-testid": "info-alert" },
+  const alert = createElement(father, 'missing-info-alert', message, 'p', {
+    attributes: { 'data-testid': 'info-alert' },
   });
   setTimeout(() => {
     alert.remove();

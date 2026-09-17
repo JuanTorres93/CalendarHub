@@ -550,6 +550,8 @@ export function initEventFormEvents() {
       ...globalEventState,
     };
 
+    let feedbackMessage = '';
+
     try {
       if (
         globalEventState.mode === 'create' &&
@@ -563,11 +565,7 @@ export function initEventFormEvents() {
           eventRawProps: createEventProps,
         });
 
-        createMessage(
-          "l'evento è stato modificato!",
-          modalEvents,
-          document.body,
-        );
+        feedbackMessage = "l'evento è stato modificato!";
       } else if (globalEventState.mode === 'edit-single-occurrence') {
         AppUpdateSingleEventOccurrenceUsecase.execute({
           motherEventId: editingMotherEventId,
@@ -575,11 +573,7 @@ export function initEventFormEvents() {
           eventRawProps: createEventProps,
         });
 
-        createMessage(
-          "l'occorrenza è stata modificata!",
-          modalEvents,
-          document.body,
-        );
+        feedbackMessage = "l'occorrenza è stata modificata!";
       } else if (globalEventState.mode === 'edit-series') {
         AppUpdateEventSeriesUsecase.execute({
           id: editingEventId,
@@ -588,11 +582,11 @@ export function initEventFormEvents() {
           eventRawProps: createEventProps,
         });
 
-        createMessage(
-          'la serie è stato modificata!',
-          modalEvents,
-          document.body,
-        );
+        feedbackMessage = 'la serie è stato modificata!';
+      }
+
+      if (feedbackMessage) {
+        createMessage(feedbackMessage, modalEvents, document.body);
       }
     } catch (error) {
       handleKnownErrors(error);

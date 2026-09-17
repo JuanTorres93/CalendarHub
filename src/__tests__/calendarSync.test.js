@@ -188,6 +188,18 @@ describe('Events', () => {
     );
   });
 
+  it('should close the modal when saving the event', async () => {
+    await openEventForm();
+
+    await editTitle('Test event');
+
+    await saveEventForm();
+
+    expect(
+      screen.getByTestId('event-popup-container'),
+    ).not.toHaveClass('show-container');
+  });
+
   describe('Event creation', () => {
     beforeEach(async () => {
       localStorage.clear();
@@ -733,6 +745,45 @@ describe('Event banner', () => {
         }),
       }),
     ]);
+  });
+
+  it('should show the edit confirmation message when saving an edited event', async () => {
+    await seedAndRender([createBaseEvent()]);
+
+    await openEventBanner('2026-09-14', 'monthly-event-evt-base');
+    await openEditForm('event-banner-edit-button');
+    await editTitle('Edited event');
+    await saveEventForm();
+
+    await vi.waitFor(() =>
+      expect(
+        screen.getByText("l'evento è stato modificato!"),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it('should show the occurrence edit confirmation message when saving an edited occurrence', async () => {
+    await seedAndRender([createSeriesEvent()]);
+
+    await openEventBanner('2026-09-15', 'monthly-event-series-1-2026-09-15');
+    await openEditForm('event-banner-edit-single-button');
+    await editTitle('Edited occurrence');
+    await saveEventForm();
+
+    expect(
+      screen.getByText("l'occorrenza è stata modificata!"),
+    ).toBeInTheDocument();
+  });
+
+  it('should show the series edit confirmation message when saving an edited series', async () => {
+    await seedAndRender([createSeriesEvent()]);
+
+    await openEventBanner('2026-09-15', 'monthly-event-series-1-2026-09-15');
+    await openEditForm('event-banner-edit-series-button');
+    await editTitle('Edited series');
+    await saveEventForm();
+
+    expect(screen.getByText('la serie è stato modificata!')).toBeInTheDocument();
   });
 
   it('should delete an event when confirming deletion', async () => {
