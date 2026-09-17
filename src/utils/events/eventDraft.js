@@ -90,9 +90,6 @@ export function validatorEventDraft() {
   } else {
     globalEventState.from = '00:00';
     globalEventState.to = '23:59';
-
-    updateEventDraft('from', '00:00');
-    updateEventDraft('to', '23:59');
   }
   return true;
 }

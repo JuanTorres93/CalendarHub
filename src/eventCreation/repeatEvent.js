@@ -23,6 +23,7 @@ import {
 import { eventDraft, globalEventState } from '../utils/events/eventDraft.js';
 import { hydrateCustomDates } from './repeatcustomDates.js';
 import { Repeat } from '../domain/value-objets/Repeat/Repeat.js';
+import dayjs from '../day.js';
 
 import {
   repeatContainer,
@@ -74,8 +75,6 @@ function repeatModalUiState(state) {
     case 'weekly':
       globalEventState.repeatForm.weekdays = [...selectedDays];
 
-      updateRepeatDraft('weekdays', [...selectedDays]);
-
       removeClassHelper(sections);
       intervalContainer.classList.add('show-repeat-section');
       untilContainer.classList.add('show-repeat-section');
@@ -88,8 +87,6 @@ function repeatModalUiState(state) {
       break;
     case 'custom':
       globalEventState.repeatForm.customDates = getStoredCustomDates();
-
-      updateRepeatDraft('customDates', getStoredCustomDates());
 
       removeClassHelper(sections);
       customContainer.classList.add('show-repeat-section');
@@ -134,12 +131,6 @@ export function rehydrateRepeatModal() {
   globalEventState.repeatForm.weekdays = [...repeatDraftInfo.weekdays];
   globalEventState.repeatForm.until = repeatDraftInfo.until;
   globalEventState.repeatForm.exceptions = [...repeatDraftInfo.exceptions];
-
-  updateRepeatDraft('type', repeatDraftInfo.type);
-  updateRepeatDraft('interval', repeatDraftInfo.interval);
-  updateRepeatDraft('weekdays', [...repeatDraftInfo.weekdays]);
-  updateRepeatDraft('until', repeatDraftInfo.until);
-  updateRepeatDraft('exceptions', [...repeatDraftInfo.exceptions]);
 
   selectedDays = [...repeatDraftInfo.weekdays];
 }
@@ -220,36 +211,41 @@ export function forceResetRepeatModalState() {
   clearDatesStates();
 }
 
-function saveRepeatEvent(e) {
+function saveRepeatEvent() {
   const isValid = validatorRepeatDraft();
   if (!isValid) {
     return;
-  } else {
-    const seriesId = crypto.randomUUID();
-
-    const currentFromDraft = eventDraft.repeat;
-
-    if (currentFromDraft) {
-      eventDraft.update({ repeat: { ...currentFromDraft, seriesId } });
-    }
-
-    globalEventState.repeatForm = {
-      ...getRepeatRawPropsFromForm(e),
-      ...globalEventState.repeatForm,
-      seriesId,
-    };
-
-    globalEventState.repeat = { ...eventDraft.repeat };
-
-    closeRepeatEvent();
   }
+
+  const seriesId = crypto.randomUUID();
+
+  const currentFromDraft = eventDraft.repeat;
+
+  if (currentFromDraft) {
+    eventDraft.update({ repeat: { ...currentFromDraft, seriesId } });
+  }
+
+  globalEventState.repeatForm = {
+    ...globalEventState.repeatForm,
+    seriesId,
+  };
+  globalEventState.repeat = { ...eventDraft.repeat };
+
+  Repeat.create({
+    ...defaultRepeatFormProps(eventDraft.date),
+    ...globalEventState.repeatForm,
+  });
+
+  closeRepeatEvent();
 }
 
-function getRepeatRawPropsFromForm(e) {
-  const formData = new FormData(e.target.closest('form'));
-
+function defaultRepeatFormProps(eventDate) {
   return {
-    interval: formData.get('event-repeat-interval'),
+    interval: 1,
+    weekdays: [],
+    customDates: [],
+    until: dayjs(eventDate).add(1, 'month').format('YYYY-MM-DD'),
+    exceptions: [],
   };
 }
 

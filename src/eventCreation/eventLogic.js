@@ -164,7 +164,6 @@ function classRemovalHelper(sections) {
 export function resetEventModal() {
   globalEventState.mode = 'create';
   delete globalEventState.date;
-  delete globalEventState.repeat;
   delete globalEventState.notification;
   delete globalEventState.allDay;
 
@@ -333,8 +332,6 @@ function inputTimeHelper(timeDraft, caseType, input, classType) {
     const finalTime = `${current.hour}:${current.minute}`;
 
     globalEventState[classType] = finalTime;
-
-    updateEventDraft(classType, finalTime);
   }
 }
 
@@ -359,8 +356,6 @@ function applySelectedTime(timeDraft, type, time) {
   setTimeUIAndDraft(timeDraft, type, time);
 
   globalEventState[type] = time;
-
-  updateEventDraft(type, time);
 }
 
 function closeModal() {
@@ -409,8 +404,6 @@ export function initEventFormEvents() {
       iconBtn.innerText = li.innerText;
 
       globalEventState.icon = li.innerText;
-
-      updateEventDraft('icon', li.innerText);
     },
     'show-icons-list',
   );
@@ -430,8 +423,6 @@ export function initEventFormEvents() {
     desc = inputDesc.value;
 
     globalEventState.description = desc;
-
-    updateEventDraft('description', desc);
   });
   categoryBtn.addEventListener('click', () => {
     colorLists.classList.toggle('show-color-list');
@@ -446,8 +437,6 @@ export function initEventFormEvents() {
       colorPreview.style.backgroundColor = li.dataset.color;
 
       globalEventState.color = li.dataset.color;
-
-      updateEventDraft('color', li.dataset.color);
     },
     'show-color-list',
   );
@@ -456,8 +445,6 @@ export function initEventFormEvents() {
     const isChecked = urgentCheckBox.classList.toggle('checked');
 
     globalEventState.urgent = isChecked;
-
-    updateEventDraft('urgent', isChecked);
   });
 
   miniCalendarBtn.addEventListener('click', () => {
@@ -471,7 +458,6 @@ export function initEventFormEvents() {
 
     globalEventState.allDay = isChecked;
 
-    updateEventDraft('allDay', isChecked);
     if (isChecked) {
       timeSelectionContainer.classList.add('hide-time-section');
     } else {
@@ -546,7 +532,6 @@ export function initEventFormEvents() {
     (li) => {
       globalEventState.notification = toDomainNotification(li.innerText);
 
-      updateEventDraft('notification', toDomainNotification(li.innerText));
       notificationBtn.innerText = li.innerText;
     },
     'show-container',
