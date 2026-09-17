@@ -186,13 +186,10 @@ describe('Repeat', () => {
       },
     );
 
-    it('should create a custom repeat with no custom dates yet', () => {
-      const repeat = Repeat.create(
-        buildRepeatConfig({ type: 'custom', customDates: [] }),
-      );
-
-      expect(repeat.value.type).toBe('custom');
-      expect(repeat.value.customDates).toEqual([]);
+    it('should throw validation error if a custom repeat has no custom dates', () => {
+      expect(() =>
+        Repeat.create(buildRepeatConfig({ type: 'custom', customDates: [] })),
+      ).toThrow(ValidationDomainError);
     });
 
     it.each([[['2024-13-01']], ['2024-06-01'], [null]])(

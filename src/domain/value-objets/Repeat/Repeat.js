@@ -66,6 +66,13 @@ function toRepeatValue(value) {
   const customDates = toValidDates(value.customDates, 'customDates');
   const exceptions = toValidDates(value.exceptions, 'exceptions');
 
+  if (type === 'custom' && customDates.length === 0) {
+    throw new ValidationDomainError(
+      'Repeat: customDates cannot be empty when type is custom',
+      { code: DomainErrorCodes.REPEAT.EMPTY_CUSTOM_DATES },
+    );
+  }
+
   return {
     seriesId,
     type,

@@ -1,5 +1,6 @@
 import dayjs from '../day.js';
 import {
+  repeatEventsDraft,
   updateRepeatDraft,
   initRepeatDraft,
   clearRepeatDraft,
@@ -74,7 +75,7 @@ function repeatModalUiState(state) {
       untilContainer.classList.add('show-repeat-section');
       break;
     case 'weekly':
-      updateRepeatDraft('weekdays', [...selectedDays]);
+      repeatEventsDraft.weekdays = [...selectedDays];
       removeClassHelper(sections);
       intervalContainer.classList.add('show-repeat-section');
       untilContainer.classList.add('show-repeat-section');
@@ -86,7 +87,7 @@ function repeatModalUiState(state) {
       untilContainer.classList.add('show-repeat-section');
       break;
     case 'custom':
-      updateRepeatDraft('customDates', getStoredCustomDates());
+      repeatEventsDraft.customDates = getStoredCustomDates();
       removeClassHelper(sections);
       customContainer.classList.add('show-repeat-section');
       break;
@@ -113,6 +114,12 @@ export function rehydrateRepeatModal() {
   unitlDateDefault('edit', repeatDraftInfo.until);
 
   hydrateCustomDates(repeatDraftInfo.customDates);
+  repeatEventsDraft.type = repeatDraftInfo.type;
+  repeatEventsDraft.interval = repeatDraftInfo.interval;
+  repeatEventsDraft.weekdays = [...repeatDraftInfo.weekdays];
+  // repeatEventsDraft.customDates = [...repeatDraftInfo.customDates]
+  repeatEventsDraft.until = repeatDraftInfo.until;
+  repeatEventsDraft.exceptions = [...repeatDraftInfo.exceptions];
   selectedDays = [...repeatDraftInfo.weekdays];
 }
 
@@ -197,14 +204,14 @@ function saveRepeatEvent() {
   if (!isValid) {
     return;
   } else {
-    eventDraft.update({
-      repeat: {
-        ...eventDraft.repeat,
-        seriesId: crypto.randomUUID(),
-      },
-    });
+    repeatEventsDraft.seriesId = crypto.randomUUID();
 
-    globalEventState.repeat = { ...eventDraft.repeat };
+    globalEventState.repeat = { ...repeatEventsDraft };
+
+    //fare una copia e passargli quella, funziona rispetto a passargli direttamente il valore el repeatEventDraft, perchè poi lo stato alla chiusura vine pulito, canceellando gli stessi valori. mantre la copia usando un altro ogetto di memoria non viene pulito alla chiususra.
+    eventDraft.update({
+      repeat: repeatEventsDraft,
+    });
 
     closeRepeatEvent();
   }
@@ -229,10 +236,10 @@ export function initRepeatEvents() {
       repeatUiState = li.dataset.repeatType;
       const date = unitlDateDefault('normal');
       initRepeatDraft(repeatUiState, date);
-      intervalInput.value = eventDraft.repeat.interval;
+      intervalInput.value = repeatEventsDraft.interval;
       modeBtn.innerText = li.innerText;
       repeatModalUiState(repeatUiState);
-      updateIntervaltext(repeatUiState, eventDraft.repeat.interval);
+      updateIntervaltext(repeatUiState, repeatEventsDraft.interval);
     },
     'show-mode-list',
   );
@@ -240,12 +247,12 @@ export function initRepeatEvents() {
   intervalInput.addEventListener('change', () => {
     const newValue = Number(intervalInput.value);
     if (!intervalInputValidator(repeatUiState, newValue)) {
-      intervalInput.value = eventDraft.repeat.interval;
+      intervalInput.value = repeatEventsDraft.interval;
       return;
     }
 
     updateRepeatDraft('interval', newValue);
-    updateIntervaltext(repeatUiState, eventDraft.repeat.interval);
+    updateIntervaltext(repeatUiState, repeatEventsDraft.interval);
   });
 
   dayOfWeekList.addEventListener('click', (e) => {
