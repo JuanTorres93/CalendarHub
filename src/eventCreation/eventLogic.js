@@ -19,8 +19,6 @@ import {
   eventDraft,
   globalEventState,
   timeDraft,
-  validateTimeRange,
-  validatorEventDraft,
 } from '../utils/events/eventDraft.js';
 import { renderEvents } from '../utils/events/eventRendering.js';
 import { formatDate } from '../utils/events/eventsUI.js';
@@ -354,11 +352,9 @@ function inputTimeReader(timeDraft) {
   });
   toHourInput.addEventListener('change', () => {
     inputTimeHelper(timeDraft, 'hour', toHourInput, 'to');
-    validateTimeRange(timeDraft);
   });
   toMinuteInput.addEventListener('change', () => {
     inputTimeHelper(timeDraft, 'minute', toMinuteInput, 'to');
-    validateTimeRange(timeDraft);
   });
 }
 
@@ -377,16 +373,6 @@ function closeModal() {
 
   forceResetRepeatModalState();
   resetEventModal();
-}
-
-export function saveEvent() {
-  const isValid = validatorEventDraft();
-
-  if (!isValid) {
-    return;
-  }
-
-  closeModal();
 }
 
 export function initEventFormEvents() {
@@ -509,7 +495,6 @@ export function initEventFormEvents() {
     '.list-item',
     (li) => {
       applySelectedTime(timeDraft, 'from', li.dataset.time);
-      validateTimeRange(timeDraft);
     },
     'show-menù',
   );
@@ -518,7 +503,6 @@ export function initEventFormEvents() {
     '.list-item',
     (li) => {
       applySelectedTime(timeDraft, 'to', li.dataset.time);
-      validateTimeRange(timeDraft);
     },
     'show-menù',
   );
@@ -587,12 +571,12 @@ export function initEventFormEvents() {
       if (feedbackMessage) {
         createMessage(feedbackMessage, modalEvents, document.body);
       }
+
+      closeModal();
+      renderEvents();
     } catch (error) {
       handleKnownErrors(error);
     }
-
-    saveEvent();
-    renderEvents();
   });
 
   closeBtn.addEventListener('click', () => {

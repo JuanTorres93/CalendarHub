@@ -23,6 +23,8 @@ export const DomainErrorCodes = {
 
   EVENT: {
     TO_BEFORE_FROM: 'event.to_before_from',
+    MISSING_DATE: 'event.missing_date',
+    MISSING_TIME: 'event.missing_time',
   },
 
   ICON: {
