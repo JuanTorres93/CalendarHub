@@ -1,4 +1,5 @@
 import { ValidationDomainError } from '../../common/domainErrors.js';
+import { DomainErrorCodes } from '../../common/domainErrorCodes.js';
 import { ValueObject } from '../ValueObject.js';
 import { Day } from '../Day/Day.js';
 
@@ -28,6 +29,7 @@ function toRepeatValue(value) {
   if (value === null || typeof value !== 'object' || Array.isArray(value)) {
     throw new ValidationDomainError(
       'Repeat: value must be null or a repeat config object',
+      { code: DomainErrorCodes.VALIDATION.INVALID_VALUE },
     );
   }
 
@@ -36,24 +38,28 @@ function toRepeatValue(value) {
   if (typeof seriesId !== 'string' || seriesId.trim() === '') {
     throw new ValidationDomainError(
       'Repeat: seriesId must be a non-empty string',
+      { code: DomainErrorCodes.VALIDATION.EMPTY },
     );
   }
 
   if (!REPEAT_TYPES.includes(type)) {
     throw new ValidationDomainError(
       `Repeat: type must be one of: ${REPEAT_TYPES.join(', ')}`,
+      { code: DomainErrorCodes.VALIDATION.UNKNOWN },
     );
   }
 
   if (!Number.isInteger(interval) || interval <= 0) {
     throw new ValidationDomainError(
       'Repeat: interval must be a positive integer',
+      { code: DomainErrorCodes.REPEAT.INVALID_INTERVAL },
     );
   }
 
   if (!Array.isArray(value.weekdays) || !value.weekdays.every(isValidWeekday)) {
     throw new ValidationDomainError(
       'Repeat: weekdays must be an array of integers between 0 and 6',
+      { code: DomainErrorCodes.REPEAT.INVALID_WEEKDAYS },
     );
   }
 
@@ -63,6 +69,7 @@ function toRepeatValue(value) {
   if (type === 'custom' && customDates.length === 0) {
     throw new ValidationDomainError(
       'Repeat: customDates cannot be empty when type is custom',
+      { code: DomainErrorCodes.REPEAT.EMPTY_CUSTOM_DATES },
     );
   }
 
@@ -87,6 +94,7 @@ function toValidDate(date, field) {
   } catch {
     throw new ValidationDomainError(
       `Repeat: ${field} must be a valid date in YYYY-MM-DD format`,
+      { code: DomainErrorCodes.DATE.INVALID_DATE, params: { field } },
     );
   }
 }
@@ -95,6 +103,7 @@ function toValidDates(dates, field) {
   if (!Array.isArray(dates)) {
     throw new ValidationDomainError(
       `Repeat: ${field} must be an array of dates`,
+      { code: DomainErrorCodes.REPEAT.INVALID_DATES_ARRAY, params: { field } },
     );
   }
 

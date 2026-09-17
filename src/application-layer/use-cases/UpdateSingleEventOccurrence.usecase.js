@@ -1,5 +1,6 @@
 import { Event } from '../../domain/entities/event/Event.js';
 import { NotFoundDomainError } from '../../domain/common/domainErrors.js';
+import { DomainErrorCodes } from '../../domain/common/domainErrorCodes.js';
 
 export class UpdateSingleEventOccurrenceUsecase {
   constructor(eventsRepo, idGenerator) {
@@ -11,7 +12,10 @@ export class UpdateSingleEventOccurrenceUsecase {
     const motherEvent = this.eventsRepo.getById(motherEventId);
 
     if (!motherEvent) {
-      throw new NotFoundDomainError(`Event with id ${motherEventId} not found`);
+      throw new NotFoundDomainError(`Event with id ${motherEventId} not found`, {
+        code: DomainErrorCodes.NOT_FOUND.EVENT,
+        params: { id: motherEventId },
+      });
     }
 
     motherEvent.update({

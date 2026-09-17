@@ -1,4 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { captureError } from '../../../../../tests/testHelpers.js';
+
+
 
 import { ValidationDomainError } from '../../../common/domainErrors.js';
 import { Day, MAX_YEAR, MIN_YEAR } from '../Day.js';
@@ -27,27 +30,39 @@ describe('Day', () => {
     });
 
     it('should throw validation error for year before the minimum', () => {
-      expect(() => Day.create({ year: MIN_YEAR - 1, month: 1, day: 1 })).toThrow(
-        ValidationDomainError,
-      );
+      const error = captureError(() => Day.create({ year: MIN_YEAR - 1, month: 1, day: 1 }));
+
+      expect(error).toBeInstanceOf(ValidationDomainError);
+      expect(error.code).toBeDefined();
+      expect(error.params.min).toBeDefined();
+      expect(error.params.max).toBeDefined();
     });
 
     it('should throw validation error for year after the maximum', () => {
-      expect(() => Day.create({ year: MAX_YEAR + 1, month: 12, day: 31 })).toThrow(
-        ValidationDomainError,
-      );
+      const error = captureError(() => Day.create({ year: MAX_YEAR + 1, month: 12, day: 31 }));
+
+      expect(error).toBeInstanceOf(ValidationDomainError);
+      expect(error.code).toBeDefined();
+      expect(error.params.min).toBeDefined();
+      expect(error.params.max).toBeDefined();
     });
 
     it('should throw validation error for month 0', () => {
-      expect(() => Day.create({ year: 2024, month: 0, day: 1 })).toThrow(
-        ValidationDomainError,
-      );
+      const error = captureError(() => Day.create({ year: 2024, month: 0, day: 1 }));
+
+      expect(error).toBeInstanceOf(ValidationDomainError);
+      expect(error.code).toBeDefined();
+      expect(error.params.min).toBeDefined();
+      expect(error.params.max).toBeDefined();
     });
 
     it('should throw validation error for month 13', () => {
-      expect(() => Day.create({ year: 2024, month: 13, day: 1 })).toThrow(
-        ValidationDomainError,
-      );
+      const error = captureError(() => Day.create({ year: 2024, month: 13, day: 1 }));
+
+      expect(error).toBeInstanceOf(ValidationDomainError);
+      expect(error.code).toBeDefined();
+      expect(error.params.min).toBeDefined();
+      expect(error.params.max).toBeDefined();
     });
 
     it('should throw validation error for day 0', () => {
@@ -170,18 +185,24 @@ describe('Day', () => {
     it.each([-1, 999, 10000, 2024.5, '2024', null, undefined])(
       'should throw validation error for year "%s"',
       (year) => {
-        expect(() => Day.create({ year, month: 6, day: 1 })).toThrow(
-          ValidationDomainError,
-        );
+        const error = captureError(() => Day.create({ year, month: 6, day: 1 }));
+
+        expect(error).toBeInstanceOf(ValidationDomainError);
+        expect(error.code).toBeDefined();
+        expect(error.params.min).toBeDefined();
+      expect(error.params.max).toBeDefined();
       },
     );
 
     it.each([0, 13, 6.5, '06', null, undefined])(
       'should throw validation error for month "%s"',
       (month) => {
-        expect(() => Day.create({ year: 2024, month, day: 1 })).toThrow(
-          ValidationDomainError,
-        );
+        const error = captureError(() => Day.create({ year: 2024, month, day: 1 }));
+
+        expect(error).toBeInstanceOf(ValidationDomainError);
+        expect(error.code).toBeDefined();
+        expect(error.params.min).toBeDefined();
+      expect(error.params.max).toBeDefined();
       },
     );
 

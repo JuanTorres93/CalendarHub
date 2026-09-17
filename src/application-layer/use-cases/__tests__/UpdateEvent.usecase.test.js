@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { captureError } from '../../../../tests/testHelpers.js';
+
 
 import { LocalStorageEventsRepo } from '../../../infra/repos/LocalStorageEventsRepo/LocalStorageEventsRepo.js';
 import { createTestEvent } from '../../../domain/entities/event/__tests__/eventTestProps.js';
@@ -46,12 +48,16 @@ describe('UpdateEventUsecase', () => {
     });
 
     it('should throw NotFoundDomainError when the event does not exist', () => {
-      expect(() =>
+      const error = captureError(() =>
         updateEventUsecase.execute({
           id: 'non-existent-event-id',
           eventRawProps: { title: 'Updated title' },
         }),
-      ).toThrow(NotFoundDomainError);
+      );
+
+      expect(error).toBeInstanceOf(NotFoundDomainError);
+      expect(error.code).toBeDefined();
+      expect(error.params.id).toBeDefined();
     });
   });
 });

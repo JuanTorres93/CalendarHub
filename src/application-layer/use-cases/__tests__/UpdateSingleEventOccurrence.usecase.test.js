@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { captureError } from '../../../../tests/testHelpers.js';
+
 
 import { LocalStorageEventsRepo } from '../../../infra/repos/LocalStorageEventsRepo/LocalStorageEventsRepo.js';
 import { CryptoUUIDIdGenerator } from '../../../infra/services/CryptoUUIDIdGenerator/CryptoUUIDIdGenerator.js';
@@ -62,13 +64,17 @@ describe('UpdateSingleEventOccurrenceUsecase', () => {
     });
 
     it('should throw NotFoundDomainError when the mother event does not exist', () => {
-      expect(() =>
+      const error = captureError(() =>
         updateSingleEventOccurrenceUsecase.execute({
           motherEventId: 'non-existent-id',
           occurrenceDate: '2026-09-15',
           eventRawProps: { ...EVENT_TEST_PROPS },
         }),
-      ).toThrow(NotFoundDomainError);
+      );
+
+      expect(error).toBeInstanceOf(NotFoundDomainError);
+      expect(error.code).toBeDefined();
+      expect(error.params.id).toBeDefined();
     });
   });
 });

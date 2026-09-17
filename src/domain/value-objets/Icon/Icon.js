@@ -1,4 +1,5 @@
 import { ValidationDomainError } from '../../common/domainErrors.js';
+import { DomainErrorCodes } from '../../common/domainErrorCodes.js';
 import { ValueObject } from '../ValueObject.js';
 
 export class Icon extends ValueObject {
@@ -10,10 +11,10 @@ export class Icon extends ValueObject {
 
   static create(value) {
     if (typeof value !== 'string' || value === null || value === undefined)
-      throw new ValidationDomainError('Icon must be a string');
+      throw new ValidationDomainError('Icon must be a string', { code: DomainErrorCodes.VALIDATION.NOT_A_STRING });
 
     if (Array.from(value.replace(/[\uFE00-\uFE0F]/g, '')).length !== 1) {
-      throw new ValidationDomainError('Icon must be a single character');
+      throw new ValidationDomainError('Icon must be a single character', { code: DomainErrorCodes.ICON.NOT_A_SINGLE_CHARACTER });
     }
 
     return new Icon({ value });

@@ -1,4 +1,5 @@
 import { ValidationDomainError } from '../../common/domainErrors.js';
+import { DomainErrorCodes } from '../../common/domainErrorCodes.js';
 import { NotificationPeriod } from '../../value-objets/NotificationPeriod/NotificationPeriod.js';
 import { Text } from '../../value-objets/Text/Text.js';
 import { Id } from '../../value-objets/Id/Id.js';
@@ -30,7 +31,9 @@ export class Event {
       : Time.create(props.to);
 
     if (toMinutes(to.value) <= toMinutes(from.value)) {
-      throw new ValidationDomainError('Event: to must be later than from');
+      throw new ValidationDomainError('Event: to must be later than from', {
+        code: DomainErrorCodes.EVENT.TO_BEFORE_FROM,
+      });
     }
 
     const validatedProps = {

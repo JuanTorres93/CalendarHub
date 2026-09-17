@@ -1,4 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { captureError } from '../../../../../tests/testHelpers.js';
+
+
 
 import { ValidationDomainError } from '../../../common/domainErrors.js';
 import { MAX_TIME, MIN_TIME, Time } from '../Time.js';
@@ -26,27 +29,39 @@ describe('Time', () => {
     });
 
     it('should throw validation error for 23:60', () => {
-      expect(() => Time.create({ hours: 23, minutes: 60 })).toThrow(
-        ValidationDomainError,
-      );
+      const error = captureError(() => Time.create({ hours: 23, minutes: 60 }));
+
+      expect(error).toBeInstanceOf(ValidationDomainError);
+      expect(error.code).toBeDefined();
+      expect(error.params.min).toBeDefined();
+      expect(error.params.max).toBeDefined();
     });
 
     it('should throw validation error for 24:00', () => {
-      expect(() => Time.create({ hours: 24, minutes: 0 })).toThrow(
-        ValidationDomainError,
-      );
+      const error = captureError(() => Time.create({ hours: 24, minutes: 0 }));
+
+      expect(error).toBeInstanceOf(ValidationDomainError);
+      expect(error.code).toBeDefined();
+      expect(error.params.min).toBeDefined();
+      expect(error.params.max).toBeDefined();
     });
 
     it('should throw validation error for -1:00', () => {
-      expect(() => Time.create({ hours: -1, minutes: 0 })).toThrow(
-        ValidationDomainError,
-      );
+      const error = captureError(() => Time.create({ hours: -1, minutes: 0 }));
+
+      expect(error).toBeInstanceOf(ValidationDomainError);
+      expect(error.code).toBeDefined();
+      expect(error.params.min).toBeDefined();
+      expect(error.params.max).toBeDefined();
     });
 
     it('should throw validation error for 00:-1', () => {
-      expect(() => Time.create({ hours: 0, minutes: -1 })).toThrow(
-        ValidationDomainError,
-      );
+      const error = captureError(() => Time.create({ hours: 0, minutes: -1 }));
+
+      expect(error).toBeInstanceOf(ValidationDomainError);
+      expect(error.code).toBeDefined();
+      expect(error.params.min).toBeDefined();
+      expect(error.params.max).toBeDefined();
     });
   });
 
@@ -121,18 +136,24 @@ describe('Time', () => {
     it.each([-1, 24, 25, 10.5, '10', null, undefined])(
       'should throw validation error for hours "%s"',
       (hours) => {
-        expect(() => Time.create({ hours, minutes: 30 })).toThrow(
-          ValidationDomainError,
-        );
+        const error = captureError(() => Time.create({ hours, minutes: 30 }));
+
+        expect(error).toBeInstanceOf(ValidationDomainError);
+        expect(error.code).toBeDefined();
+        expect(error.params.min).toBeDefined();
+      expect(error.params.max).toBeDefined();
       },
     );
 
     it.each([-1, 60, 61, 30.5, '30', null, undefined])(
       'should throw validation error for minutes "%s"',
       (minutes) => {
-        expect(() => Time.create({ hours: 10, minutes })).toThrow(
-          ValidationDomainError,
-        );
+        const error = captureError(() => Time.create({ hours: 10, minutes }));
+
+        expect(error).toBeInstanceOf(ValidationDomainError);
+        expect(error.code).toBeDefined();
+        expect(error.params.min).toBeDefined();
+      expect(error.params.max).toBeDefined();
       },
     );
   });

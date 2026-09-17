@@ -1,4 +1,5 @@
 import { ValidationDomainError } from '../../common/domainErrors.js';
+import { DomainErrorCodes } from '../../common/domainErrorCodes.js';
 import { ValueObject } from '../ValueObject.js';
 
 export const EVENT_COLORS = [
@@ -22,6 +23,7 @@ export class Color extends ValueObject {
     if (!EVENT_COLORS.includes(value)) {
       throw new ValidationDomainError(
         `Color: value must be one of: ${EVENT_COLORS.join(', ')}`,
+        { code: DomainErrorCodes.VALIDATION.UNKNOWN },
       );
     }
 

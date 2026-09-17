@@ -1,4 +1,5 @@
 import { ValidationDomainError } from '../../common/domainErrors.js';
+import { DomainErrorCodes } from '../../common/domainErrorCodes.js';
 import { ValueObject } from '../ValueObject.js';
 
 export const MIN_YEAR = 1000;
@@ -19,17 +20,27 @@ export class Day extends ValueObject {
     if (!Number.isInteger(year) || year < MIN_YEAR || year > MAX_YEAR) {
       throw new ValidationDomainError(
         `Day: year must be an integer between ${MIN_YEAR} and ${MAX_YEAR}`,
+        {
+          code: DomainErrorCodes.DATE.YEAR_OUT_OF_RANGE,
+          params: { min: MIN_YEAR, max: MAX_YEAR },
+        },
       );
     }
 
     if (!Number.isInteger(month) || month < 1 || month > 12) {
       throw new ValidationDomainError(
         'Day: month must be an integer between 1 and 12',
+        {
+          code: DomainErrorCodes.DATE.MONTH_OUT_OF_RANGE,
+          params: { min: 1, max: 12 },
+        },
       );
     }
 
     if (!Number.isInteger(dayOfMonth) || !isValidDate(year, month, dayOfMonth)) {
-      throw new ValidationDomainError('Day: invalid date');
+      throw new ValidationDomainError('Day: invalid date', {
+        code: DomainErrorCodes.DATE.INVALID_DATE,
+      });
     }
 
     return new Day({ year, month, day: dayOfMonth });
@@ -67,6 +78,7 @@ function toDayProps(day) {
     if (!match) {
       throw new ValidationDomainError(
         'Day: string must be in YYYY-MM-DD format',
+        { code: DomainErrorCodes.DATE.INVALID_FORMAT },
       );
     }
 
@@ -80,6 +92,7 @@ function toDayProps(day) {
   if (day === null || day === undefined || typeof day !== 'object') {
     throw new ValidationDomainError(
       'Day: value must be an object with year, month and day, a Date or a string in YYYY-MM-DD format',
+      { code: DomainErrorCodes.VALIDATION.INVALID_VALUE },
     );
   }
 

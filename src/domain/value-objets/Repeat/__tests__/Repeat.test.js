@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { captureError } from '../../../../../tests/testHelpers.js';
+
 
 import { ValidationDomainError } from '../../../common/domainErrors.js';
 import { Day } from '../../Day/Day.js';
@@ -152,9 +154,13 @@ describe('Repeat', () => {
     it.each(['2024-13-01', '20240601', 'not-a-date', null])(
       'should throw validation error if until is %j',
       (until) => {
-        expect(() => Repeat.create(buildRepeatConfig({ until }))).toThrow(
-          ValidationDomainError,
+        const error = captureError(() =>
+          Repeat.create(buildRepeatConfig({ until })),
         );
+
+        expect(error).toBeInstanceOf(ValidationDomainError);
+        expect(error.code).toBeDefined();
+        expect(error.params.field).toBeDefined();
       },
     );
 
@@ -170,9 +176,13 @@ describe('Repeat', () => {
     it.each([[['2024-13-01']], ['2024-06-01'], [null]])(
       'should throw validation error if customDates is %j',
       (customDates) => {
-        expect(() => Repeat.create(buildRepeatConfig({ customDates }))).toThrow(
-          ValidationDomainError,
+        const error = captureError(() =>
+          Repeat.create(buildRepeatConfig({ customDates })),
         );
+
+        expect(error).toBeInstanceOf(ValidationDomainError);
+        expect(error.code).toBeDefined();
+        expect(error.params.field).toBeDefined();
       },
     );
 
@@ -185,9 +195,13 @@ describe('Repeat', () => {
     it.each([[['2024-13-01']], ['2024-06-01'], [null]])(
       'should throw validation error if exceptions is %j',
       (exceptions) => {
-        expect(() => Repeat.create(buildRepeatConfig({ exceptions }))).toThrow(
-          ValidationDomainError,
+        const error = captureError(() =>
+          Repeat.create(buildRepeatConfig({ exceptions })),
         );
+
+        expect(error).toBeInstanceOf(ValidationDomainError);
+        expect(error.code).toBeDefined();
+        expect(error.params.field).toBeDefined();
       },
     );
   });

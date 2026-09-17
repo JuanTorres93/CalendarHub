@@ -1,4 +1,5 @@
 import { ValidationDomainError } from '../../common/domainErrors.js';
+import { DomainErrorCodes } from '../../common/domainErrorCodes.js';
 import { ValueObject } from '../ValueObject.js';
 
 export class Boolean extends ValueObject {
@@ -10,7 +11,7 @@ export class Boolean extends ValueObject {
 
   static create(value) {
     if (typeof value !== 'boolean') {
-      throw new ValidationDomainError('Boolean must be a boolean');
+      throw new ValidationDomainError('Boolean must be a boolean', { code: DomainErrorCodes.VALIDATION.NOT_A_BOOLEAN });
     }
 
     return new Boolean({ value });

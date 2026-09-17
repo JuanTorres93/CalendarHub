@@ -1,4 +1,5 @@
 import { ValidationDomainError } from '../../common/domainErrors.js';
+import { DomainErrorCodes } from '../../common/domainErrorCodes.js';
 import { ValueObject } from '../ValueObject.js';
 
 export const MIN_TIME = { hours: 0, minutes: 0 };
@@ -23,6 +24,10 @@ export class Time extends ValueObject {
     ) {
       throw new ValidationDomainError(
         `Time: hours must be an integer between ${MIN_TIME.hours} and ${MAX_TIME.hours}`,
+        {
+          code: DomainErrorCodes.TIME.HOURS_OUT_OF_RANGE,
+          params: { min: MIN_TIME.hours, max: MAX_TIME.hours },
+        },
       );
     }
 
@@ -33,6 +38,10 @@ export class Time extends ValueObject {
     ) {
       throw new ValidationDomainError(
         `Time: minutes must be an integer between ${MIN_TIME.minutes} and ${MAX_TIME.minutes}`,
+        {
+          code: DomainErrorCodes.TIME.MINUTES_OUT_OF_RANGE,
+          params: { min: MIN_TIME.minutes, max: MAX_TIME.minutes },
+        },
       );
     }
 
@@ -52,7 +61,9 @@ function toTimeProps(time) {
     const match = time.match(TIME_PATTERN);
 
     if (!match) {
-      throw new ValidationDomainError('Time: string must be in HH:MM format');
+      throw new ValidationDomainError('Time: string must be in HH:MM format', {
+        code: DomainErrorCodes.TIME.INVALID_FORMAT,
+      });
     }
 
     return { hours: Number(match[1]), minutes: Number(match[2]) };
@@ -61,6 +72,7 @@ function toTimeProps(time) {
   if (time === null || time === undefined || typeof time !== 'object') {
     throw new ValidationDomainError(
       'Time: value must be an object with hours and minutes or a string in HH:MM format',
+      { code: DomainErrorCodes.VALIDATION.INVALID_VALUE },
     );
   }
 

@@ -1,4 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { captureError } from '../../../../../tests/testHelpers.js';
+
+
 
 import { ValidationDomainError } from '../../../common/domainErrors.js';
 import { Text } from '../Text.js';
@@ -65,9 +68,11 @@ describe('Text', () => {
       const maxLength = 20;
       const options = { maxLength };
 
-      expect(() => Text.create(longText, options)).toThrow(
-        ValidationDomainError,
-      );
+      const error = captureError(() => Text.create(longText, options));
+
+      expect(error).toBeInstanceOf(ValidationDomainError);
+      expect(error.code).toBeDefined();
+      expect(error.params.maxLength).toBeDefined();
     });
   });
 });

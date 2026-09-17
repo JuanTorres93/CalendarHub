@@ -1,4 +1,5 @@
 import { ValidationDomainError } from '../../common/domainErrors.js';
+import { DomainErrorCodes } from '../../common/domainErrorCodes.js';
 import { ValueObject } from '../ValueObject.js';
 
 export class Text extends ValueObject {
@@ -10,18 +11,26 @@ export class Text extends ValueObject {
 
   static create(value, options) {
     if (typeof value !== 'string' || value === null || value === undefined)
-      throw new ValidationDomainError('Text must be a string');
+      throw new ValidationDomainError('Text must be a string', {
+        code: DomainErrorCodes.VALIDATION.NOT_A_STRING,
+      });
 
     if (options?.maxLength) {
       if (value.length > options.maxLength) {
         throw new ValidationDomainError(
           `Text: value length must not exceed ${options.maxLength} characters`,
+          {
+            code: DomainErrorCodes.VALIDATION.TOO_LONG,
+            params: { maxLength: options.maxLength },
+          },
         );
       }
     }
 
     if (options?.canBeEmpty === false && value.trim() === '') {
-      throw new ValidationDomainError('Text cannot be empty');
+      throw new ValidationDomainError('Text cannot be empty', {
+        code: DomainErrorCodes.VALIDATION.EMPTY,
+      });
     }
 
     return new Text({ value: value.trim() });
