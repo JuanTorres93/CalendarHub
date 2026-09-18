@@ -73,6 +73,8 @@ function repeatModalUiState(state) {
       untilContainer.classList.add('show-repeat-section');
       break;
     case 'weekly':
+      globalEventState.repeat.weekdays = [...selectedDays];
+
       globalEventState.repeatForm.weekdays = [...selectedDays];
 
       removeClassHelper(sections);
@@ -86,6 +88,8 @@ function repeatModalUiState(state) {
       untilContainer.classList.add('show-repeat-section');
       break;
     case 'custom':
+      globalEventState.repeat.customDates = getStoredCustomDates();
+
       globalEventState.repeatForm.customDates = getStoredCustomDates();
 
       removeClassHelper(sections);
@@ -125,6 +129,12 @@ export function rehydrateRepeatModal() {
   unitlDateDefault('edit', repeatDraftInfo.until);
 
   hydrateCustomDates(repeatDraftInfo.customDates);
+
+  globalEventState.repeat.type = repeatDraftInfo.type;
+  globalEventState.repeat.interval = repeatDraftInfo.interval;
+  globalEventState.repeat.weekdays = [...repeatDraftInfo.weekdays];
+  globalEventState.repeat.until = repeatDraftInfo.until;
+  globalEventState.repeat.exceptions = [...repeatDraftInfo.exceptions];
 
   globalEventState.repeatForm.type = repeatDraftInfo.type;
   globalEventState.repeatForm.interval = repeatDraftInfo.interval;
@@ -222,6 +232,11 @@ function saveRepeatEvent() {
   const currentFromDraft = eventDraft.repeat;
 
   if (currentFromDraft) {
+    globalEventState.repeat = {
+      ...currentFromDraft,
+      seriesId,
+    };
+
     eventDraft.update({ repeat: { ...currentFromDraft, seriesId } });
   }
 
@@ -229,7 +244,10 @@ function saveRepeatEvent() {
     ...globalEventState.repeatForm,
     seriesId,
   };
-  globalEventState.repeat = { ...eventDraft.repeat };
+  globalEventState.repeat = {
+    ...globalEventState.repeat,
+    seriesId,
+  };
 
   Repeat.create({
     ...defaultRepeatFormProps(eventDraft.date),
@@ -272,6 +290,11 @@ export function initRepeatEvents() {
         type: li.dataset.repeatType,
       };
 
+      globalEventState.repeat = {
+        ...globalEventState.repeat,
+        type: li.dataset.repeatType,
+      };
+
       const date = unitlDateDefault('normal');
 
       initRepeatDraft(repeatUiState, date);
@@ -293,6 +316,7 @@ export function initRepeatEvents() {
     }
 
     globalEventState.repeatForm.interval = newValue;
+    globalEventState.repeat.interval = newValue;
 
     updateIntervaltext(repeatUiState, eventDraft.repeat.interval);
   });
@@ -312,6 +336,7 @@ export function initRepeatEvents() {
       }
     }
 
+    globalEventState.repeat.weekdays = [...selectedDays];
     globalEventState.repeatForm.weekdays = [...selectedDays];
 
     updateRepeatDraft('weekdays', selectedDays);

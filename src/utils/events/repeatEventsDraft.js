@@ -21,6 +21,8 @@ export const initRepeatDraft = (type, date) => {
     seriesId: 'fake-init-id',
   };
 
+  globalEventState.repeat = { ...repeatProps };
+
   eventDraft.update({ repeat: repeatProps });
 };
 
@@ -30,19 +32,26 @@ export const clearRepeatDraft = () => {
 
 export function updateRepeatDraft(field, value) {
   if (!eventDraft.repeat) {
-    initRepeatDraft('daily', new Date());
+    return;
   }
 
   if (!globalEventState.repeatForm) {
     globalEventState.repeatForm = {};
   }
 
+  if (!globalEventState.repeat) {
+    globalEventState.repeat = {};
+  }
+
   globalEventState.repeatForm[field] = value;
+  globalEventState.repeat[field] = value;
 
   const repeatProps = {
     ...eventDraft.repeat,
     [field]: value,
   };
+
+  globalEventState.repeat = { ...repeatProps };
 
   eventDraft.update({ repeat: repeatProps });
 }

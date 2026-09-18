@@ -195,6 +195,8 @@ export function resetEventModal() {
 
   globalEventState.from = '';
   globalEventState.to = '';
+
+  globalEventState.repeat = null;
 }
 
 const renderModeTextInfo = (mode, eventTitle) => {
@@ -264,6 +266,14 @@ export function preCompilerEdit(event, mode) {
         : event[field];
   });
 
+  const combinedEventProps = {
+    ...globalEventState,
+    ...updateEventEntityProps,
+  };
+  Object.entries(combinedEventProps).forEach(([key, value]) => {
+    globalEventState[key] = value;
+  });
+
   eventDraft.update(updateEventEntityProps);
 
   editingEventId = event.id;
@@ -274,6 +284,9 @@ export function preCompilerEdit(event, mode) {
       ? event.originalEventId
       : event.id;
     editingOccurrenceDate = event.date;
+
+    globalEventState.repeat = null;
+
     eventDraft.update({ repeat: null });
   }
 
