@@ -1,7 +1,7 @@
 import dayjs from './day.js';
 import { isNow } from './utils/isNow.js';
 import { openMiniCalendar } from './miniCalendar/miniCalendar.js';
-import { calendarLogic } from './calendarSync.js';
+import { calendarLogic } from './calendarLogic.js';
 import { openTodo } from './to-do-list/toDo.js';
 import { resetTutorial } from './tutorial.js';
 import {
