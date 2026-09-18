@@ -1,3 +1,5 @@
+import { calendarLogic } from '../../calendarLogic.js';
+
 export default function createTodoListButton() {
   const button = document.createElement('button');
 
@@ -5,6 +7,11 @@ export default function createTodoListButton() {
   button.type = 'button';
   button.setAttribute('aria-label', 'Crea nuova Todo-list');
   button.setAttribute('data-testid', 'new-todo-button');
+
+  button.addEventListener('click', async () => {
+    const { openTodo } = await import('../../to-do-list/toDo.js');
+    openTodo(calendarLogic.date.format('YYYY-MM-DD'));
+  });
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');

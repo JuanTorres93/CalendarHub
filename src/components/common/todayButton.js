@@ -1,3 +1,6 @@
+import { calendarLogic } from '../../calendarLogic.js';
+import dayjs from '../../day.js';
+
 export default function createTodayButton() {
   const button = document.createElement('button');
 
@@ -6,6 +9,10 @@ export default function createTodayButton() {
   button.setAttribute('aria-label', 'Ripristina data corrente');
   button.setAttribute('data-testid', 'today-button');
   button.textContent = 'today';
+
+  button.addEventListener('click', () => {
+    calendarLogic.setDate(dayjs());
+  });
 
   return button;
 }

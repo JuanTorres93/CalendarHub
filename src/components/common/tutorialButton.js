@@ -1,9 +1,13 @@
+import { resetTutorial } from '../../tutorial.js';
+
 export default function createTutorialButton() {
   const button = document.createElement('button');
 
   button.className = 'tutorial-btn';
   button.type = 'button';
   button.setAttribute('aria-label', 'Apri tutorial');
+
+  button.addEventListener('click', resetTutorial);
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
