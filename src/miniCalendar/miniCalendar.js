@@ -8,7 +8,7 @@ import {
   yearInput,
 } from '../utils/helpers/dom/miniCalendarDom.js';
 
-import { overlay } from '../calendarSync.js';
+import { calendarLogic } from '../calendarSync.js';
 import dayjs from '../day.js';
 import { validateAndReturnCustomDate } from '../eventCreation/repeatcustomDates.js';
 import { config } from '../utils/config/config.js';
@@ -44,7 +44,7 @@ export function openMiniCalendar(
 
   miniCalendarLayer.classList.add('show-mini-calendar-layer');
   if (type === 'normal') {
-    miniLocalDate = dayjs(overlay.date);
+    miniLocalDate = dayjs(calendarLogic.date);
     syncMiniInputs();
 
     createMiniCalendar(miniLocalDate);
@@ -88,7 +88,7 @@ export function closeMiniCalendar() {
   miniLocalDate = null;
 }
 function cancelMiniCalendar() {
-  miniLocalDate = dayjs(overlay.date);
+  miniLocalDate = dayjs(calendarLogic.date);
   syncMiniInputs();
   createMiniCalendar(miniLocalDate);
   closeMiniCalendar();
@@ -103,7 +103,7 @@ function commitMiniDate() {
 
   switch (miniCalendarCommitTarget) {
     case 'normal':
-      overlay.setDate(dayjs(miniLocalDate));
+      calendarLogic.setDate(dayjs(miniLocalDate));
       break;
     case 'event-date':
       eventFormState.date = selectedDate;

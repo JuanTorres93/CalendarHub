@@ -1,4 +1,8 @@
-export default function createRightArrowButton({ testid, ariaLabel, extraClasses = [] }) {
+export default function createRightArrowButton({
+  testid,
+  ariaLabel,
+  extraClasses = [],
+}) {
   const button = document.createElement('button');
 
   button.className = ['right-arrow', ...extraClasses].filter(Boolean).join(' ');

@@ -140,12 +140,12 @@ class CalendarLogic {
     });
   }
 }
-export const overlay = new CalendarLogic();
+export const calendarLogic = new CalendarLogic();
 
 function highlightDayMonth(button) {
   const selectedDate = button.dataset.day;
   if (!selectedDate) return;
-  overlay.setDate(dayjs(selectedDate));
+  calendarLogic.setDate(dayjs(selectedDate));
 }
 
 function handleMonthGridClick(e) {
@@ -194,7 +194,7 @@ function handleMonthGridClick(e) {
 
 function highLightWeek(e) {
   let highLight = e.target.parentElement.dataset.day;
-  overlay.setDate(dayjs(highLight));
+  calendarLogic.setDate(dayjs(highLight));
 }
 function OpenModalWeek(e) {
   const selecthour = document.querySelectorAll('.week-box');
@@ -288,28 +288,28 @@ function handleDailyClick(e) {
 
 function bindCalendarEvents() {
   rightArrowMonth.addEventListener('click', () => {
-    overlay.nextMonth();
-    overlay.syncAll();
+    calendarLogic.nextMonth();
+    calendarLogic.syncAll();
   });
   leftArrowMonth.addEventListener('click', () => {
-    overlay.prevMonth();
-    overlay.syncAll();
+    calendarLogic.prevMonth();
+    calendarLogic.syncAll();
   });
   leftArrowWeek.addEventListener('click', () => {
-    overlay.prevWeek();
-    overlay.syncAll();
+    calendarLogic.prevWeek();
+    calendarLogic.syncAll();
   });
   rightArrowWeek.addEventListener('click', () => {
-    overlay.nextWeek();
-    overlay.syncAll();
+    calendarLogic.nextWeek();
+    calendarLogic.syncAll();
   });
   leftArrowDay.addEventListener('click', () => {
-    overlay.prevDay();
-    overlay.syncAll();
+    calendarLogic.prevDay();
+    calendarLogic.syncAll();
   });
   rightArrowDay.addEventListener('click', () => {
-    overlay.nextDay();
-    overlay.syncAll();
+    calendarLogic.nextDay();
+    calendarLogic.syncAll();
   });
   monthGrid.addEventListener('click', handleMonthGridClick);
   weekGrid.addEventListener('click', handleClickWeek);
@@ -318,5 +318,5 @@ function bindCalendarEvents() {
 
 export default function initCalendar() {
   bindCalendarEvents();
-  overlay.syncAll();
+  calendarLogic.syncAll();
 }
