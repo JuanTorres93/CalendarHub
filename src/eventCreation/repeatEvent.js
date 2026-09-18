@@ -20,7 +20,7 @@ import {
   initCustomDateRemoval,
   clearDatesStates,
 } from './repeatcustomDates.js';
-import { eventDraft, globalEventState } from '../utils/events/eventDraft.js';
+import { globalEventState } from '../utils/events/eventDraft.js';
 import { hydrateCustomDates } from './repeatcustomDates.js';
 import { Repeat } from '../domain/value-objets/Repeat/Repeat.js';
 import dayjs from '../day.js';
@@ -97,8 +97,7 @@ function repeatModalUiState(state) {
 export function rehydrateRepeatModal() {
   editMode = true;
 
-  // Legacy code
-  const repeatDraftInfo = eventDraft.repeat;
+  const repeatDraftInfo = globalEventState.repeat;
   if (repeatDraftInfo === null) return;
 
   initRepeatDraft(
@@ -219,23 +218,22 @@ function saveRepeatEvent() {
 
   const seriesId = crypto.randomUUID();
 
-  const currentFromDraft = eventDraft.repeat;
+  const currentFromDraft = globalEventState.repeat;
 
   if (currentFromDraft) {
     globalEventState.repeat = {
       ...currentFromDraft,
       seriesId,
     };
-
-    eventDraft.update({ repeat: { ...currentFromDraft, seriesId } });
   }
+
   globalEventState.repeat = {
     ...globalEventState.repeat,
     seriesId,
   };
 
   Repeat.create({
-    ...defaultRepeatFormProps(eventDraft.date),
+    ...defaultRepeatFormProps(globalEventState.date),
     ...globalEventState.repeat,
   });
 
@@ -279,11 +277,11 @@ export function initRepeatEvents() {
 
       initRepeatDraft(repeatUiState, date);
 
-      intervalInput.value = eventDraft.repeat.interval;
+      intervalInput.value = globalEventState.repeat.interval;
       modeBtn.innerText = li.innerText;
 
       repeatModalUiState(repeatUiState);
-      updateIntervaltext(repeatUiState, eventDraft.repeat.interval);
+      updateIntervaltext(repeatUiState, globalEventState.repeat.interval);
     },
     'show-mode-list',
   );
@@ -291,13 +289,13 @@ export function initRepeatEvents() {
   intervalInput.addEventListener('change', () => {
     const newValue = Number(intervalInput.value);
     if (!intervalInputValidator(repeatUiState, newValue)) {
-      intervalInput.value = eventDraft.repeat.interval;
+      intervalInput.value = globalEventState.repeat.interval;
       return;
     }
 
     globalEventState.repeat.interval = newValue;
 
-    updateIntervaltext(repeatUiState, eventDraft.repeat.interval);
+    updateIntervaltext(repeatUiState, globalEventState.repeat.interval);
   });
 
   dayOfWeekList.addEventListener('click', (e) => {
@@ -324,7 +322,7 @@ export function initRepeatEvents() {
     if (editMode) {
       const untilDateRestored = unitlDateDefault(
         'edit',
-        eventDraft.repeat.until,
+        globalEventState.repeat.until,
       );
       openMiniCalendar('event', untilDateRestored, 'repeat-until');
     } else {

@@ -15,7 +15,7 @@ import createCaroseul, {
   renderIconsList,
   renderNotificationList,
 } from '../utils/events/createLists.js';
-import { eventDraft, globalEventState } from '../utils/events/eventDraft.js';
+import { globalEventState } from '../utils/events/eventDraft.js';
 import { renderEvents } from '../utils/events/eventRendering.js';
 import { formatDate } from '../utils/events/eventsUI.js';
 import { createMessage } from '../utils/helpers/createElement.js';
@@ -274,8 +274,6 @@ export function preCompilerEdit(event, mode) {
     globalEventState[key] = value;
   });
 
-  eventDraft.update(updateEventEntityProps);
-
   editingEventId = event.id;
 
   if (mode === 'edit-single-occurrence') {
@@ -286,8 +284,6 @@ export function preCompilerEdit(event, mode) {
     editingOccurrenceDate = event.date;
 
     globalEventState.repeat = null;
-
-    eventDraft.update({ repeat: null });
   }
 
   if (mode === 'edit-series') {
@@ -483,7 +479,7 @@ export function initEventFormEvents() {
     const isOpen = listedTimeFrom.classList.toggle('show-menù');
 
     if (isOpen) {
-      const targetTime = eventDraft.from;
+      const targetTime = globalEventState.from;
       const target = nowTarget(
         listedTimeFrom.querySelectorAll('.list-item'),
         null,
@@ -497,7 +493,7 @@ export function initEventFormEvents() {
     const isOpen = listedTimeTo.classList.toggle('show-menù');
 
     if (isOpen) {
-      const targetTime = eventDraft.to;
+      const targetTime = globalEventState.to;
       const target = nowTarget(
         listedTimeTo.querySelectorAll('.list-item'),
         null,

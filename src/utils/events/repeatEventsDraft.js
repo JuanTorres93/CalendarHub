@@ -42,20 +42,18 @@ export function updateRepeatDraft(field, value) {
   globalEventState.repeat[field] = value;
 
   const repeatProps = {
-    ...eventDraft.repeat,
+    ...globalEventState.repeat,
     [field]: value,
   };
 
   globalEventState.repeat = { ...repeatProps };
-
-  eventDraft.update({ repeat: repeatProps });
 }
 
 export function validatorRepeatDraft() {
   // Legacy code, Repeat draft will already be validated if creation succedes
   if (
-    eventDraft.repeat?.type === 'custom' &&
-    eventDraft.repeat?.customDates.length === 0
+    globalEventState.repeat?.type === 'custom' &&
+    globalEventState.repeat?.customDates.length === 0
   ) {
     createMessage(
       'inserisci almeno una data',
