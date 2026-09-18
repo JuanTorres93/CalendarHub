@@ -8,7 +8,7 @@ import {
   yearInput,
 } from '../utils/helpers/dom/miniCalendarDom.js';
 
-import { calendarLogic } from '../calendarSync.js';
+import { calendarLogic } from '../calendarLogic.js';
 import dayjs from '../day.js';
 import { validateAndReturnCustomDate } from '../eventCreation/repeatcustomDates.js';
 import { config } from '../utils/config/config.js';

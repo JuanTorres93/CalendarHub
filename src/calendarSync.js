@@ -192,30 +192,6 @@ function handleDailyClick(e) {
 }
 
 function bindCalendarEvents() {
-  rightArrowMonth.addEventListener('click', () => {
-    calendarLogic.nextMonth();
-    calendarLogic.syncAll();
-  });
-  leftArrowMonth.addEventListener('click', () => {
-    calendarLogic.prevMonth();
-    calendarLogic.syncAll();
-  });
-  leftArrowWeek.addEventListener('click', () => {
-    calendarLogic.prevWeek();
-    calendarLogic.syncAll();
-  });
-  rightArrowWeek.addEventListener('click', () => {
-    calendarLogic.nextWeek();
-    calendarLogic.syncAll();
-  });
-  leftArrowDay.addEventListener('click', () => {
-    calendarLogic.prevDay();
-    calendarLogic.syncAll();
-  });
-  rightArrowDay.addEventListener('click', () => {
-    calendarLogic.nextDay();
-    calendarLogic.syncAll();
-  });
   monthGrid.addEventListener('click', handleMonthGridClick);
   weekGrid.addEventListener('click', handleClickWeek);
   dayGrid.addEventListener('click', handleDailyClick);

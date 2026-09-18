@@ -24,12 +24,12 @@ const componentBuilders = {
     return createCurrentYearDisplay();
   },
   replace_leftArrowButton(parts) {
-    const [, testid, ariaLabel, ...extraClasses] = parts;
-    return createLeftArrowButton({ testid, ariaLabel, extraClasses });
+    const [, timeFrame, ariaLabel, ...extraClasses] = parts;
+    return createLeftArrowButton({ timeFrame, ariaLabel, extraClasses });
   },
   replace_rightArrowButton(parts) {
-    const [, testid, ariaLabel, ...extraClasses] = parts;
-    return createRightArrowButton({ testid, ariaLabel, extraClasses });
+    const [, timeFrame, ariaLabel, ...extraClasses] = parts;
+    return createRightArrowButton({ timeFrame, ariaLabel, extraClasses });
   },
   replace_currentTimeframeDisplay(parts) {
     const [, timeframe] = parts;

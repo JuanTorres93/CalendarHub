@@ -1,10 +1,18 @@
-export default function createLeftArrowButton({ testid, ariaLabel, extraClasses = [] }) {
+import { calendarLogic } from '../../../calendarLogic.js';
+
+export default function createLeftArrowButton({
+  timeFrame,
+  ariaLabel,
+  extraClasses = [],
+}) {
   const button = document.createElement('button');
+
+  button.addEventListener('click', () => goToPreviousTimeframe(timeFrame));
 
   button.className = ['left-arrow', ...extraClasses].filter(Boolean).join(' ');
   button.type = 'button';
   button.setAttribute('aria-label', ariaLabel);
-  button.setAttribute('data-testid', testid);
+  button.setAttribute('data-testid', `previous-${timeFrame}-button`);
 
   const img = document.createElement('img');
   img.src = './images/streamline-plump-color--arrow-right-circle-1-flat.svg';
@@ -14,4 +22,18 @@ export default function createLeftArrowButton({ testid, ariaLabel, extraClasses 
   button.appendChild(img);
 
   return button;
+}
+
+function goToPreviousTimeframe(timeFrame) {
+  if (timeFrame === 'month') {
+    calendarLogic.prevMonth();
+  }
+  if (timeFrame === 'week') {
+    calendarLogic.prevWeek();
+  }
+  if (timeFrame === 'day') {
+    calendarLogic.prevDay();
+  }
+
+  calendarLogic.syncAll();
 }

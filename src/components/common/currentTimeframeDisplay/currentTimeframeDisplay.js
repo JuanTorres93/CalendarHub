@@ -13,7 +13,7 @@ export default function createCurrentTimeframeDisplay(timeframeString) {
 
   container.appendChild(
     createLeftArrowButton({
-      testid: `previous-${timeframeString}-button`,
+      timeFrame: timeframeString,
       ariaLabel: `${config.italianTimeframeString} precedente`,
     }),
   );
@@ -24,7 +24,7 @@ export default function createCurrentTimeframeDisplay(timeframeString) {
   );
   container.appendChild(
     createRightArrowButton({
-      testid: `next-${timeframeString}-button`,
+      timeFrame: timeframeString,
       ariaLabel: `${config.italianTimeframeString} successivo`,
     }),
   );
