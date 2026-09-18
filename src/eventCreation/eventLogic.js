@@ -236,8 +236,8 @@ export function preCompiler(e) {
   header.firstElementChild.dataset.day = date;
   header.firstElementChild.nextElementSibling.textContent = time;
 
-  setTimeUIAndDraft(timeDraft, 'from', time);
-  setTimeUIAndDraft(timeDraft, 'to', endTime);
+  setTimeUIAndDraft('from', time);
+  setTimeUIAndDraft('to', endTime);
 
   renderModeTextInfo(globalEventState.mode);
 }
@@ -305,8 +305,8 @@ export function preCompilerEdit(event, mode) {
     allDayCheckBox.classList.add('checked');
     timeSelectionContainer.classList.add('hide-time-section');
   }
-  setTimeUIAndDraft(timeDraft, 'from', event.from);
-  setTimeUIAndDraft(timeDraft, 'to', event.to);
+  setTimeUIAndDraft('from', event.from);
+  setTimeUIAndDraft('to', event.to);
 
   notificationBtn.innerText = toItalianNotification(event.notification);
 }
@@ -327,7 +327,7 @@ function updateTimeInput(part, value) {
       break;
   }
 }
-function inputTimeHelper(timeDraft, caseType, input, classType) {
+function inputTimeHelper(caseType, input, classType) {
   const time = updateTimeInput(caseType, input.value);
   if (time === undefined) {
     input.value = '';
@@ -343,23 +343,23 @@ function inputTimeHelper(timeDraft, caseType, input, classType) {
   }
 }
 
-function inputTimeReader(timeDraft) {
+function inputTimeReader() {
   fromHourInput.addEventListener('change', () => {
-    inputTimeHelper(timeDraft, 'hour', fromHourInput, 'from');
+    inputTimeHelper('hour', fromHourInput, 'from');
   });
   fromMinuteInput.addEventListener('change', () => {
-    inputTimeHelper(timeDraft, 'minute', fromMinuteInput, 'from');
+    inputTimeHelper('minute', fromMinuteInput, 'from');
   });
   toHourInput.addEventListener('change', () => {
-    inputTimeHelper(timeDraft, 'hour', toHourInput, 'to');
+    inputTimeHelper('hour', toHourInput, 'to');
   });
   toMinuteInput.addEventListener('change', () => {
-    inputTimeHelper(timeDraft, 'minute', toMinuteInput, 'to');
+    inputTimeHelper('minute', toMinuteInput, 'to');
   });
 }
 
-function applySelectedTime(timeDraft, type, time) {
-  setTimeUIAndDraft(timeDraft, type, time);
+function applySelectedTime(type, time) {
+  setTimeUIAndDraft(type, time);
 
   globalEventState[type] = time;
 }
@@ -459,7 +459,7 @@ export function initEventFormEvents() {
     }
   });
 
-  inputTimeReader(timeDraft);
+  inputTimeReader();
 
   listedTimeBtnFrom.addEventListener('click', (e) => {
     const isOpen = listedTimeFrom.classList.toggle('show-menù');
@@ -494,7 +494,7 @@ export function initEventFormEvents() {
     listedTimeFrom,
     '.list-item',
     (li) => {
-      applySelectedTime(timeDraft, 'from', li.dataset.time);
+      applySelectedTime('from', li.dataset.time);
     },
     'show-menù',
   );
@@ -502,7 +502,7 @@ export function initEventFormEvents() {
     listedTimeTo,
     '.list-item',
     (li) => {
-      applySelectedTime(timeDraft, 'to', li.dataset.time);
+      applySelectedTime('to', li.dataset.time);
     },
     'show-menù',
   );

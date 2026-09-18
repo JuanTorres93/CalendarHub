@@ -1,7 +1,9 @@
-const fromHourInput = document.querySelector(".input-hour.from");
-const fromMinuteInput = document.querySelector(".input-minute.from");
-const toHourInput = document.querySelector(".input-hour.to");
-const toMinuteInput = document.querySelector(".input-minute.to");
+import { timeDraft } from '../events/eventDraft';
+
+const fromHourInput = document.querySelector('.input-hour.from');
+const fromMinuteInput = document.querySelector('.input-minute.from');
+const toHourInput = document.querySelector('.input-hour.to');
+const toMinuteInput = document.querySelector('.input-minute.to');
 
 export const separateHourFromMinute = (time) => {
   const hour = time.slice(0, 2);
@@ -19,14 +21,14 @@ export const timeToMinutes = (time) => {
   return Number(hour) * 60 + Number(minute);
 };
 
-export function setTimeUIAndDraft(timeDraft, type, time) {
+export function setTimeUIAndDraft(type, time) {
   const { hour, minute } = separateHourFromMinute(time);
 
-  if (type === "from") {
+  if (type === 'from') {
     fromHourInput.value = hour;
     fromMinuteInput.value = minute;
   }
-  if (type === "to") {
+  if (type === 'to') {
     toHourInput.value = hour;
     toMinuteInput.value = minute;
   }

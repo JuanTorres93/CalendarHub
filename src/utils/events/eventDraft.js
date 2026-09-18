@@ -13,6 +13,7 @@ export const eventDraft = Event.create({
   to: '01:00',
 });
 
+// TODO NEXT: eliminar timeDraft
 export const timeDraft = {
   from: { hour: '', minute: '' },
   to: { hour: '', minute: '' },
