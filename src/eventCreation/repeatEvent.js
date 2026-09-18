@@ -1,7 +1,6 @@
 import {
   updateRepeatDraft,
   initRepeatDraft,
-  clearRepeatDraft,
   validatorRepeatDraft,
 } from '../utils/events/repeatEventsDraft.js';
 import {
@@ -178,8 +177,6 @@ function resetRepeatModalState() {
   repeatUiState = 'default';
   editMode = false;
   selectedDays = [];
-
-  clearRepeatDraft();
 
   modeBtn.innerText = '';
   intervalInput.value = '';

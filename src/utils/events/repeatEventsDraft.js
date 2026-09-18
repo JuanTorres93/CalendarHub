@@ -3,7 +3,7 @@ import {
   customContainer,
   repeatContainer,
 } from '../helpers/dom/repeatModalDom.js';
-import { eventDraft, globalEventState } from './eventDraft.js';
+import { globalEventState } from './eventDraft.js';
 
 export const initRepeatDraft = (type, date) => {
   const props = {
@@ -22,31 +22,17 @@ export const initRepeatDraft = (type, date) => {
   };
 
   globalEventState.repeat = { ...repeatProps };
-
-  eventDraft.update({ repeat: repeatProps });
-};
-
-export const clearRepeatDraft = () => {
-  eventDraft.update({ repeat: null });
 };
 
 export function updateRepeatDraft(field, value) {
-  if (!eventDraft.repeat) {
+  if (!globalEventState.repeat) {
     return;
   }
 
-  if (!globalEventState.repeat) {
-    globalEventState.repeat = {};
-  }
-
-  globalEventState.repeat[field] = value;
-
-  const repeatProps = {
+  globalEventState.repeat = {
     ...globalEventState.repeat,
     [field]: value,
   };
-
-  globalEventState.repeat = { ...repeatProps };
 }
 
 export function validatorRepeatDraft() {

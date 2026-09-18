@@ -74,7 +74,6 @@ export function getStoredCustomDates() {
 export function clearDatesStates() {
   listOfDates = [];
   customList.innerHTML = '';
-  syncCustomDatesDraft();
 }
 
 export function hydrateCustomDates(dates) {
