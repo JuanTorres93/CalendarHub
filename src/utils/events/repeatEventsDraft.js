@@ -35,15 +35,10 @@ export function updateRepeatDraft(field, value) {
     return;
   }
 
-  if (!globalEventState.repeatForm) {
-    globalEventState.repeatForm = {};
-  }
-
   if (!globalEventState.repeat) {
     globalEventState.repeat = {};
   }
 
-  globalEventState.repeatForm[field] = value;
   globalEventState.repeat[field] = value;
 
   const repeatProps = {

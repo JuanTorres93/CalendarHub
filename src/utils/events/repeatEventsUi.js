@@ -45,11 +45,6 @@ export const unitlDateDefault = (type, currentDate) => {
     dateDisplayed = formatDate(month);
     untilText.innerText = dateDisplayed;
 
-    globalEventState.repeatForm = {
-      ...globalEventState.repeatForm,
-      until: month,
-    };
-
     globalEventState.repeat = {
       ...globalEventState.repeat,
       until: month,
@@ -63,10 +58,6 @@ export const unitlDateDefault = (type, currentDate) => {
 
     globalEventState.repeat = {
       ...globalEventState.repeat,
-      until: currentDate,
-    };
-    globalEventState.repeatForm = {
-      ...globalEventState.repeatForm,
       until: currentDate,
     };
 
@@ -89,7 +80,6 @@ export function updateUntilUIAndDraft(date) {
     untilText.innerText = dateDisplayed;
 
     globalEventState.repeat.until = date;
-    globalEventState.repeatForm.until = date;
 
     updateRepeatDraft('until', date);
   }
