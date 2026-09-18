@@ -15,11 +15,7 @@ import createCaroseul, {
   renderIconsList,
   renderNotificationList,
 } from '../utils/events/createLists.js';
-import {
-  eventDraft,
-  globalEventState,
-  timeDraft,
-} from '../utils/events/eventDraft.js';
+import { eventDraft, globalEventState } from '../utils/events/eventDraft.js';
 import { renderEvents } from '../utils/events/eventRendering.js';
 import { formatDate } from '../utils/events/eventsUI.js';
 import { createMessage } from '../utils/helpers/createElement.js';
@@ -196,10 +192,9 @@ export function resetEventModal() {
   toMinuteInput.value = '';
   notificationList.style.left = '';
   notificationBtn.innerText = '5 minuti prima';
-  timeDraft.from.hour = '';
-  timeDraft.from.minute = '';
-  timeDraft.to.hour = '';
-  timeDraft.to.minute = '';
+
+  globalEventState.from = '';
+  globalEventState.to = '';
 }
 
 const renderModeTextInfo = (mode, eventTitle) => {
@@ -333,13 +328,25 @@ function inputTimeHelper(caseType, input, classType) {
     input.value = '';
     return;
   }
-  timeDraft[classType][caseType] = time;
 
-  const current = timeDraft[classType];
-  if (current.hour !== '' && current.minute !== '') {
-    const finalTime = `${current.hour}:${current.minute}`;
+  input.value = time;
 
-    globalEventState[classType] = finalTime;
+  const isFrom = classType === 'from';
+  const hour =
+    caseType === 'hour'
+      ? time
+      : isFrom
+        ? fromHourInput.value
+        : toHourInput.value;
+  const minute =
+    caseType === 'minute'
+      ? time
+      : isFrom
+        ? fromMinuteInput.value
+        : toMinuteInput.value;
+
+  if (hour !== '' && minute !== '') {
+    globalEventState[classType] = `${hour}:${minute}`;
   }
 }
 
@@ -360,8 +367,6 @@ function inputTimeReader() {
 
 function applySelectedTime(type, time) {
   setTimeUIAndDraft(type, time);
-
-  globalEventState[type] = time;
 }
 
 function closeModal() {
