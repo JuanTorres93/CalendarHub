@@ -47,22 +47,10 @@ function bindNavEvents() {
     openMiniCalendar('normal', null, 'normal', e.currentTarget),
   );
 
-  weekBtn.addEventListener('click', () => {
-    const allEvents = getAllRenderableEvents();
-
-    renderWeeklyEvents(allEvents);
-    isNow();
-  });
-
-  dayBtn.addEventListener('click', () => {
-    const allEvents = getAllRenderableEvents();
-
-    renderDailyEvents(allEvents);
-    isNow();
-  });
   reset.addEventListener('click', function () {
     calendarLogic.setDate(dayjs());
   });
+
   newTodoBtn.addEventListener('click', () => {
     openTodo(calendarLogic.date.format('YYYY-MM-DD'));
   });

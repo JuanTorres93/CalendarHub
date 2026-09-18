@@ -995,6 +995,72 @@ describe('Repeated events generation', () => {
   }
 });
 
+describe('Event rendering', () => {
+  it('should render events in the week view when clicking the week button', async () => {
+    seedEvents([
+      createBaseEvent({
+        id: 'evt-week',
+        title: 'Week event',
+        date: '2026-09-15',
+      }),
+    ]);
+
+    await user.click(screen.getByTestId('week-button'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('week-view')).toHaveClass('show-section'),
+    );
+
+    const dayColumn = document.querySelector(
+      '.day-name[data-day="2026-09-15"]',
+    );
+    const timedEvent = dayColumn.querySelector('.weekly-event');
+
+    expect(timedEvent).toBeInTheDocument();
+    expect(timedEvent).toHaveTextContent('Week event');
+    expect(timedEvent.querySelector('.render-time')).toHaveTextContent('10:00');
+  });
+
+  it('should render events in the day view when clicking the day button', async () => {
+    seedEvents([
+      createBaseEvent({
+        id: 'evt-day',
+        title: 'Day event',
+        date: '2026-09-14',
+      }),
+    ]);
+
+    await user.click(screen.getByTestId('day-button'));
+    await vi.waitFor(() =>
+      expect(screen.getByTestId('day-view')).toHaveClass('show-section'),
+    );
+
+    const dailyEvent = document.querySelector('.day-structure .daily-event');
+
+    expect(dailyEvent).toBeInTheDocument();
+    expect(dailyEvent).toHaveTextContent('Day event');
+    expect(dailyEvent.querySelector('.render-time')).toHaveTextContent('10:00');
+  });
+
+  it('should render events in the month view after re-syncing the calendar', async () => {
+    seedEvents([
+      createBaseEvent({
+        id: 'evt-month',
+        title: 'Month event',
+        date: '2026-09-14',
+      }),
+    ]);
+
+    await user.click(screen.getByTestId('next-month-button'));
+    await user.click(screen.getByTestId('previous-month-button'));
+
+    const eventEl = within(screen.getByTestId('day-box-2026-09-14')).getByTestId(
+      'monthly-event-evt-month',
+    );
+    expect(eventEl).toBeInTheDocument();
+    expect(eventEl).toHaveTextContent('Month event');
+  });
+});
+
 describe('Event repeat modes', () => {
   it('should save a weekly repeat with the selected weekdays', async () => {
     await openRepeatModal();
@@ -1365,6 +1431,10 @@ async function seedAndRender(events) {
 
   const { renderEvents } = await import('../utils/events/eventRendering.js');
   renderEvents();
+}
+
+function seedEvents(events) {
+  localStorage.setItem('calendarEvents', JSON.stringify(events));
 }
 
 async function openEventForm(dayTestId = 'day-box-2026-09-14') {

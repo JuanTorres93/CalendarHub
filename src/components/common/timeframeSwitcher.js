@@ -1,6 +1,10 @@
 import { TIMEFRAMES, ITALIAN_WORDS } from '../../utils/config/config.js';
 import { viewSwitcher } from '../../utils/helpers/viewSwitcher.js';
-import { getAllRenderableEvents } from '../../utils/events/eventRendering.js';
+import {
+  getAllRenderableEvents,
+  renderWeeklyEvents,
+} from '../../utils/events/eventRendering.js';
+import { renderDailyEvents } from '../../utils/events/eventRendering.js';
 import { isNow } from '../../utils/isNow.js';
 
 export default function createTimeframeSwitcher() {
@@ -30,6 +34,14 @@ function switchTimeframeView(timeframe) {
   viewSwitcher.switchView(timeframes[timeframe].viewIndex);
 
   if (timeframe === TIMEFRAMES.month) return;
+
+  const allEvents = getAllRenderableEvents();
+
+  if (timeframe === TIMEFRAMES.week) renderWeeklyEvents(allEvents);
+
+  if (timeframe === TIMEFRAMES.day) renderDailyEvents(allEvents);
+
+  isNow();
 }
 
 const timeframes = {
