@@ -4,6 +4,7 @@ import { openMiniCalendar } from './miniCalendar/miniCalendar.js';
 import { calendarLogic } from './calendarLogic.js';
 import { openTodo } from './to-do-list/toDo.js';
 import { resetTutorial } from './tutorial.js';
+import { viewSwitcher } from './utils/helpers/viewSwitcher.js';
 import {
   renderDailyEvents,
   renderWeeklyEvents,
@@ -25,26 +26,16 @@ import {
   currentYearDisplay,
 } from './utils/helpers/dom/mainCalendarDom.js';
 
-let currentState = 0;
-
-function switchView(index) {
-  const gridView = [monthView, weekView, dayView];
-  const overlays = [...displayOverlays];
-  if (currentState !== index) {
-    gridView.forEach((view, i) =>
-      view.classList.toggle('show-section', i === index),
-    );
-    overlays.forEach((ov, i) =>
-      ov.classList.toggle('show-display', i === index),
-    );
-    currentState = index;
-  }
-}
+viewSwitcher.init({
+  monthView,
+  weekView,
+  dayView,
+  displayOverlays,
+  displayOverlayMonth,
+});
 
 function initDefaultView() {
-  currentState = 0;
-  monthView.classList.add('show-section');
-  displayOverlayMonth.classList.add('show-display');
+  viewSwitcher.initDefaultView();
 }
 
 function bindNavEvents() {
@@ -56,20 +47,16 @@ function bindNavEvents() {
     openMiniCalendar('normal', null, 'normal', e.currentTarget),
   );
 
-  monthBtn.addEventListener('click', () => {
-    switchView(0);
-  });
-
   weekBtn.addEventListener('click', () => {
-    switchView(1);
     const allEvents = getAllRenderableEvents();
+
     renderWeeklyEvents(allEvents);
     isNow();
   });
 
   dayBtn.addEventListener('click', () => {
-    switchView(2);
     const allEvents = getAllRenderableEvents();
+
     renderDailyEvents(allEvents);
     isNow();
   });
