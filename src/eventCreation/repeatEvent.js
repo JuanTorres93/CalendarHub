@@ -19,7 +19,7 @@ import {
   initCustomDateRemoval,
   clearDatesStates,
 } from './repeatcustomDates.js';
-import { globalEventState } from '../utils/events/eventFormState.js';
+import { eventFormState } from '../utils/events/eventFormState.js';
 import { hydrateCustomDates } from './repeatcustomDates.js';
 import { Repeat } from '../domain/value-objets/Repeat/Repeat.js';
 import dayjs from '../day.js';
@@ -72,7 +72,7 @@ function repeatModalUiState(state) {
       untilContainer.classList.add('show-repeat-section');
       break;
     case 'weekly':
-      globalEventState.repeat.weekdays = [...selectedDays];
+      eventFormState.repeat.weekdays = [...selectedDays];
 
       removeClassHelper(sections);
       intervalContainer.classList.add('show-repeat-section');
@@ -85,7 +85,7 @@ function repeatModalUiState(state) {
       untilContainer.classList.add('show-repeat-section');
       break;
     case 'custom':
-      globalEventState.repeat.customDates = getStoredCustomDates();
+      eventFormState.repeat.customDates = getStoredCustomDates();
 
       removeClassHelper(sections);
       customContainer.classList.add('show-repeat-section');
@@ -96,7 +96,7 @@ function repeatModalUiState(state) {
 export function rehydrateRepeatModal() {
   editMode = true;
 
-  const repeatDraftInfo = globalEventState.repeat;
+  const repeatDraftInfo = eventFormState.repeat;
   if (repeatDraftInfo === null) return;
 
   initRepeatDraft(
@@ -124,11 +124,11 @@ export function rehydrateRepeatModal() {
 
   hydrateCustomDates(repeatDraftInfo.customDates);
 
-  globalEventState.repeat.type = repeatDraftInfo.type;
-  globalEventState.repeat.interval = repeatDraftInfo.interval;
-  globalEventState.repeat.weekdays = [...repeatDraftInfo.weekdays];
-  globalEventState.repeat.until = repeatDraftInfo.until;
-  globalEventState.repeat.exceptions = [...repeatDraftInfo.exceptions];
+  eventFormState.repeat.type = repeatDraftInfo.type;
+  eventFormState.repeat.interval = repeatDraftInfo.interval;
+  eventFormState.repeat.weekdays = [...repeatDraftInfo.weekdays];
+  eventFormState.repeat.until = repeatDraftInfo.until;
+  eventFormState.repeat.exceptions = [...repeatDraftInfo.exceptions];
 
   selectedDays = [...repeatDraftInfo.weekdays];
 }
@@ -215,23 +215,23 @@ function saveRepeatEvent() {
 
   const seriesId = crypto.randomUUID();
 
-  const currentFromDraft = globalEventState.repeat;
+  const currentFromDraft = eventFormState.repeat;
 
   if (currentFromDraft) {
-    globalEventState.repeat = {
+    eventFormState.repeat = {
       ...currentFromDraft,
       seriesId,
     };
   }
 
-  globalEventState.repeat = {
-    ...globalEventState.repeat,
+  eventFormState.repeat = {
+    ...eventFormState.repeat,
     seriesId,
   };
 
   Repeat.create({
-    ...defaultRepeatFormProps(globalEventState.date),
-    ...globalEventState.repeat,
+    ...defaultRepeatFormProps(eventFormState.date),
+    ...eventFormState.repeat,
   });
 
   closeRepeatEvent();
@@ -265,8 +265,8 @@ export function initRepeatEvents() {
     (li) => {
       repeatUiState = li.dataset.repeatType;
 
-      globalEventState.repeat = {
-        ...globalEventState.repeat,
+      eventFormState.repeat = {
+        ...eventFormState.repeat,
         type: li.dataset.repeatType,
       };
 
@@ -274,11 +274,11 @@ export function initRepeatEvents() {
 
       initRepeatDraft(repeatUiState, date);
 
-      intervalInput.value = globalEventState.repeat.interval;
+      intervalInput.value = eventFormState.repeat.interval;
       modeBtn.innerText = li.innerText;
 
       repeatModalUiState(repeatUiState);
-      updateIntervaltext(repeatUiState, globalEventState.repeat.interval);
+      updateIntervaltext(repeatUiState, eventFormState.repeat.interval);
     },
     'show-mode-list',
   );
@@ -286,13 +286,13 @@ export function initRepeatEvents() {
   intervalInput.addEventListener('change', () => {
     const newValue = Number(intervalInput.value);
     if (!intervalInputValidator(repeatUiState, newValue)) {
-      intervalInput.value = globalEventState.repeat.interval;
+      intervalInput.value = eventFormState.repeat.interval;
       return;
     }
 
-    globalEventState.repeat.interval = newValue;
+    eventFormState.repeat.interval = newValue;
 
-    updateIntervaltext(repeatUiState, globalEventState.repeat.interval);
+    updateIntervaltext(repeatUiState, eventFormState.repeat.interval);
   });
 
   dayOfWeekList.addEventListener('click', (e) => {
@@ -310,7 +310,7 @@ export function initRepeatEvents() {
       }
     }
 
-    globalEventState.repeat.weekdays = [...selectedDays];
+    eventFormState.repeat.weekdays = [...selectedDays];
 
     updateRepeatDraft('weekdays', selectedDays);
   });
@@ -319,7 +319,7 @@ export function initRepeatEvents() {
     if (editMode) {
       const untilDateRestored = unitlDateDefault(
         'edit',
-        globalEventState.repeat.until,
+        eventFormState.repeat.until,
       );
       openMiniCalendar('event', untilDateRestored, 'repeat-until');
     } else {

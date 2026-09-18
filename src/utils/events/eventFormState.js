@@ -1,3 +1,3 @@
-export const globalEventState = {
+export const eventFormState = {
   mode: 'create',
 };

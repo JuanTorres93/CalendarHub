@@ -15,7 +15,7 @@ import createCaroseul, {
   renderIconsList,
   renderNotificationList,
 } from '../utils/events/createLists.js';
-import { globalEventState } from '../utils/events/eventFormState.js';
+import { eventFormState } from '../utils/events/eventFormState.js';
 import { renderEvents } from '../utils/events/eventRendering.js';
 import { formatDate } from '../utils/events/eventsUI.js';
 import { createMessage } from '../utils/helpers/createElement.js';
@@ -155,10 +155,10 @@ function classRemovalHelper(sections) {
 }
 
 export function resetEventModal() {
-  globalEventState.mode = 'create';
-  delete globalEventState.date;
-  delete globalEventState.notification;
-  delete globalEventState.allDay;
+  eventFormState.mode = 'create';
+  delete eventFormState.date;
+  delete eventFormState.notification;
+  delete eventFormState.allDay;
 
   editingEventId = null;
   editingMotherEventId = null;
@@ -193,10 +193,10 @@ export function resetEventModal() {
   notificationList.style.left = '';
   notificationBtn.innerText = '5 minuti prima';
 
-  globalEventState.from = '';
-  globalEventState.to = '';
+  eventFormState.from = '';
+  eventFormState.to = '';
 
-  globalEventState.repeat = null;
+  eventFormState.repeat = null;
 }
 
 const renderModeTextInfo = (mode, eventTitle) => {
@@ -227,7 +227,7 @@ export function preCompiler(e) {
   const { date, time } = getData(e);
   const endTime = dayjs(time, 'HH:mm').add(1, 'hour').format('HH:mm');
 
-  globalEventState.date = date;
+  eventFormState.date = date;
 
   header.firstElementChild.textContent = formatDate(date);
   header.firstElementChild.dataset.day = date;
@@ -236,24 +236,24 @@ export function preCompiler(e) {
   setTimeUIAndDraft('from', time);
   setTimeUIAndDraft('to', endTime);
 
-  renderModeTextInfo(globalEventState.mode);
+  renderModeTextInfo(eventFormState.mode);
 }
 
 export function preCompilerEdit(event, mode) {
-  globalEventState.mode = mode;
+  eventFormState.mode = mode;
 
-  globalEventState.title = event.title;
-  globalEventState.description = event.description;
-  globalEventState.date = event.date;
-  globalEventState.from = event.from;
-  globalEventState.to = event.to;
-  globalEventState.icon = event.icon;
-  globalEventState.color = event.color;
-  globalEventState.urgent = event.urgent;
-  globalEventState.allDay = event.allDay;
-  globalEventState.notification = event.notification;
+  eventFormState.title = event.title;
+  eventFormState.description = event.description;
+  eventFormState.date = event.date;
+  eventFormState.from = event.from;
+  eventFormState.to = event.to;
+  eventFormState.icon = event.icon;
+  eventFormState.color = event.color;
+  eventFormState.urgent = event.urgent;
+  eventFormState.allDay = event.allDay;
+  eventFormState.notification = event.notification;
 
-  renderModeTextInfo(globalEventState.mode, event.title);
+  renderModeTextInfo(eventFormState.mode, event.title);
 
   const updateEventEntityProps = {};
 
@@ -267,11 +267,11 @@ export function preCompilerEdit(event, mode) {
   });
 
   const combinedEventProps = {
-    ...globalEventState,
+    ...eventFormState,
     ...updateEventEntityProps,
   };
   Object.entries(combinedEventProps).forEach(([key, value]) => {
-    globalEventState[key] = value;
+    eventFormState[key] = value;
   });
 
   editingEventId = event.id;
@@ -283,7 +283,7 @@ export function preCompilerEdit(event, mode) {
       : event.id;
     editingOccurrenceDate = event.date;
 
-    globalEventState.repeat = null;
+    eventFormState.repeat = null;
   }
 
   if (mode === 'edit-series') {
@@ -355,7 +355,7 @@ function inputTimeHelper(caseType, input, classType) {
         : toMinuteInput.value;
 
   if (hour !== '' && minute !== '') {
-    globalEventState[classType] = `${hour}:${minute}`;
+    eventFormState[classType] = `${hour}:${minute}`;
   }
 }
 
@@ -409,11 +409,11 @@ export function initEventFormEvents() {
     iconsList,
     '.icon-list-item',
     (li) => {
-      globalEventState.icon = li.innerText;
+      eventFormState.icon = li.innerText;
 
       iconBtn.innerText = li.innerText;
 
-      globalEventState.icon = li.innerText;
+      eventFormState.icon = li.innerText;
     },
     'show-icons-list',
   );
@@ -425,12 +425,12 @@ export function initEventFormEvents() {
   inputTitle.addEventListener('change', () => {
     title = inputTitle.value;
 
-    globalEventState.title = title;
+    eventFormState.title = title;
   });
   inputDesc.addEventListener('change', () => {
     desc = inputDesc.value;
 
-    globalEventState.description = desc;
+    eventFormState.description = desc;
   });
   categoryBtn.addEventListener('click', () => {
     colorLists.classList.toggle('show-color-list');
@@ -440,11 +440,11 @@ export function initEventFormEvents() {
     colorLists,
     '.color',
     (li) => {
-      globalEventState.color = li.dataset.color;
+      eventFormState.color = li.dataset.color;
 
       colorPreview.style.backgroundColor = li.dataset.color;
 
-      globalEventState.color = li.dataset.color;
+      eventFormState.color = li.dataset.color;
     },
     'show-color-list',
   );
@@ -452,7 +452,7 @@ export function initEventFormEvents() {
   urgentBtn.addEventListener('click', () => {
     const isChecked = urgentCheckBox.classList.toggle('checked');
 
-    globalEventState.urgent = isChecked;
+    eventFormState.urgent = isChecked;
   });
 
   miniCalendarBtn.addEventListener('click', () => {
@@ -464,7 +464,7 @@ export function initEventFormEvents() {
   allDayBtn.addEventListener('click', () => {
     const isChecked = allDayCheckBox.classList.toggle('checked');
 
-    globalEventState.allDay = isChecked;
+    eventFormState.allDay = isChecked;
 
     if (isChecked) {
       timeSelectionContainer.classList.add('hide-time-section');
@@ -479,7 +479,7 @@ export function initEventFormEvents() {
     const isOpen = listedTimeFrom.classList.toggle('show-menù');
 
     if (isOpen) {
-      const targetTime = globalEventState.from;
+      const targetTime = eventFormState.from;
       const target = nowTarget(
         listedTimeFrom.querySelectorAll('.list-item'),
         null,
@@ -493,7 +493,7 @@ export function initEventFormEvents() {
     const isOpen = listedTimeTo.classList.toggle('show-menù');
 
     if (isOpen) {
-      const targetTime = globalEventState.to;
+      const targetTime = eventFormState.to;
       const target = nowTarget(
         listedTimeTo.querySelectorAll('.list-item'),
         null,
@@ -536,7 +536,7 @@ export function initEventFormEvents() {
     notificationList,
     '.single-notification',
     (li) => {
-      globalEventState.notification = toDomainNotification(li.innerText);
+      eventFormState.notification = toDomainNotification(li.innerText);
 
       notificationBtn.innerText = li.innerText;
     },
@@ -548,22 +548,22 @@ export function initEventFormEvents() {
 
     const createEventProps = {
       ...eventFormProps,
-      ...globalEventState,
+      ...eventFormState,
     };
 
     let feedbackMessage = '';
 
     try {
-      if (globalEventState.mode === 'create') {
+      if (eventFormState.mode === 'create') {
         AppCreateEventUsecase.execute(createEventProps);
-      } else if (globalEventState.mode === 'edit') {
+      } else if (eventFormState.mode === 'edit') {
         AppUpdateEventUsecase.execute({
           id: editingEventId,
           eventRawProps: createEventProps,
         });
 
         feedbackMessage = "l'evento è stato modificato!";
-      } else if (globalEventState.mode === 'edit-single-occurrence') {
+      } else if (eventFormState.mode === 'edit-single-occurrence') {
         AppUpdateSingleEventOccurrenceUsecase.execute({
           motherEventId: editingMotherEventId,
           occurrenceDate: editingOccurrenceDate,
@@ -571,7 +571,7 @@ export function initEventFormEvents() {
         });
 
         feedbackMessage = "l'occorrenza è stata modificata!";
-      } else if (globalEventState.mode === 'edit-series') {
+      } else if (eventFormState.mode === 'edit-series') {
         AppUpdateEventSeriesUsecase.execute({
           id: editingEventId,
           originalRepeat: originalRepeatSnapshot,

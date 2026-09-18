@@ -1,4 +1,4 @@
-import { globalEventState } from '../events/eventFormState';
+import { eventFormState } from '../events/eventFormState';
 
 const fromHourInput = document.querySelector('.input-hour.from');
 const fromMinuteInput = document.querySelector('.input-minute.from');
@@ -33,5 +33,5 @@ export function setTimeUIAndDraft(type, time) {
     toMinuteInput.value = minute;
   }
 
-  globalEventState[type] = time;
+  eventFormState[type] = time;
 }
