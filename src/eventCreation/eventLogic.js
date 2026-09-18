@@ -15,7 +15,7 @@ import createCaroseul, {
   renderIconsList,
   renderNotificationList,
 } from '../utils/events/createLists.js';
-import { globalEventState } from '../utils/events/eventDraft.js';
+import { globalEventState } from '../utils/events/eventFormState.js';
 import { renderEvents } from '../utils/events/eventRendering.js';
 import { formatDate } from '../utils/events/eventsUI.js';
 import { createMessage } from '../utils/helpers/createElement.js';

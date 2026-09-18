@@ -12,7 +12,7 @@ import { overlay } from '../calendarSync.js';
 import dayjs from '../day.js';
 import { validateAndReturnCustomDate } from '../eventCreation/repeatcustomDates.js';
 import { config } from '../utils/config/config.js';
-import { globalEventState } from '../utils/events/eventDraft.js';
+import { globalEventState } from '../utils/events/eventFormState.js';
 import { updateEventDateUI } from '../utils/events/eventsUI.js';
 import { updateUntilUIAndDraft } from '../utils/events/repeatEventsUi.js';
 import createElement from '../utils/helpers/createElement.js';

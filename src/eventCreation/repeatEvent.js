@@ -19,7 +19,7 @@ import {
   initCustomDateRemoval,
   clearDatesStates,
 } from './repeatcustomDates.js';
-import { globalEventState } from '../utils/events/eventDraft.js';
+import { globalEventState } from '../utils/events/eventFormState.js';
 import { hydrateCustomDates } from './repeatcustomDates.js';
 import { Repeat } from '../domain/value-objets/Repeat/Repeat.js';
 import dayjs from '../day.js';

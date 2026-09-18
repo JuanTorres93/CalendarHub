@@ -1,4 +1,4 @@
-import { globalEventState } from '../events/eventDraft';
+import { globalEventState } from '../events/eventFormState';
 
 const fromHourInput = document.querySelector('.input-hour.from');
 const fromMinuteInput = document.querySelector('.input-minute.from');

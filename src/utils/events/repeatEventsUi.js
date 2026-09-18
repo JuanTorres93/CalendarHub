@@ -1,7 +1,7 @@
 import { formatDate } from './eventsUI.js';
 import { createMessage } from '../helpers/createElement.js';
 import { updateRepeatDraft } from './repeatEventsDraft.js';
-import { globalEventState } from './eventDraft.js';
+import { globalEventState } from './eventFormState.js';
 import dateValidator from '../helpers/dateValidator.js';
 import dayjs from '../../day.js';
 import { header } from '../helpers/dom/eventModalDom.js';

@@ -3,7 +3,7 @@ import {
   customContainer,
   repeatContainer,
 } from '../helpers/dom/repeatModalDom.js';
-import { globalEventState } from './eventDraft.js';
+import { globalEventState } from './eventFormState.js';
 
 export const initRepeatDraft = (type, date) => {
   const props = {
