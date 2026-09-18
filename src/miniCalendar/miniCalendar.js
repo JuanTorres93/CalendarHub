@@ -18,13 +18,16 @@ import { updateUntilUIAndDraft } from '../utils/events/repeatEventsUi.js';
 import createElement from '../utils/helpers/createElement.js';
 import { initMonthList, initYearList } from './miniCalendarCarousels.js';
 
-import { displayOverlays } from '../utils/helpers/dom/mainCalendarDom.js';
-
 import { eventDateDiv } from '../utils/helpers/dom/eventModalDom.js';
 import createMonthGrid from '../components/features/calendar/monthGrid.js';
 
 let miniLocalDate = null;
 let miniCalendarCommitTarget = 'normal';
+let displayOverlays = [];
+
+export function initMiniCalendarDeps(deps) {
+  displayOverlays = deps.displayOverlays;
+}
 
 function syncMiniInputs() {
   if (!miniLocalDate) return;

@@ -1,30 +1,19 @@
-import dayjs from './day.js';
-import { isNow } from './utils/isNow.js';
-import { openMiniCalendar } from './miniCalendar/miniCalendar.js';
 import { calendarLogic } from './calendarLogic.js';
+import dayjs from './day.js';
 import { openTodo } from './to-do-list/toDo.js';
 import { resetTutorial } from './tutorial.js';
-import { viewSwitcher } from './utils/helpers/viewSwitcher.js';
 import {
-  renderDailyEvents,
-  renderWeeklyEvents,
-  getAllRenderableEvents,
-} from './utils/events/eventRendering.js';
-import {
-  monthBtn,
-  weekBtn,
-  dayBtn,
-  monthView,
-  weekView,
   dayView,
-  allOverlays,
-  displayOverlays,
   displayOverlayMonth,
-  resetBtn as reset,
+  displayOverlays,
+  monthView,
   newTodoBtn,
+  resetBtn as reset,
   tutorialBtn,
-  currentYearDisplay,
+  weekView,
 } from './utils/helpers/dom/mainCalendarDom.js';
+import { viewSwitcher } from './utils/helpers/viewSwitcher.js';
+import { initMiniCalendarDeps } from './miniCalendar/miniCalendar.js';
 
 viewSwitcher.init({
   monthView,
@@ -34,19 +23,13 @@ viewSwitcher.init({
   displayOverlayMonth,
 });
 
+initMiniCalendarDeps({ displayOverlays });
+
 function initDefaultView() {
   viewSwitcher.initDefaultView();
 }
 
 function bindNavEvents() {
-  allOverlays.forEach((overlayElement) => {
-    overlayElement.addEventListener('click', () => openMiniCalendar('normal'));
-  });
-
-  currentYearDisplay.addEventListener('click', (e) =>
-    openMiniCalendar('normal', null, 'normal', e.currentTarget),
-  );
-
   reset.addEventListener('click', function () {
     calendarLogic.setDate(dayjs());
   });

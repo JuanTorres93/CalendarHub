@@ -1,8 +1,11 @@
+import { openMiniCalendar } from '../../../miniCalendar/miniCalendar';
 import { TIMEFRAMES } from '../../../utils/config/config';
 
 export default function createCurrentTimeframeButton({ timeframe }) {
   const config = timeframeConfigs[timeframe];
   const button = document.createElement('button');
+
+  button.addEventListener('click', (e) => openMiniCalendar('normal'));
 
   button.className = ['big-numbers text', ...config.buttonExtraClasses]
     .filter(Boolean)
