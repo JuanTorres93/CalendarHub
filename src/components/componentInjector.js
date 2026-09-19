@@ -1,3 +1,5 @@
+import './modalOverlayInjector.js';
+import { replaceMarkers } from './markerReplacer.js';
 import createCurrentTimeframeDisplay from './navbar/currentTimeframeDisplay/currentTimeframeDisplay.js';
 import createLeftArrowButton from './navbar/currentTimeframeDisplay/leftArrowButton.js';
 import createRightArrowButton from './navbar/currentTimeframeDisplay/rightArrowButton.js';
@@ -37,37 +39,4 @@ const componentBuilders = {
   },
 };
 
-function findMarkers() {
-  const walker = document.createTreeWalker(
-    document.body,
-    NodeFilter.SHOW_COMMENT,
-    {
-      acceptNode(node) {
-        const value = node.nodeValue.trim();
-        return Object.keys(componentBuilders).some((marker) =>
-          value.startsWith(marker),
-        )
-          ? NodeFilter.FILTER_ACCEPT
-          : NodeFilter.FILTER_REJECT;
-      },
-    },
-  );
-
-  const markers = [];
-  while (walker.nextNode()) markers.push(walker.currentNode);
-  return markers;
-}
-
-function replaceMarkers() {
-  findMarkers().forEach((comment) => {
-    const parts = comment.nodeValue
-      .trim()
-      .split('||')
-      .map((part) => part.trim());
-    const marker = parts[0];
-
-    comment.replaceWith(componentBuilders[marker](parts));
-  });
-}
-
-replaceMarkers();
+replaceMarkers(componentBuilders);
