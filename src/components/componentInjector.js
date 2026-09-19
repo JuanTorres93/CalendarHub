@@ -1,11 +1,11 @@
-import createCurrentTimeframeDisplay from './common/currentTimeframeDisplay/currentTimeframeDisplay.js';
-import createLeftArrowButton from './common/currentTimeframeDisplay/leftArrowButton.js';
-import createRightArrowButton from './common/currentTimeframeDisplay/rightArrowButton.js';
-import createViewModeSwitcher from './common/timeframeSwitcher.js';
-import createTodayButton from './common/todayButton.js';
-import createTodoListButton from './common/todoListButton.js';
-import createTutorialButton from './common/tutorialButton.js';
-import createCurrentYearDisplay from './common/currentYearDisplay.js';
+import createCurrentTimeframeDisplay from './navbar/currentTimeframeDisplay/currentTimeframeDisplay.js';
+import createLeftArrowButton from './navbar/currentTimeframeDisplay/leftArrowButton.js';
+import createRightArrowButton from './navbar/currentTimeframeDisplay/rightArrowButton.js';
+import createViewModeSwitcher from './navbar/timeframeSwitcher.js';
+import createTodayButton from './navbar/todayButton.js';
+import createTodoListButton from './navbar/todoListButton.js';
+import createTutorialButton from './navbar/tutorialButton.js';
+import createCurrentYearDisplay from './navbar/currentYearDisplay.js';
 
 const componentBuilders = {
   replace_viewModeSwitcher() {

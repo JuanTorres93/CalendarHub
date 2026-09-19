@@ -388,6 +388,7 @@
         <div class="show-date" data-testid="event-date-display">
           <span data-day="" class="first-row-date"></span><span></span>
         </div>
+
         <div class="event-description">
           <div id="icons">
             <button
@@ -398,8 +399,10 @@
             >
               ✏️
             </button>
+
             <ul class="icons-list" data-testid="event-icon-list"></ul>
           </div>
+
           <div id="title-container">
             <input
               type="text"
@@ -410,8 +413,10 @@
               name="event-title"
             />
           </div>
+
           <div id="description-container">
             <p class="desc-text">Descrivi :</p>
+
             <button
               type="button"
               class="btn-description"
@@ -420,6 +425,7 @@
             >
               📃
             </button>
+
             <section
               class="description-area"
               data-testid="event-description-area"
@@ -439,7 +445,9 @@
         <div class="category-selector">
           <div class="category-container">
             <p class="desc-text">Categoria :</p>
+
             <div class="color-preview" data-testid="event-color-preview"></div>
+
             <button
               id="color-btn"
               type="button"
@@ -451,8 +459,10 @@
           </div>
 
           <ul class="color-list" data-testid="event-color-list"></ul>
+
           <div id="urgent-container">
             <p class="desc-text">Urgente :</p>
+
             <button
               id="urgent-btn"
               type="button"
@@ -496,6 +506,7 @@
         <div id="row-date">
           <div class="event-date">
             <p class="desc-text">Data :</p>
+
             <div class="date-icon">
               <button
                 type="button"
@@ -508,8 +519,10 @@
               </button>
             </div>
           </div>
+
           <div id="all-day">
             <p class="desc-text">Giornata Intera :</p>
+
             <button
               id="all-day-btn"
               type="button"
@@ -549,6 +562,7 @@
             </button>
           </div>
         </div>
+
         <div id="row-time">
           <div class="time-selection">
             <div id="da-time">
@@ -560,6 +574,7 @@
               >
                 ⌛
               </button>
+
               <div class="time-input-group from">
                 <input
                   type="text"
@@ -571,7 +586,9 @@
                   data-testid="event-from-hour-input"
                   name="event-from-hour"
                 />
+
                 <span class="time-separator" aria-hidden="true">:</span>
+
                 <input
                   type="text"
                   class="input-minute from"
@@ -583,6 +600,7 @@
                   name="event-from-minute"
                 />
               </div>
+
               <ul
                 class="interactive-time-list from"
                 data-testid="event-from-time-list"
@@ -598,6 +616,7 @@
               >
                 ⏳
               </button>
+
               <div class="time-input-group to">
                 <input
                   type="text"
@@ -609,7 +628,9 @@
                   data-testid="event-to-hour-input"
                   name="event-to-hour"
                 />
+
                 <span class="time-separator" aria-hidden="true">:</span>
+
                 <input
                   type="text"
                   class="input-minute to"
@@ -621,6 +642,7 @@
                   name="event-to-minute"
                 />
               </div>
+
               <ul
                 class="interactive-time-list to"
                 data-testid="event-to-time-list"
@@ -629,6 +651,7 @@
           </div>
           <div id="event-repeat">
             <p class="desc-text">Ripeti :</p>
+
             <button
               type="button"
               class="event-repeat-btn"
@@ -640,9 +663,11 @@
             </button>
           </div>
         </div>
+
         <div id="notification-row">
           <div class="notification-container">
             <div class="notification-icon">⏰</div>
+
             <button
               type="button"
               class="notification-button"
@@ -651,11 +676,13 @@
             >
               5 minuti prima
             </button>
+
             <ul
               class="notification-list"
               data-testid="event-notification-list"
             ></ul>
           </div>
+
           <div id="save-event">
             <button
               type="button"
@@ -666,6 +693,7 @@
               save
             </button>
           </div>
+
           <div id="close-event">
             <button
               type="button"
@@ -677,6 +705,7 @@
             </button>
           </div>
         </div>
+
         <section
           class="modal-repeat"
           role="dialog"
@@ -686,14 +715,17 @@
           <h2 id="repeat-modal-title" class="visually-hidden">
             Configura ripetizione evento
           </h2>
+
           <div class="repeat-mode-container">
             <p>Scegli tipo di ripetizione :</p>
+
             <button
               type="button"
               class="repeat-mode-btn"
               aria-label="Scegli tipo di ripetizione"
               data-testid="event-repeat-mode-button"
             ></button>
+
             <ul
               id="repeat-mode-options"
               class="repeat-mode-list"
@@ -729,9 +761,11 @@
               </li>
             </ul>
           </div>
+
           <div class="repeat-intervall-container">
             <div class="intervall-text-container">
               <p class="static-intervall-text">Intervallo :</p>
+
               <input
                 type="text"
                 placeholder="1"
@@ -743,6 +777,7 @@
                 name="event-repeat-interval"
               />
             </div>
+
             <p
               id="dynamic-interval-description"
               class="dinamic-interval-text"
@@ -751,17 +786,21 @@
               ogni 2 giorni
             </p>
           </div>
+
           <div class="weekly-repetion-container">
             <p>Ripeti il:</p>
+
             <ul
               class="weekly-repetion-list"
               aria-label="Giorni della settimana"
               data-testid="event-repeat-weekdays-list"
             ></ul>
           </div>
+
           <div class="end-repeat-event-container">
             <div class="open-miniCalendar-repeation-container">
               <p>Fino al:</p>
+
               <button
                 class="open-miniCalendar-repeation"
                 type="button"
@@ -772,6 +811,7 @@
                 📆
               </button>
             </div>
+
             <p
               class="end-repeation-event-date"
               aria-live="polite"
@@ -780,9 +820,11 @@
               5 Marzo 2026
             </p>
           </div>
+
           <div class="custom-dates-container">
             <div class="open-custom-date-container">
               <p>Date personalizzate:</p>
+
               <button
                 class="open-miniCalendar-custom-date"
                 type="button"
@@ -800,6 +842,7 @@
               data-testid="event-repeat-custom-dates-list"
             ></ul>
           </div>
+
           <div class="close-repeat">
             <button
               class="btn save-repeat"
@@ -809,6 +852,7 @@
             >
               salva
             </button>
+
             <button
               class="btn cls-repeat"
               type="button"
@@ -819,6 +863,7 @@
             </button>
           </div>
         </section>
+
         <div class="repeat-overlay" aria-hidden="true"></div>
       </form>
     </section>

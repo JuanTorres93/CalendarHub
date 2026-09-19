@@ -1,35 +1,29 @@
 import createMonthGrid from './components/features/calendar/monthGrid.js';
-import createWeekGrid from './week.js';
 import createDailyGrid from './daily.js';
+import createWeekGrid from './week.js';
 
-import dayjs from './day.js';
 import { calendarLogic } from './calendarLogic.js';
-import { config } from './utils/config/config.js';
+import dayjs from './day.js';
 import { handleOpenCreate } from './eventCreation/eventLogic.js';
-import { theme } from './utils/theme.js';
-import { renderEvents } from './utils/events/eventRendering.js';
 import { renderExtraInfo } from './eventCreation/infoBanner.js';
+import { getSelectedTodo } from './to-do-list/toDo.js';
 import { initRenderBadge } from './to-do-list/toDoBadgeRendering.js';
 import {
-  openContextualMenu,
   closeContextualMenu,
+  openContextualMenu,
 } from './to-do-list/todoBadgeActions.js';
-import { getSelectedTodo } from './to-do-list/toDo.js';
+import { config } from './utils/config/config.js';
+import { renderEvents } from './utils/events/eventRendering.js';
+import { theme } from './utils/theme.js';
 
 import {
+  currentDailyDisplay,
+  currentMonthDisplay,
+  currentWeekDisplay,
+  currentYearDisplay,
+  dayGrid,
   monthGrid,
   weekGrid,
-  dayGrid,
-  currentMonthDisplay,
-  currentYearDisplay,
-  currentWeekDisplay,
-  currentDailyDisplay,
-  leftArrowMonth,
-  leftArrowWeek,
-  leftArrowDay,
-  rightArrowDay,
-  rightArrowWeek,
-  rightArrowMonth,
 } from './utils/helpers/dom/mainCalendarDom.js';
 
 calendarLogic.init({
