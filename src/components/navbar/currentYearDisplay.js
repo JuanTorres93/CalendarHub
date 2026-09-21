@@ -1,5 +1,3 @@
-import { openMiniCalendar } from '../../miniCalendar/miniCalendar.js';
-
 export default function createCurrentYearDisplay() {
   const container = document.createElement('div');
 
@@ -13,9 +11,13 @@ export default function createCurrentYearDisplay() {
   button.setAttribute('aria-haspopup', 'dialog');
   button.setAttribute('data-testid', 'show-year-mini-calendar-button');
 
-  button.addEventListener('click', (e) =>
-    openMiniCalendar('normal', null, 'normal', e.currentTarget),
-  );
+  button.addEventListener('click', async (e) => {
+    const { openMiniCalendar } = await import(
+      '../../miniCalendar/miniCalendar.js'
+    );
+
+    openMiniCalendar('normal', null, 'normal', e.currentTarget);
+  });
 
   container.appendChild(button);
 

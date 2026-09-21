@@ -1,10 +1,5 @@
 import { eventFormState } from '../events/eventFormState';
 
-const fromHourInput = document.querySelector('.input-hour.from');
-const fromMinuteInput = document.querySelector('.input-minute.from');
-const toHourInput = document.querySelector('.input-hour.to');
-const toMinuteInput = document.querySelector('.input-minute.to');
-
 export const separateHourFromMinute = (time) => {
   const hour = time.slice(0, 2);
   const minute = time.slice(3, 5);
@@ -25,12 +20,12 @@ export function setTimeUIAndDraft(type, time) {
   const { hour, minute } = separateHourFromMinute(time);
 
   if (type === 'from') {
-    fromHourInput.value = hour;
-    fromMinuteInput.value = minute;
+    document.querySelector('.input-hour.from').value = hour;
+    document.querySelector('.input-minute.from').value = minute;
   }
   if (type === 'to') {
-    toHourInput.value = hour;
-    toMinuteInput.value = minute;
+    document.querySelector('.input-hour.to').value = hour;
+    document.querySelector('.input-minute.to').value = minute;
   }
 
   eventFormState[type] = time;

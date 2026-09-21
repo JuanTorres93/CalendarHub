@@ -1,4 +1,3 @@
-import "./modalOverlayInjector.js";
 import { replaceMarkers } from "./markerReplacer.js";
 import createMonthGrid from "./features/calendar/monthGrid.js";
 import createWeekGrid from "./features/calendar/weekGrid.js";
@@ -13,6 +12,7 @@ import createTodoListButton from "./navbar/todoListButton.js";
 import createTutorialButton from "./navbar/tutorialButton.js";
 import createCurrentYearDisplay from "./navbar/currentYearDisplay.js";
 import createTodoPanel from "./features/todo/todoPanel/TodoPanel.js";
+import createEventModal from "./features/event/EventModal.js";
 
 const componentBuilders = {
   replace_viewModeSwitcher() {
@@ -53,6 +53,9 @@ const componentBuilders = {
   },
   replace_todoPanel() {
     return createTodoPanel();
+  },
+  replace_eventModal() {
+    return createEventModal();
   },
 };
 
