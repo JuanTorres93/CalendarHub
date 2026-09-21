@@ -13,8 +13,21 @@ export function createHourCell({ type, time, halfTime, extraClasses = [] }) {
   halfHourCell.className = `${type}-half-box`;
   halfHourCell.setAttribute('data-time', halfTime);
 
+  if (type === 'week') {
+    hourCell.addEventListener('click', handleWeekCellClick);
+
+    halfHourCell.addEventListener('click', handleWeekCellClick);
+  }
+
   fragment.appendChild(hourCell);
   fragment.appendChild(halfHourCell);
 
   return fragment;
+}
+
+async function handleWeekCellClick(e) {
+  const { handleOpenCreate } =
+    await import('../../../eventCreation/eventLogic.js');
+
+  handleOpenCreate(e);
 }

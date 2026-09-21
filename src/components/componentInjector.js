@@ -1,15 +1,16 @@
-import './modalOverlayInjector.js';
-import { replaceMarkers } from './markerReplacer.js';
-import createMonthGrid from './features/calendar/monthGrid.js';
-import { calendarLogic } from '../calendarLogic.js';
-import createCurrentTimeframeDisplay from './navbar/currentTimeframeDisplay/currentTimeframeDisplay.js';
-import createLeftArrowButton from './navbar/currentTimeframeDisplay/leftArrowButton.js';
-import createRightArrowButton from './navbar/currentTimeframeDisplay/rightArrowButton.js';
-import createViewModeSwitcher from './navbar/timeframeSwitcher.js';
-import createTodayButton from './navbar/todayButton.js';
-import createTodoListButton from './navbar/todoListButton.js';
-import createTutorialButton from './navbar/tutorialButton.js';
-import createCurrentYearDisplay from './navbar/currentYearDisplay.js';
+import "./modalOverlayInjector.js";
+import { replaceMarkers } from "./markerReplacer.js";
+import createMonthGrid from "./features/calendar/monthGrid.js";
+import createWeekGrid from "./features/calendar/weekGrid.js";
+import { calendarLogic } from "../calendarLogic.js";
+import createCurrentTimeframeDisplay from "./navbar/currentTimeframeDisplay/currentTimeframeDisplay.js";
+import createLeftArrowButton from "./navbar/currentTimeframeDisplay/leftArrowButton.js";
+import createRightArrowButton from "./navbar/currentTimeframeDisplay/rightArrowButton.js";
+import createViewModeSwitcher from "./navbar/timeframeSwitcher.js";
+import createTodayButton from "./navbar/todayButton.js";
+import createTodoListButton from "./navbar/todoListButton.js";
+import createTutorialButton from "./navbar/tutorialButton.js";
+import createCurrentYearDisplay from "./navbar/currentYearDisplay.js";
 
 const componentBuilders = {
   replace_viewModeSwitcher() {
@@ -41,6 +42,9 @@ const componentBuilders = {
   },
   replace_monthGrid() {
     return createMonthGrid(calendarLogic.date);
+  },
+  replace_weekGrid() {
+    return createWeekGrid(calendarLogic.date);
   },
 };
 

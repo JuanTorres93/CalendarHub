@@ -88,6 +88,15 @@ function renderMonthEvents(allEvents) {
   });
 }
 
+function bindEventInfoClick(eventElement, enabled) {
+  if (!enabled) return;
+
+  eventElement.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openEventInfo(eventElement, e);
+  });
+}
+
 async function openEventInfo(eventElement, e) {
   const { renderExtraInfo } = await import("../../eventCreation/infoBanner.js");
 
@@ -167,6 +176,8 @@ function renderHelper(
       },
     );
 
+    bindEventInfoClick(eventElement, allDayClass === "week-allDay-event");
+
     createElement(eventElement, "all-event-start-text", "Oggi:", "span");
 
     const titleContainer = createElement(eventElement, null, "", "p");
@@ -185,6 +196,8 @@ function renderHelper(
     const eventElement = createElement(container, eventClass, "", "div", {
       dataset: { id: event.id },
     });
+
+    bindEventInfoClick(eventElement, eventClass === "weekly-event");
 
     if (event.isOccurrence) {
       createElement(eventElement, null, event.icon, "span");
