@@ -10,41 +10,6 @@ import { AppAddTodoToListUsecase } from '../interface-adapters/use-cases/AppAddT
 import { AppRenameTodoListUsecase } from '../interface-adapters/use-cases/AppRenameTodoListUsecase.js';
 import { AppToggleTodoCompletionUsecase } from '../interface-adapters/use-cases/AppToggleTodoCompletionUsecase.js';
 
-export function saveTodo(todos) {
-  if (!Array.isArray(todos)) {
-    createMessage(
-      'Salvataggio non riuscito: formato dei dati non valido.',
-      createList,
-      document.body,
-    );
-    return false;
-  }
-  const hasValidTodos = todos.every(isValidTodoList);
-
-  if (!hasValidTodos) {
-    createMessage(
-      'Salvataggio non riuscito: i dati della todo list non sono validi.',
-      createList,
-      document.body,
-    );
-    return false;
-  }
-
-  try {
-    localStorage.setItem('todoEvents', JSON.stringify(todos));
-    return true;
-  } catch (error) {
-    console.error('Failed to save Todo lists in localStorage:', error);
-    createMessage(
-      'Salvataggio non riuscito. Il browser non ha potuto memorizzare la Todo.',
-      createList,
-      document.body,
-    );
-
-    return false;
-  }
-}
-
 export function getTodoListsFromLocalStorage() {
   try {
     return AppGetAllTodoListsUsecase.execute();
@@ -85,4 +50,40 @@ function isValidTodoList(todo) {
   todo.items.every((item) => Todo.create(item));
 
   return true;
+}
+
+// Now unused, TODO: map italian error messages
+export function saveTodo(todos) {
+  if (!Array.isArray(todos)) {
+    createMessage(
+      'Salvataggio non riuscito: formato dei dati non valido.',
+      createList,
+      document.body,
+    );
+    return false;
+  }
+  const hasValidTodos = todos.every(isValidTodoList);
+
+  if (!hasValidTodos) {
+    createMessage(
+      'Salvataggio non riuscito: i dati della todo list non sono validi.',
+      createList,
+      document.body,
+    );
+    return false;
+  }
+
+  try {
+    localStorage.setItem('todoEvents', JSON.stringify(todos));
+    return true;
+  } catch (error) {
+    console.error('Failed to save Todo lists in localStorage:', error);
+    createMessage(
+      'Salvataggio non riuscito. Il browser non ha potuto memorizzare la Todo.',
+      createList,
+      document.body,
+    );
+
+    return false;
+  }
 }

@@ -12,6 +12,7 @@ import createTodayButton from "./navbar/todayButton.js";
 import createTodoListButton from "./navbar/todoListButton.js";
 import createTutorialButton from "./navbar/tutorialButton.js";
 import createCurrentYearDisplay from "./navbar/currentYearDisplay.js";
+import createTodoPanel from "./features/todo/todoPanel/TodoPanel.js";
 
 const componentBuilders = {
   replace_viewModeSwitcher() {
@@ -49,6 +50,9 @@ const componentBuilders = {
   },
   replace_dayGrid() {
     return createDailyGrid(calendarLogic.date);
+  },
+  replace_todoPanel() {
+    return createTodoPanel();
   },
 };
 
