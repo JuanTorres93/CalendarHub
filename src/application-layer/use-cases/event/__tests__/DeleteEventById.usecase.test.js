@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { LocalStorageEventsRepo } from '../../../infra/repos/LocalStorageEventsRepo/LocalStorageEventsRepo.js';
-import { Event } from '../../../domain/entities/event/Event.js';
+import { LocalStorageEventsRepo } from '../../../../infra/repos/LocalStorageEventsRepo/LocalStorageEventsRepo.js';
+import { Event } from '../../../../domain/entities/event/Event.js';
 
 import { DeleteEventByIdUsecase } from '../DeleteEventById.usecase.js';
-import { createTestEvent } from '../../../domain/entities/event/__tests__/eventTestProps.js';
+import { createTestEvent } from '../../../../domain/entities/event/__tests__/eventTestProps.js';
 
 describe('DeleteEventByIdUsecase', () => {
   let eventsRepo;

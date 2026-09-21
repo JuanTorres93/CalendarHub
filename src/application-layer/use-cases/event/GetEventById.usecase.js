@@ -1,12 +1,12 @@
-import { NotFoundDomainError } from '../../domain/common/domainErrors.js';
-import { DomainErrorCodes } from '../../domain/common/domainErrorCodes.js';
+import { NotFoundDomainError } from '../../../domain/common/domainErrors.js';
+import { DomainErrorCodes } from '../../../domain/common/domainErrorCodes.js';
 
-export class UpdateEventUsecase {
+export class GetEventByIdUsecase {
   constructor(eventsRepo) {
     this.eventsRepo = eventsRepo;
   }
 
-  execute({ id, eventRawProps }) {
+  execute({ id }) {
     const event = this.eventsRepo.getById(id);
 
     if (!event) {
@@ -15,10 +15,6 @@ export class UpdateEventUsecase {
         params: { id },
       });
     }
-
-    event.update(eventRawProps);
-
-    this.eventsRepo.save(event);
 
     return event;
   }

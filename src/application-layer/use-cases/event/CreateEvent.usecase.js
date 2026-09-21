@@ -1,4 +1,4 @@
-import { Event } from '../../domain/entities/event/Event.js';
+import { Event } from '../../../domain/entities/event/Event.js';
 
 export class CreateEventUsecase {
   constructor(eventsRepo, idGenerator) {

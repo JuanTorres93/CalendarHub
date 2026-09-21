@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { LocalStorageEventsRepo } from '../../../infra/repos/LocalStorageEventsRepo/LocalStorageEventsRepo.js';
-import { CryptoUUIDIdGenerator } from '../../../infra/services/CryptoUUIDIdGenerator/CryptoUUIDIdGenerator.js';
-import { Event } from '../../../domain/entities/event/Event.js';
-import { EVENT_TEST_PROPS } from '../../../domain/entities/event/__tests__/eventTestProps.js';
+import { LocalStorageEventsRepo } from '../../../../infra/repos/LocalStorageEventsRepo/LocalStorageEventsRepo.js';
+import { CryptoUUIDIdGenerator } from '../../../../infra/services/CryptoUUIDIdGenerator/CryptoUUIDIdGenerator.js';
+import { Event } from '../../../../domain/entities/event/Event.js';
+import { EVENT_TEST_PROPS } from '../../../../domain/entities/event/__tests__/eventTestProps.js';
 
 import { CreateEventUsecase } from '../CreateEvent.usecase.js';
 

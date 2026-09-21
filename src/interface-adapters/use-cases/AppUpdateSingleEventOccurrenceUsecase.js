@@ -1,4 +1,4 @@
-import { UpdateSingleEventOccurrenceUsecase } from '../../application-layer/use-cases/UpdateSingleEventOccurrence.usecase.js';
+import { UpdateSingleEventOccurrenceUsecase } from '../../application-layer/use-cases/event/UpdateSingleEventOccurrence.usecase.js';
 import { AppEventsRepo } from '../repos/AppEventsRepo.js';
 import { AppIdGenerator } from '../services/AppIdGenerator.js';
 

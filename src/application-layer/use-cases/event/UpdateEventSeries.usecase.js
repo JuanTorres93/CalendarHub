@@ -1,5 +1,5 @@
-import { NotFoundDomainError } from '../../domain/common/domainErrors.js';
-import { DomainErrorCodes } from '../../domain/common/domainErrorCodes.js';
+import { NotFoundDomainError } from '../../../domain/common/domainErrors.js';
+import { DomainErrorCodes } from '../../../domain/common/domainErrorCodes.js';
 
 export class UpdateEventSeriesUsecase {
   constructor(eventsRepo) {

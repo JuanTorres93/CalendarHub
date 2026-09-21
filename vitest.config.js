@@ -5,5 +5,7 @@ export default defineConfig({
     environment: 'jsdom',
 
     setupFiles: ['./tests/setup.js'],
+
+    exclude: ['**/node_modules/**', '**/.git/**', '.stpr/template/**'],
   },
 });

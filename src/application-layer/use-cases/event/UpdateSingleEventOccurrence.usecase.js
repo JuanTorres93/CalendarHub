@@ -1,6 +1,6 @@
-import { Event } from '../../domain/entities/event/Event.js';
-import { NotFoundDomainError } from '../../domain/common/domainErrors.js';
-import { DomainErrorCodes } from '../../domain/common/domainErrorCodes.js';
+import { Event } from '../../../domain/entities/event/Event.js';
+import { NotFoundDomainError } from '../../../domain/common/domainErrors.js';
+import { DomainErrorCodes } from '../../../domain/common/domainErrorCodes.js';
 
 export class UpdateSingleEventOccurrenceUsecase {
   constructor(eventsRepo, idGenerator) {

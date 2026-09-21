@@ -1,4 +1,4 @@
-import { CreateEventUsecase } from '../../application-layer/use-cases/CreateEvent.usecase.js';
+import { CreateEventUsecase } from '../../application-layer/use-cases/event/CreateEvent.usecase.js';
 import { AppEventsRepo } from '../repos/AppEventsRepo.js';
 import { AppIdGenerator } from '../services/AppIdGenerator.js';
 

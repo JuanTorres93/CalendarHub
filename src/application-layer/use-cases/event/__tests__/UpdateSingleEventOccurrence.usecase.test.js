@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { captureError } from '../../../../tests/testHelpers.js';
+import { captureError } from '../../../../../tests/testHelpers.js';
 
 
-import { LocalStorageEventsRepo } from '../../../infra/repos/LocalStorageEventsRepo/LocalStorageEventsRepo.js';
-import { CryptoUUIDIdGenerator } from '../../../infra/services/CryptoUUIDIdGenerator/CryptoUUIDIdGenerator.js';
-import { EVENT_TEST_PROPS } from '../../../domain/entities/event/__tests__/eventTestProps.js';
-import { createTestEvent } from '../../../domain/entities/event/__tests__/eventTestProps.js';
-import { NotFoundDomainError } from '../../../domain/common/domainErrors.js';
+import { LocalStorageEventsRepo } from '../../../../infra/repos/LocalStorageEventsRepo/LocalStorageEventsRepo.js';
+import { CryptoUUIDIdGenerator } from '../../../../infra/services/CryptoUUIDIdGenerator/CryptoUUIDIdGenerator.js';
+import { EVENT_TEST_PROPS } from '../../../../domain/entities/event/__tests__/eventTestProps.js';
+import { createTestEvent } from '../../../../domain/entities/event/__tests__/eventTestProps.js';
+import { NotFoundDomainError } from '../../../../domain/common/domainErrors.js';
 
 import { UpdateSingleEventOccurrenceUsecase } from '../UpdateSingleEventOccurrence.usecase.js';
 
