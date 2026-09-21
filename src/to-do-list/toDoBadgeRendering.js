@@ -4,43 +4,62 @@ import {
   dayGrid,
 } from "../utils/helpers/dom/mainCalendarDom.js";
 import { getTodoFromLocalStorage } from "./toDoStorage.js";
+import createElement from "../utils/helpers/createElement.js";
+import { openContextualMenu } from "./todoBadgeActions.js";
 
-function renderBadgeHelper(allTodo, dataDay, container) {
+function renderBadgeHelper(allTodo, dataDay, container, grid, dayCell) {
   const todoOfDay = allTodo.filter((todo) => todo.date === dataDay);
-  if (todoOfDay.length > 0) {
-    container.innerHTML = `<button type="button" class="todo-btn-header" data-testid="todo-badge-${dataDay}">
-                    <span class="todo-count">
-                    ${todoOfDay.length}
-                    </span>
-                    <span class="todo-icon">📜</span>
-                </button>
-                `;
-  } else {
-    container.innerHTML = "";
-  }
+
+  container.innerHTML = "";
+
+  if (todoOfDay.length === 0) return;
+
+  const badge = createElement(container, "todo-btn-header", null, "button", {
+    attributes: { type: "button", "data-testid": `todo-badge-${dataDay}` },
+  });
+
+  const count = document.createElement("span");
+  count.classList.add("todo-count");
+  count.textContent = todoOfDay.length;
+
+  const icon = document.createElement("span");
+  icon.classList.add("todo-icon");
+  icon.textContent = "📜";
+
+  badge.append(count, icon);
+
+  badge.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openContextualMenu(dataDay, container, grid, dayCell);
+  });
 }
 
 function renderBadgeInMonth(allTodo) {
   const todoContainer = monthGrid.querySelectorAll(".todo-container-month");
 
   todoContainer.forEach((container) => {
-    const dataDay = container.parentElement.parentElement.dataset.day;
-    renderBadgeHelper(allTodo, dataDay, container);
+    const dayCell = container.dayCell;
+    const dataDay = dayCell.dataset.day;
+
+    renderBadgeHelper(allTodo, dataDay, container, monthGrid, dayCell);
   });
 }
+
 function renderBadgeInWeek(allTodo) {
   const todoContainer = weekGrid.querySelectorAll(".week-todo-container");
 
   todoContainer.forEach((container) => {
     const dataDay = container.parentElement.parentElement.dataset.day;
-    renderBadgeHelper(allTodo, dataDay, container);
+
+    renderBadgeHelper(allTodo, dataDay, container, weekGrid);
   });
 }
 
 function renderBadgeDaily(allTodo) {
   const todoContainer = dayGrid.querySelector(".daily-todo-container");
   const dataDay = dayGrid.querySelector(".daily-header").dataset.day;
-  renderBadgeHelper(allTodo, dataDay, todoContainer);
+
+  renderBadgeHelper(allTodo, dataDay, todoContainer, dayGrid);
 }
 
 export function initRenderBadge() {

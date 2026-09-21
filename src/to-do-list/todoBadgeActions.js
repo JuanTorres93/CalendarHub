@@ -7,9 +7,17 @@ let todoMenuContext;
 
 function createItemsOfTodoMenu(items, father) {
   items.forEach((item) => {
-    createElement(father, "", item.title, "li", {
+    const menuItem = createElement(father, "", item.title, "li", {
       dataset: { id: item.id, action: "rehydrate-todo" },
       attributes: { "data-testid": `todo-menu-item-${item.id}` },
+    });
+
+    menuItem.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const { getSelectedTodo } = await import("./toDo.js");
+
+      getSelectedTodo(menuItem.dataset.id);
+      closeContextualMenu(todoMenuContext);
     });
   });
 }

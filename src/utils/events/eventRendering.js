@@ -1,7 +1,7 @@
-import { AppGetAllEventsUsecase } from '../../interface-adapters/use-cases/AppGetAllEventsUsecase.js';
-import { getRepeatedEvents } from '../../eventCreation/generateRepeatEvents.js';
-import createElement from '../helpers/createElement.js';
-import { timeToMinutes } from '../helpers/timeHelper.js';
+import { AppGetAllEventsUsecase } from "../../interface-adapters/use-cases/AppGetAllEventsUsecase.js";
+import { getRepeatedEvents } from "../../eventCreation/generateRepeatEvents.js";
+import createElement from "../helpers/createElement.js";
+import { timeToMinutes } from "../helpers/timeHelper.js";
 
 export function getAllRenderableEvents() {
   const eventsUpdated = AppGetAllEventsUsecase.execute();
@@ -19,15 +19,15 @@ export function renderEvents() {
 }
 
 function renderMonthEvents(allEvents) {
-  const monthlyBoxes = document.querySelectorAll('.box-grid');
+  const monthlyBoxes = document.querySelectorAll(".box-grid");
 
   monthlyBoxes.forEach((box) => {
-    const container = box.querySelector('.monthly-events-container');
-    const allDayContainer = box.querySelector('.event-allDay-container');
+    const container = box.querySelector(".monthly-events-container");
+    const allDayContainer = box.querySelector(".event-allDay-container");
     if (!container || !allDayContainer) return;
 
-    container.innerHTML = '';
-    allDayContainer.innerHTML = '';
+    container.innerHTML = "";
+    allDayContainer.innerHTML = "";
 
     const dataDay = box.dataset.day;
     const eventOfDay = allEvents.filter((event) => event.date === dataDay);
@@ -45,54 +45,65 @@ function renderMonthEvents(allEvents) {
       if (event.allDay) {
         eventElement = createElement(
           allDayContainer,
-          'monthly-event',
-          '',
-          'div',
+          "monthly-event",
+          "",
+          "div",
           {
             dataset: { id: event.id },
-            attributes: { 'data-testid': `monthly-event-${event.id}` },
+            attributes: { "data-testid": `monthly-event-${event.id}` },
           },
         );
 
-        createElement(eventElement, null, 'Oggi:', 'span');
+        createElement(eventElement, null, "Oggi:", "span");
 
-        createElement(eventElement, null, event.title, 'p');
+        createElement(eventElement, null, event.title, "p");
 
-        eventElement.classList.add('render-allDay');
+        eventElement.classList.add("render-allDay");
       } else {
-        eventElement = createElement(container, 'monthly-event', '', 'div', {
+        eventElement = createElement(container, "monthly-event", "", "div", {
           dataset: { id: event.id },
-          attributes: { 'data-testid': `monthly-event-${event.id}` },
+          attributes: { "data-testid": `monthly-event-${event.id}` },
         });
 
-        createElement(eventElement, 'icon-month', event.icon, 'span');
+        createElement(eventElement, "icon-month", event.icon, "span");
 
-        createElement(eventElement, 'title-month', event.title, 'span');
+        createElement(eventElement, "title-month", event.title, "span");
 
         if (event.isOccurrence) {
-          createElement(eventElement, 'repeat-icon', '🔗', 'small');
+          createElement(eventElement, "repeat-icon", "🔗", "small");
         }
       }
+
+      eventElement.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openEventInfo(eventElement, e);
+      });
 
       eventElement.classList.add(`event-${event.color}`);
 
       if (event.urgent) {
-        eventElement.classList.add('event-urgent');
+        eventElement.classList.add("event-urgent");
       }
     });
   });
 }
 
+async function openEventInfo(eventElement, e) {
+  const { renderExtraInfo } = await import("../../eventCreation/infoBanner.js");
+
+  renderExtraInfo(eventElement, e);
+}
+
 //ogni casella ha un'altezza coerente, ed equivale a 30 minuti, quindi ogni frazione di essa corrispondera ad un minuto
 export function renderDailyEvents(allEvents) {
-  const container = document.querySelector('.day-structure');
-  const allDayContainer = document.querySelector('.daily-allDay-container');
+  const container = document.querySelector(".day-structure");
+  const allDayContainer = document.querySelector(".daily-allDay-container");
 
-  container.querySelectorAll('.daily-event').forEach((event) => event.remove());
+  container.querySelectorAll(".daily-event").forEach((event) => event.remove());
   allDayContainer
-    .querySelectorAll('.daily-allDay-event')
+    .querySelectorAll(".daily-allDay-event")
     .forEach((event) => event.remove());
-  const dailybox = document.querySelector('.day-box');
+  const dailybox = document.querySelector(".day-box");
   const dataDay = dailybox.parentElement.dataset.day;
   const height = dailybox.getBoundingClientRect().height;
   renderHelper(
@@ -100,22 +111,22 @@ export function renderDailyEvents(allEvents) {
     container,
     allEvents,
     dataDay,
-    'daily-event',
+    "daily-event",
     allDayContainer,
-    'daily-allDay-event',
+    "daily-allDay-event",
   );
 }
 export function renderWeeklyEvents(allEvents) {
-  const containers = document.querySelectorAll('.day-name');
-  const allDayContainers = document.querySelectorAll('.week-all-day-container');
+  const containers = document.querySelectorAll(".day-name");
+  const allDayContainers = document.querySelectorAll(".week-all-day-container");
   const allDayContainer = [...allDayContainers];
-  allDayContainer.forEach((event) => (event.innerHTML = ''));
+  allDayContainer.forEach((event) => (event.innerHTML = ""));
   containers.forEach((container, index) => {
     container
-      .querySelectorAll('.weekly-event')
+      .querySelectorAll(".weekly-event")
       .forEach((event) => event.remove());
 
-    const weeklyBox = document.querySelector('.week-box');
+    const weeklyBox = document.querySelector(".week-box");
     const height = weeklyBox.getBoundingClientRect().height;
     const dataDay = container.dataset.day;
 
@@ -124,9 +135,9 @@ export function renderWeeklyEvents(allEvents) {
       container,
       allEvents,
       dataDay,
-      'weekly-event',
+      "weekly-event",
       allDayContainer[index],
-      'week-allDay-event',
+      "week-allDay-event",
     );
   });
 }
@@ -149,49 +160,49 @@ function renderHelper(
     const eventElement = createElement(
       allDayContainer,
       allDayClass,
-      '',
-      'div',
+      "",
+      "div",
       {
         dataset: { id: event.id },
       },
     );
 
-    createElement(eventElement, 'all-event-start-text', 'Oggi:', 'span');
+    createElement(eventElement, "all-event-start-text", "Oggi:", "span");
 
-    const titleContainer = createElement(eventElement, null, '', 'p');
+    const titleContainer = createElement(eventElement, null, "", "p");
 
-    createElement(titleContainer, null, event.icon, 'span');
+    createElement(titleContainer, null, event.icon, "span");
 
     titleContainer.appendChild(document.createTextNode(event.title));
 
     eventElement.classList.add(`event-${event.color}`);
 
     if (event.urgent) {
-      eventElement.classList.add('event-urgent');
+      eventElement.classList.add("event-urgent");
     }
   });
   timedEvents.forEach((event) => {
-    const eventElement = createElement(container, eventClass, '', 'div', {
+    const eventElement = createElement(container, eventClass, "", "div", {
       dataset: { id: event.id },
     });
 
     if (event.isOccurrence) {
-      createElement(eventElement, null, event.icon, 'span');
+      createElement(eventElement, null, event.icon, "span");
 
-      createElement(eventElement, null, event.title, 'span');
+      createElement(eventElement, null, event.title, "span");
 
-      createElement(eventElement, 'repeat-icon-alt', '🔗', 'small');
+      createElement(eventElement, "repeat-icon-alt", "🔗", "small");
     } else {
-      createElement(eventElement, 'render-time', event.from, 'span');
+      createElement(eventElement, "render-time", event.from, "span");
 
       const titleContainer = createElement(
         eventElement,
-        'render-title',
-        '',
-        'p',
+        "render-title",
+        "",
+        "p",
       );
 
-      createElement(titleContainer, null, event.icon, 'span');
+      createElement(titleContainer, null, event.icon, "span");
 
       titleContainer.appendChild(document.createTextNode(` ${event.title}`));
     }
@@ -224,7 +235,7 @@ function renderHelper(
     eventElement.style.left = `${left}%`;
 
     if (event.urgent) {
-      eventElement.classList.add('event-urgent');
+      eventElement.classList.add("event-urgent");
     }
   });
 }
