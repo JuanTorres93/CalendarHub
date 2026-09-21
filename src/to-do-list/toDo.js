@@ -37,6 +37,7 @@ import {
 import { createMessage } from '../utils/helpers/createElement.js';
 import { initRenderBadge } from './toDoBadgeRendering.js';
 import { handleOutsideContextualMenuClick } from './todoBadgeActions.js';
+import { createTodoItem } from '../components/features/todo/todoItem.js';
 
 const EMPTY_TODO_MESSAGE = 'Nessuna attività';
 let activeTodoList = null;
@@ -227,35 +228,7 @@ function handleTodoItemActions(e) {
 }
 
 function renderTodoItem(todoItem) {
-  const todoElement = document.createElement('article');
-  todoElement.className = 'todo-item';
-  todoElement.dataset.id = todoItem.id;
-  todoElement.setAttribute('data-testid', `todo-item-${todoItem.id}`);
-
-  todoElement.innerHTML = `<button type="button" class="check-btn ${todoItem.completed ? 'checked' : ''}" aria-label="Completa attività" data-testid="todo-item-check-${todoItem.id}">
-            <svg viewBox="0 0 24 24" class="todo-check-icon">
-                <rect x="3" y="3" width="18" height="18" rx="4"></rect>
-                <path d="M7 12.5l3 3 7-7"></path>
-            </svg>
-        </button>
-
-        <strong class="title-item"></strong>
-
-        <button type="button" class="delete-item-todo-btn show-delete" aria-label="Elimina attività" data-testid="todo-item-delete-${todoItem.id}">
-            <svg viewBox="0 0 24 24" class="todo-delete-icon">
-                <path d="M3 6h18"></path>
-                <path d="M8 6V4h8v2"></path>
-                <path d="M6 6l1 15h10l1-15"></path>
-                <path d="M10 11v6"></path>
-                <path d="M14 11v6"></path>
-            </svg>
-        </button>`;
-
-  toDoItemsContainer.appendChild(todoElement);
-
-  const titleElement = todoElement.querySelector('.title-item');
-
-  titleElement.textContent = todoItem.title;
+  toDoItemsContainer.appendChild(createTodoItem(todoItem));
 }
 
 function handleCreateItems() {

@@ -5,6 +5,7 @@ import {
 } from '../utils/helpers/dom/mainCalendarDom.js';
 import { getTodoListsFromLocalStorage } from './toDoStorage.js';
 import { openContextualMenu } from './todoBadgeActions.js';
+import { createTodoBadge } from '../components/features/todo/todoBadge.js';
 
 function renderBadgeHelper(allTodo, dataDay, container, grid, dayCell) {
   const todoOfDay = allTodo.filter((todo) => todo.date === dataDay);
@@ -13,21 +14,8 @@ function renderBadgeHelper(allTodo, dataDay, container, grid, dayCell) {
 
   if (todoOfDay.length === 0) return;
 
-  const badge = document.createElement('button');
-  badge.className = 'todo-btn-header';
-  badge.type = 'button';
-  badge.setAttribute('data-testid', `todo-badge-${dataDay}`);
+  const badge = createTodoBadge({ count: todoOfDay.length, dataDay });
   container.appendChild(badge);
-
-  const count = document.createElement('span');
-  count.classList.add('todo-count');
-  count.textContent = todoOfDay.length;
-
-  const icon = document.createElement('span');
-  icon.classList.add('todo-icon');
-  icon.textContent = '📜';
-
-  badge.append(count, icon);
 
   badge.addEventListener('click', (e) => {
     e.stopPropagation();
