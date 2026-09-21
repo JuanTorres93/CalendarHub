@@ -83,6 +83,20 @@ describe('Todo', () => {
     });
   });
 
+  describe('toJSON', () => {
+    it('should return the todo as a plain object', () => {
+      const todo = createTestTodo();
+
+      expect(todo.toJSON()).toEqual(TODO_TEST_PROPS);
+    });
+
+    it('should serialize as a plain object with JSON.stringify', () => {
+      const todo = createTestTodo();
+
+      expect(JSON.parse(JSON.stringify(todo))).toEqual(TODO_TEST_PROPS);
+    });
+  });
+
   describe('clone', () => {
     it('should produce an independent instance', () => {
       const todo = createTestTodo();

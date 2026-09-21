@@ -71,6 +71,15 @@ export class TodoList {
     return TodoList.create(this.toCreateProps());
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      date: this.date,
+      title: this.title,
+      items: this.props.items.map((item) => item.toJSON()),
+    };
+  }
+
   toCreateProps() {
     return {
       id: this.id,

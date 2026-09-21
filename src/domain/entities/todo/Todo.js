@@ -35,6 +35,14 @@ export class Todo {
     return Todo.create(this.toCreateProps());
   }
 
+  toJSON() {
+    return {
+      id: this.id,
+      title: this.title,
+      completed: this.completed,
+    };
+  }
+
   toCreateProps() {
     return {
       id: this.id,

@@ -144,6 +144,28 @@ describe('TodoList', () => {
     });
   });
 
+  describe('toJSON', () => {
+    it('should return the todolist as a plain object', () => {
+      const todo = createTestTodo();
+      const todoList = createTestTodoList({ items: [todo] });
+
+      expect(todoList.toJSON()).toEqual({
+        ...TODOLIST_TEST_PROPS,
+        items: [todo.toJSON()],
+      });
+    });
+
+    it('should serialize nested items as plain objects with JSON.stringify', () => {
+      const todo = createTestTodo();
+      const todoList = createTestTodoList({ items: [todo] });
+
+      expect(JSON.parse(JSON.stringify(todoList))).toEqual({
+        ...TODOLIST_TEST_PROPS,
+        items: [todo.toJSON()],
+      });
+    });
+  });
+
   describe('clone', () => {
     it('should produce an independent aggregate', () => {
       const todo = createTestTodo();

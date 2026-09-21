@@ -3,7 +3,7 @@ import {
   weekGrid,
   dayGrid,
 } from '../utils/helpers/dom/mainCalendarDom.js';
-import { getTodoListFromLocalStorage } from './toDoStorage.js';
+import { getTodoListsFromLocalStorage } from './toDoStorage.js';
 import { openContextualMenu } from './todoBadgeActions.js';
 
 function renderBadgeHelper(allTodo, dataDay, container, grid, dayCell) {
@@ -64,7 +64,7 @@ function renderBadgeDaily(allTodo) {
 }
 
 export function initRenderBadge() {
-  const allTodo = getTodoListFromLocalStorage();
+  const allTodo = getTodoListsFromLocalStorage();
 
   renderBadgeInMonth(allTodo);
   renderBadgeInWeek(allTodo);

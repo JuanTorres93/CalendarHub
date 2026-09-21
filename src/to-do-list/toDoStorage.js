@@ -2,6 +2,7 @@ import { createMessage } from '../utils/helpers/createElement.js';
 import { createList } from '../utils/helpers/dom/toDoDom.js';
 import { Todo } from '../domain/entities/todo/Todo.js';
 import { TodoList } from '../domain/entities/todolist/TodoList.js';
+import { AppGetAllTodoListsUsecase } from '../interface-adapters/use-cases/AppGetAllTodoListsUsecase.js';
 
 export function saveTodo(todos) {
   if (!Array.isArray(todos)) {
@@ -38,25 +39,11 @@ export function saveTodo(todos) {
   }
 }
 
-export function getTodoListFromLocalStorage() {
+export function getTodoListsFromLocalStorage() {
   try {
-    const storedTodo = localStorage.getItem('todoEvents');
-    if (!storedTodo) return [];
-    const parsedTodo = JSON.parse(storedTodo);
+    const allTodo = AppGetAllTodoListsUsecase.execute();
 
-    if (!Array.isArray(parsedTodo)) return [];
-
-    const result = parsedTodo.filter((todo, index) => {
-      const isValid = isValidTodoList(todo);
-
-      if (!isValid) {
-        console.warn(`Invalid todoEvent at index ${index} in localStorage`);
-      }
-
-      return isValid;
-    });
-
-    return result;
+    return allTodo.map((todo) => todo.toJSON());
   } catch (error) {
     console.error('invalid Todo in localSotrage', error);
     return [];
@@ -64,7 +51,7 @@ export function getTodoListFromLocalStorage() {
 }
 
 export function deleteItemsFromLocalStorage(currentId, activeId) {
-  const allTodo = getTodoListFromLocalStorage();
+  const allTodo = getTodoListsFromLocalStorage();
   const modTodo = allTodo.map((todo) => {
     return todo.id === activeId
       ? {
@@ -83,7 +70,7 @@ export function deleteItemsFromLocalStorage(currentId, activeId) {
 }
 
 export function deleteTodoListFromLocalStorage(currentId) {
-  const allTodo = getTodoListFromLocalStorage();
+  const allTodo = getTodoListsFromLocalStorage();
   const updatedTodos = allTodo.filter((todo) => todo.id !== currentId);
 
   const hasBeenSaved = saveTodo(updatedTodos);

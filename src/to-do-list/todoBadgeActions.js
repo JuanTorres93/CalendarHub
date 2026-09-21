@@ -1,4 +1,4 @@
-import { getTodoListFromLocalStorage } from './toDoStorage.js';
+import { getTodoListsFromLocalStorage } from './toDoStorage.js';
 import getDropDownPosition from '../utils/helpers/dropDownPositioner.js';
 import { monthGrid } from '../utils/helpers/dom/mainCalendarDom.js';
 
@@ -30,7 +30,7 @@ export function openContextualMenu(
   contextElement,
   monthCell,
 ) {
-  const allTodo = getTodoListFromLocalStorage();
+  const allTodo = getTodoListsFromLocalStorage();
   const existingMenu = contextElement.querySelector('.contextual-menu');
 
   if (existingMenu) {
