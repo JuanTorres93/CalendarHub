@@ -1,23 +1,26 @@
 import { createDayCell } from './dayCell.js';
 import { createDayLabel } from './dayLabel.js';
 import { config } from '../../../utils/config/config.js';
+import { calendarLogic } from '../../../calendarLogic.js';
+import dayjs from '../../../day.js';
 
-let mainMonthGrid = null;
-let mainMonthStructure = null;
+let existingMainMonthGrid = null;
+let existingMainMonthStructure = null;
 
 function createMonthGrid(currentView, isMini = false) {
   if (!isMini) {
-    if (mainMonthStructure) {
+    if (existingMainMonthStructure) {
       reRenderMainGrid(currentView);
-      return mainMonthGrid;
+
+      return existingMainMonthGrid;
     }
 
     const grid = buildMonthGrid(currentView, isMini);
 
-    mainMonthGrid = grid.monthContainer;
-    mainMonthStructure = grid.monthStructureContainer;
+    existingMainMonthGrid = grid.monthContainer;
+    existingMainMonthStructure = grid.monthStructureContainer;
 
-    return mainMonthGrid;
+    return existingMainMonthGrid;
   }
 
   return buildMonthGrid(currentView, isMini).monthContainer;
@@ -27,6 +30,12 @@ function buildMonthGrid(currentView, isMini) {
   const monthContainer = initMonthContainer(isMini);
   const monthStructureContainer = initMonthStructure();
 
+  if (!isMini) {
+    monthStructureContainer.addEventListener('click', (e) =>
+      handleMonthGridClick(e, monthStructureContainer),
+    );
+  }
+
   monthContainer.appendChild(monthStructureContainer);
   buildGridContent(monthStructureContainer, currentView, isMini);
 
@@ -34,9 +43,9 @@ function buildMonthGrid(currentView, isMini) {
 }
 
 function reRenderMainGrid(currentView) {
-  mainMonthStructure.innerHTML = '';
+  existingMainMonthStructure.innerHTML = '';
 
-  buildGridContent(mainMonthStructure, currentView, false);
+  buildGridContent(existingMainMonthStructure, currentView, false);
 }
 
 function buildGridContent(monthStructureContainer, currentView, isMini) {
@@ -116,6 +125,70 @@ function initMonthStructure() {
   monthStructureContainer.classList.add('month-structure');
 
   return monthStructureContainer;
+}
+
+// Handlers
+
+async function handleMonthGridClick(e, monthGrid) {
+  e.stopPropagation();
+  const eventElement = e.target.closest('.monthly-event');
+
+  if (eventElement) {
+    const { renderExtraInfo } =
+      await import('../../../eventCreation/infoBanner.js');
+
+    renderExtraInfo(eventElement, e);
+    return;
+  }
+
+  const selectedBtn = e.target.closest('[data-action="select-date"]');
+  const cell = e.target.closest('[data-action="create-event"]');
+  const todo = e.target.closest('.todo-btn-header');
+  const itemContextualMenu = e.target.closest('[data-action="rehydrate-todo"]');
+  const selectBtnAndTodoContainer = e.target.closest('.fist-row-month');
+  const badgeContainer = e.target.closest('.todo-container-month');
+
+  if (itemContextualMenu) {
+    const { getSelectedTodo } = await import('../../../to-do-list/toDo.js');
+    const { closeContextualMenu } =
+      await import('../../../to-do-list/todoBadgeActions.js');
+
+    getSelectedTodo(itemContextualMenu.dataset.id);
+    closeContextualMenu(monthGrid);
+    return;
+  }
+
+  if (selectedBtn) {
+    highlightDayMonth(selectedBtn);
+    return;
+  }
+
+  if (todo) {
+    const { openContextualMenu } =
+      await import('../../../to-do-list/todoBadgeActions.js');
+
+    openContextualMenu(cell.dataset.day, badgeContainer, monthGrid, cell);
+    return;
+  }
+
+  if (selectBtnAndTodoContainer) {
+    return;
+  }
+
+  if (cell) {
+    const { handleOpenCreate } =
+      await import('../../../eventCreation/eventLogic.js');
+
+    handleOpenCreate(e);
+    return;
+  }
+}
+
+function highlightDayMonth(button) {
+  const selectedDate = button.dataset.day;
+  if (!selectedDate) return;
+
+  calendarLogic.setDate(dayjs(selectedDate));
 }
 
 export default createMonthGrid;

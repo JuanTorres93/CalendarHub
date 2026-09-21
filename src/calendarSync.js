@@ -38,56 +38,6 @@ calendarLogic.init({
   currentYearDisplay,
 });
 
-function highlightDayMonth(button) {
-  const selectedDate = button.dataset.day;
-  if (!selectedDate) return;
-  calendarLogic.setDate(dayjs(selectedDate));
-}
-
-function handleMonthGridClick(e) {
-  const eventElement = e.target.closest('.monthly-event');
-  if (eventElement) {
-    e.stopPropagation();
-    renderExtraInfo(eventElement, e);
-    return;
-  }
-
-  const selectedBtn = e.target.closest('[data-action="select-date"]');
-  const cell = e.target.closest('[data-action="create-event"]');
-  const todo = e.target.closest('.todo-btn-header');
-  const itemContextualMenu = e.target.closest('[data-action="rehydrate-todo"]');
-  const selectBtnAndTodoContainer = e.target.closest('.fist-row-month');
-  const badgeContainer = e.target.closest('.todo-container-month');
-
-  if (itemContextualMenu) {
-    e.stopPropagation();
-    getSelectedTodo(itemContextualMenu.dataset.id);
-    closeContextualMenu(monthGrid);
-    return;
-  }
-
-  if (selectedBtn) {
-    e.stopPropagation();
-    highlightDayMonth(selectedBtn);
-    return;
-  }
-  if (todo) {
-    e.stopPropagation();
-    openContextualMenu(cell.dataset.day, badgeContainer, monthGrid, cell);
-    return;
-  }
-
-  if (selectBtnAndTodoContainer) {
-    e.stopPropagation();
-    return;
-  }
-  if (cell) {
-    e.stopPropagation();
-    handleOpenCreate(e);
-    return;
-  }
-}
-
 function highLightWeek(e) {
   let highLight = e.target.parentElement.dataset.day;
   calendarLogic.setDate(dayjs(highLight));
@@ -183,7 +133,6 @@ function handleDailyClick(e) {
 }
 
 function bindCalendarEvents() {
-  monthGrid.addEventListener('click', handleMonthGridClick);
   weekGrid.addEventListener('click', handleClickWeek);
   dayGrid.addEventListener('click', handleDailyClick);
 }
