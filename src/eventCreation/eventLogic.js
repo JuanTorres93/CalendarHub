@@ -1,24 +1,24 @@
-import dayjs from '../day.js';
+import dayjs from "../day.js";
 import {
   toDomainNotification,
   toItalianNotification,
-} from '../interface-adapters/other/bidirectionalItalianDomainMapper.js';
-import { AppUpdateEventSeriesUsecase } from '../interface-adapters/use-cases/AppUpdateEventSeriesUsecase.js';
-import { AppUpdateEventUsecase } from '../interface-adapters/use-cases/AppUpdateEventUsecase.js';
-import { AppUpdateSingleEventOccurrenceUsecase } from '../interface-adapters/use-cases/AppUpdateSingleEventOccurrenceUsecase.js';
+} from "../interface-adapters/other/bidirectionalItalianDomainMapper.js";
+import { AppUpdateEventSeriesUsecase } from "../interface-adapters/use-cases/AppUpdateEventSeriesUsecase.js";
+import { AppUpdateEventUsecase } from "../interface-adapters/use-cases/AppUpdateEventUsecase.js";
+import { AppUpdateSingleEventOccurrenceUsecase } from "../interface-adapters/use-cases/AppUpdateSingleEventOccurrenceUsecase.js";
 
-import { handleKnownErrors } from '../interface-adapters/other/handleKnownErrors.js';
-import { AppCreateEventUsecase } from '../interface-adapters/use-cases/AppCreateEventUsecase.js';
-import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
+import { handleKnownErrors } from "../interface-adapters/other/handleKnownErrors.js";
+import { AppCreateEventUsecase } from "../interface-adapters/use-cases/AppCreateEventUsecase.js";
+import { openMiniCalendar } from "../miniCalendar/miniCalendar.js";
 import createCaroseul, {
   renderColorList,
   renderIconsList,
   renderNotificationList,
-} from '../utils/events/createLists.js';
-import { eventFormState } from '../utils/events/eventFormState.js';
-import { renderEvents } from '../utils/events/eventRendering.js';
-import { formatDate } from '../utils/events/eventsUI.js';
-import { createMessage } from '../utils/helpers/createElement.js';
+} from "../utils/events/createLists.js";
+import { eventFormState } from "../utils/events/eventFormState.js";
+import { renderEvents } from "../utils/events/eventRendering.js";
+import { formatDate } from "../utils/events/eventsUI.js";
+import { createMessage } from "../utils/helpers/createElement.js";
 import {
   allDayBtn,
   allDayCheckBox,
@@ -53,71 +53,71 @@ import {
   toMinuteInput,
   urgentBtn,
   urgentCheckBox,
-} from '../utils/helpers/dom/eventModalDom.js';
+} from "../utils/helpers/dom/eventModalDom.js";
 import {
   handleListSelection,
   handleOutSideClick,
-} from '../utils/helpers/listSelection.js';
-import { setTimeUIAndDraft } from '../utils/helpers/timeHelper.js';
-import { nowTarget } from '../utils/isNow.js';
-import openModal from './eventModal.js';
-import { forceResetRepeatModalState, initRepeatEvents } from './repeatEvent.js';
+} from "../utils/helpers/listSelection.js";
+import { setTimeUIAndDraft } from "../utils/helpers/timeHelper.js";
+import { nowTarget } from "../utils/isNow.js";
+import openModal from "./eventModal.js";
+import { forceResetRepeatModalState, initRepeatEvents } from "./repeatEvent.js";
 
 import {
   repeatContainer as repeatModal,
   repeatOverlay,
-} from '../utils/helpers/dom/repeatModalDom.js';
+} from "../utils/helpers/dom/repeatModalDom.js";
 
 const outsideDropdowns = [
   {
-    selector: '.icons-list, #icons-btn',
+    selector: ".icons-list, #icons-btn",
     dropdown: iconsList,
-    className: 'show-icons-list',
+    className: "show-icons-list",
   },
 
   {
-    selector: '.description-area, .btn-description',
+    selector: ".description-area, .btn-description",
     dropdown: showDesc,
-    className: 'show-desc-area',
+    className: "show-desc-area",
   },
 
   {
-    selector: '.color-list, #color-btn',
+    selector: ".color-list, #color-btn",
     dropdown: colorLists,
-    className: 'show-color-list',
+    className: "show-color-list",
   },
 
   {
-    selector: '.notification-list, .notification-button',
+    selector: ".notification-list, .notification-button",
     dropdown: notificationList,
-    className: 'show-container',
+    className: "show-container",
   },
 
   {
-    selector: '.interactive-time-list.from, .listed-time.from',
+    selector: ".interactive-time-list.from, .listed-time.from",
     dropdown: listedTimeFrom,
-    className: 'show-menù',
+    className: "show-menù",
   },
 
   {
-    selector: '.interactive-time-list.to, .listed-time.to',
+    selector: ".interactive-time-list.to, .listed-time.to",
     dropdown: listedTimeTo,
-    className: 'show-menù',
+    className: "show-menù",
   },
 ];
 
 const EVENT_DRAFT_FIELDS = [
-  'title',
-  'date',
-  'from',
-  'to',
-  'description',
-  'icon',
-  'color',
-  'urgent',
-  'allDay',
-  'repeat',
-  'notification',
+  "title",
+  "date",
+  "from",
+  "to",
+  "description",
+  "icon",
+  "color",
+  "urgent",
+  "allDay",
+  "repeat",
+  "notification",
 ];
 
 let editingEventId = null;
@@ -128,10 +128,10 @@ let originalSeriesDate = null;
 
 export const getData = (e) => {
   let date, time;
-  const monthCell = e.target.closest('.box-grid');
+  const monthCell = e.target.closest(".box-grid");
   if (monthCell) {
     date = e.target.dataset.day;
-    time = dayjs().minute(0).format('HH:mm');
+    time = dayjs().minute(0).format("HH:mm");
     return {
       date: date,
       time: time,
@@ -155,7 +155,7 @@ function classRemovalHelper(sections) {
 }
 
 export function resetEventModal() {
-  eventFormState.mode = 'create';
+  eventFormState.mode = "create";
   delete eventFormState.date;
   delete eventFormState.notification;
   delete eventFormState.allDay;
@@ -167,56 +167,56 @@ export function resetEventModal() {
   originalSeriesDate = null;
 
   const sections = [
-    { section: colorLists, class: 'show-color-list' },
-    { section: urgentCheckBox, class: 'checked' },
-    { section: iconsList, class: 'show-icons-list' },
-    { section: notificationList, class: 'show-container' },
-    { section: showDesc, class: 'show-desc-area' },
-    { section: listedTimeFrom, class: 'show-menù' },
-    { section: listedTimeTo, class: 'show-menù' },
+    { section: colorLists, class: "show-color-list" },
+    { section: urgentCheckBox, class: "checked" },
+    { section: iconsList, class: "show-icons-list" },
+    { section: notificationList, class: "show-container" },
+    { section: showDesc, class: "show-desc-area" },
+    { section: listedTimeFrom, class: "show-menù" },
+    { section: listedTimeTo, class: "show-menù" },
   ];
-  if (allDayCheckBox.classList.contains('checked')) {
-    allDayCheckBox.classList.remove('checked');
-    timeSelectionContainer.classList.remove('hide-time-section');
+  if (allDayCheckBox.classList.contains("checked")) {
+    allDayCheckBox.classList.remove("checked");
+    timeSelectionContainer.classList.remove("hide-time-section");
   }
 
   classRemovalHelper(sections);
 
-  iconBtn.innerText = '✏️';
-  inputTitle.value = '';
-  inputDesc.value = '';
-  colorPreview.style.backgroundColor = 'blue';
-  fromHourInput.value = '';
-  fromMinuteInput.value = '';
-  toHourInput.value = '';
-  toMinuteInput.value = '';
-  notificationList.style.left = '';
-  notificationBtn.innerText = '5 minuti prima';
+  iconBtn.innerText = "✏️";
+  inputTitle.value = "";
+  inputDesc.value = "";
+  colorPreview.style.backgroundColor = "blue";
+  fromHourInput.value = "";
+  fromMinuteInput.value = "";
+  toHourInput.value = "";
+  toMinuteInput.value = "";
+  notificationList.style.left = "";
+  notificationBtn.innerText = "5 minuti prima";
 
-  eventFormState.from = '';
-  eventFormState.to = '';
+  eventFormState.from = "";
+  eventFormState.to = "";
 
   eventFormState.repeat = null;
 }
 
 const renderModeTextInfo = (mode, eventTitle) => {
   const header = modalInfoMode;
-  smallMessage.innerText = '';
+  smallMessage.innerText = "";
   switch (mode) {
-    case 'create':
-      header.innerText = 'Crea un nuovo evento!';
+    case "create":
+      header.innerText = "Crea un nuovo evento!";
       break;
-    case 'edit':
+    case "edit":
       header.innerText = `Stai modificando : ${eventTitle}`;
       break;
-    case 'edit-series':
+    case "edit-series":
       header.innerText = `Stai modificando la serie ${eventTitle}`;
       smallMessage.innerText =
-        'Le modifiche verranno applicate a tutta la serie.';
+        "Le modifiche verranno applicate a tutta la serie.";
       break;
-    case 'edit-single-occurrence':
+    case "edit-single-occurrence":
       header.innerText = `Stai modificando : ${eventTitle}`;
-      smallMessage.innerText = 'Questa occorrenza verrà separata dalla serie.';
+      smallMessage.innerText = "Questa occorrenza verrà separata dalla serie.";
       break;
     default:
       break;
@@ -225,7 +225,7 @@ const renderModeTextInfo = (mode, eventTitle) => {
 
 export function preCompiler(e) {
   const { date, time } = getData(e);
-  const endTime = dayjs(time, 'HH:mm').add(1, 'hour').format('HH:mm');
+  const endTime = dayjs(time, "HH:mm").add(1, "hour").format("HH:mm");
 
   eventFormState.date = date;
 
@@ -233,8 +233,8 @@ export function preCompiler(e) {
   header.firstElementChild.dataset.day = date;
   header.firstElementChild.nextElementSibling.textContent = time;
 
-  setTimeUIAndDraft('from', time);
-  setTimeUIAndDraft('to', endTime);
+  setTimeUIAndDraft("from", time);
+  setTimeUIAndDraft("to", endTime);
 
   renderModeTextInfo(eventFormState.mode);
 }
@@ -261,8 +261,8 @@ export function preCompilerEdit(event, mode) {
     if (event[field] === undefined) return;
 
     updateEventEntityProps[field] =
-      field === 'repeat' && event['repeat'] !== null
-        ? structuredClone(event['repeat'])
+      field === "repeat" && event["repeat"] !== null
+        ? structuredClone(event["repeat"])
         : event[field];
   });
 
@@ -276,7 +276,7 @@ export function preCompilerEdit(event, mode) {
 
   editingEventId = event.id;
 
-  if (mode === 'edit-single-occurrence') {
+  if (mode === "edit-single-occurrence") {
     editingEventId = null;
     editingMotherEventId = event.originalEventId
       ? event.originalEventId
@@ -286,7 +286,7 @@ export function preCompilerEdit(event, mode) {
     eventFormState.repeat = null;
   }
 
-  if (mode === 'edit-series') {
+  if (mode === "edit-series") {
     // structuredClone(event.repeat) crea un clone dell'elemento
     originalRepeatSnapshot = structuredClone(event.repeat);
     originalSeriesDate = event.date;
@@ -303,14 +303,14 @@ export function preCompilerEdit(event, mode) {
   colorPreview.style.backgroundColor = `${event.color}`;
 
   if (event.urgent) {
-    urgentCheckBox.classList.add('checked');
+    urgentCheckBox.classList.add("checked");
   }
   if (event.allDay) {
-    allDayCheckBox.classList.add('checked');
-    timeSelectionContainer.classList.add('hide-time-section');
+    allDayCheckBox.classList.add("checked");
+    timeSelectionContainer.classList.add("hide-time-section");
   }
-  setTimeUIAndDraft('from', event.from);
-  setTimeUIAndDraft('to', event.to);
+  setTimeUIAndDraft("from", event.from);
+  setTimeUIAndDraft("to", event.to);
 
   notificationBtn.innerText = toItalianNotification(event.notification);
 }
@@ -321,56 +321,56 @@ function updateTimeInput(part, value) {
   if (isNaN(num)) return;
 
   switch (part) {
-    case 'hour':
+    case "hour":
       if (num < 0 || num > 23) return;
-      return String(num).padStart(2, '0');
+      return String(num).padStart(2, "0");
       break;
-    case 'minute':
+    case "minute":
       if (num < 0 || num >= 60) return;
-      return String(num).padStart(2, '0');
+      return String(num).padStart(2, "0");
       break;
   }
 }
 function inputTimeHelper(caseType, input, classType) {
   const time = updateTimeInput(caseType, input.value);
   if (time === undefined) {
-    input.value = '';
+    input.value = "";
     return;
   }
 
   input.value = time;
 
-  const isFrom = classType === 'from';
+  const isFrom = classType === "from";
   const hour =
-    caseType === 'hour'
+    caseType === "hour"
       ? time
       : isFrom
         ? fromHourInput.value
         : toHourInput.value;
   const minute =
-    caseType === 'minute'
+    caseType === "minute"
       ? time
       : isFrom
         ? fromMinuteInput.value
         : toMinuteInput.value;
 
-  if (hour !== '' && minute !== '') {
+  if (hour !== "" && minute !== "") {
     eventFormState[classType] = `${hour}:${minute}`;
   }
 }
 
 function inputTimeReader() {
-  fromHourInput.addEventListener('change', () => {
-    inputTimeHelper('hour', fromHourInput, 'from');
+  fromHourInput.addEventListener("change", () => {
+    inputTimeHelper("hour", fromHourInput, "from");
   });
-  fromMinuteInput.addEventListener('change', () => {
-    inputTimeHelper('minute', fromMinuteInput, 'from');
+  fromMinuteInput.addEventListener("change", () => {
+    inputTimeHelper("minute", fromMinuteInput, "from");
   });
-  toHourInput.addEventListener('change', () => {
-    inputTimeHelper('hour', toHourInput, 'to');
+  toHourInput.addEventListener("change", () => {
+    inputTimeHelper("hour", toHourInput, "to");
   });
-  toMinuteInput.addEventListener('change', () => {
-    inputTimeHelper('minute', toMinuteInput, 'to');
+  toMinuteInput.addEventListener("change", () => {
+    inputTimeHelper("minute", toMinuteInput, "to");
   });
 }
 
@@ -379,11 +379,11 @@ function applySelectedTime(type, time) {
 }
 
 function closeModal() {
-  modalOverlay.classList.remove('show-overlay');
-  modalEvents.classList.remove('show-container');
+  modalOverlay.classList.remove("show-overlay");
+  modalEvents.classList.remove("show-container");
 
-  modalEvents.style.top = '';
-  modalEvents.style.left = '';
+  modalEvents.style.top = "";
+  modalEvents.style.left = "";
 
   forceResetRepeatModalState();
   resetEventModal();
@@ -401,44 +401,44 @@ export function initEventFormEvents() {
     handleOutSideClick(item.selector, item.dropdown, item.className);
   });
 
-  iconBtn.addEventListener('click', () => {
-    iconsList.classList.toggle('show-icons-list');
+  iconBtn.addEventListener("click", () => {
+    iconsList.classList.toggle("show-icons-list");
   });
 
   handleListSelection(
     iconsList,
-    '.icon-list-item',
+    ".icon-list-item",
     (li) => {
-      eventFormState.icon = li.innerText;
+      eventFormState.icon = li.textContent;
 
-      iconBtn.innerText = li.innerText;
+      iconBtn.innerText = li.textContent;
 
-      eventFormState.icon = li.innerText;
+      eventFormState.icon = li.textContent;
     },
-    'show-icons-list',
+    "show-icons-list",
   );
 
-  btnDesc.addEventListener('click', () => {
-    showDesc.classList.toggle('show-desc-area');
+  btnDesc.addEventListener("click", () => {
+    showDesc.classList.toggle("show-desc-area");
   });
 
-  inputTitle.addEventListener('change', () => {
+  inputTitle.addEventListener("change", () => {
     title = inputTitle.value;
 
     eventFormState.title = title;
   });
-  inputDesc.addEventListener('change', () => {
+  inputDesc.addEventListener("change", () => {
     desc = inputDesc.value;
 
     eventFormState.description = desc;
   });
-  categoryBtn.addEventListener('click', () => {
-    colorLists.classList.toggle('show-color-list');
+  categoryBtn.addEventListener("click", () => {
+    colorLists.classList.toggle("show-color-list");
   });
 
   handleListSelection(
     colorLists,
-    '.color',
+    ".color",
     (li) => {
       eventFormState.color = li.dataset.color;
 
@@ -446,104 +446,104 @@ export function initEventFormEvents() {
 
       eventFormState.color = li.dataset.color;
     },
-    'show-color-list',
+    "show-color-list",
   );
 
-  urgentBtn.addEventListener('click', () => {
-    const isChecked = urgentCheckBox.classList.toggle('checked');
+  urgentBtn.addEventListener("click", () => {
+    const isChecked = urgentCheckBox.classList.toggle("checked");
 
     eventFormState.urgent = isChecked;
   });
 
-  miniCalendarBtn.addEventListener('click', () => {
+  miniCalendarBtn.addEventListener("click", () => {
     const date = header.firstElementChild.dataset.day;
 
-    openMiniCalendar('event', date, 'event-date');
+    openMiniCalendar("event", date, "event-date");
   });
 
-  allDayBtn.addEventListener('click', () => {
-    const isChecked = allDayCheckBox.classList.toggle('checked');
+  allDayBtn.addEventListener("click", () => {
+    const isChecked = allDayCheckBox.classList.toggle("checked");
 
     eventFormState.allDay = isChecked;
 
     if (isChecked) {
-      timeSelectionContainer.classList.add('hide-time-section');
+      timeSelectionContainer.classList.add("hide-time-section");
     } else {
-      timeSelectionContainer.classList.remove('hide-time-section');
+      timeSelectionContainer.classList.remove("hide-time-section");
     }
   });
 
   inputTimeReader();
 
-  listedTimeBtnFrom.addEventListener('click', (e) => {
-    const isOpen = listedTimeFrom.classList.toggle('show-menù');
+  listedTimeBtnFrom.addEventListener("click", (e) => {
+    const isOpen = listedTimeFrom.classList.toggle("show-menù");
 
     if (isOpen) {
       const targetTime = eventFormState.from;
       const target = nowTarget(
-        listedTimeFrom.querySelectorAll('.list-item'),
+        listedTimeFrom.querySelectorAll(".list-item"),
         null,
-        'cellTime',
+        "cellTime",
         targetTime,
       );
-      target?.scrollIntoView({ block: 'center', behavior: 'auto' });
+      target?.scrollIntoView({ block: "center", behavior: "auto" });
     }
   });
-  listedTimeBtnTo.addEventListener('click', () => {
-    const isOpen = listedTimeTo.classList.toggle('show-menù');
+  listedTimeBtnTo.addEventListener("click", () => {
+    const isOpen = listedTimeTo.classList.toggle("show-menù");
 
     if (isOpen) {
       const targetTime = eventFormState.to;
       const target = nowTarget(
-        listedTimeTo.querySelectorAll('.list-item'),
+        listedTimeTo.querySelectorAll(".list-item"),
         null,
-        'cellTime',
+        "cellTime",
         targetTime,
       );
-      target?.scrollIntoView({ block: 'center', behavior: 'auto' });
+      target?.scrollIntoView({ block: "center", behavior: "auto" });
     }
   });
 
   handleListSelection(
     listedTimeFrom,
-    '.list-item',
+    ".list-item",
     (li) => {
-      applySelectedTime('from', li.dataset.time);
+      applySelectedTime("from", li.dataset.time);
     },
-    'show-menù',
+    "show-menù",
   );
   handleListSelection(
     listedTimeTo,
-    '.list-item',
+    ".list-item",
     (li) => {
-      applySelectedTime('to', li.dataset.time);
+      applySelectedTime("to", li.dataset.time);
     },
-    'show-menù',
+    "show-menù",
   );
 
-  repeatBtn.addEventListener('click', () => {
-    repeatModal.classList.toggle('show-repeat-modal');
-    repeatOverlay.classList.add('show-repeat-overlay');
+  repeatBtn.addEventListener("click", () => {
+    repeatModal.classList.toggle("show-repeat-modal");
+    repeatOverlay.classList.add("show-repeat-overlay");
   });
 
-  notificationBtn.addEventListener('click', () => {
+  notificationBtn.addEventListener("click", () => {
     const position = notificationBtn.getClientRects()[0].right;
-    notificationList.style.left = position + 'px';
-    notificationList.classList.toggle('show-container');
+    notificationList.style.left = position + "px";
+    notificationList.classList.toggle("show-container");
   });
 
   handleListSelection(
     notificationList,
-    '.single-notification',
+    ".single-notification",
     (li) => {
-      eventFormState.notification = toDomainNotification(li.innerText);
+      eventFormState.notification = toDomainNotification(li.textContent);
 
-      notificationBtn.innerText = li.innerText;
+      notificationBtn.innerText = li.textContent;
     },
-    'show-container',
+    "show-container",
   );
 
-  saveBtn.addEventListener('click', (e) => {
+  saveBtn.addEventListener("click", (e) => {
     const eventFormProps = getEventRawPropsFromForm(e);
 
     const createEventProps = {
@@ -551,19 +551,19 @@ export function initEventFormEvents() {
       ...eventFormState,
     };
 
-    let feedbackMessage = '';
+    let feedbackMessage = "";
 
     try {
-      if (eventFormState.mode === 'create') {
+      if (eventFormState.mode === "create") {
         AppCreateEventUsecase.execute(createEventProps);
-      } else if (eventFormState.mode === 'edit') {
+      } else if (eventFormState.mode === "edit") {
         AppUpdateEventUsecase.execute({
           id: editingEventId,
           eventRawProps: createEventProps,
         });
 
         feedbackMessage = "l'evento è stato modificato!";
-      } else if (eventFormState.mode === 'edit-single-occurrence') {
+      } else if (eventFormState.mode === "edit-single-occurrence") {
         AppUpdateSingleEventOccurrenceUsecase.execute({
           motherEventId: editingMotherEventId,
           occurrenceDate: editingOccurrenceDate,
@@ -571,7 +571,7 @@ export function initEventFormEvents() {
         });
 
         feedbackMessage = "l'occorrenza è stata modificata!";
-      } else if (eventFormState.mode === 'edit-series') {
+      } else if (eventFormState.mode === "edit-series") {
         AppUpdateEventSeriesUsecase.execute({
           id: editingEventId,
           originalRepeat: originalRepeatSnapshot,
@@ -579,7 +579,7 @@ export function initEventFormEvents() {
           eventRawProps: createEventProps,
         });
 
-        feedbackMessage = 'la serie è stato modificata!';
+        feedbackMessage = "la serie è stato modificata!";
       }
 
       if (feedbackMessage) {
@@ -593,19 +593,19 @@ export function initEventFormEvents() {
     }
   });
 
-  closeBtn.addEventListener('click', () => {
+  closeBtn.addEventListener("click", () => {
     closeModal();
   });
 }
 
 function getEventRawPropsFromForm(e) {
-  const formData = new FormData(e.target.closest('form'));
+  const formData = new FormData(e.target.closest("form"));
 
   return {
-    title: formData.get('event-title'),
-    description: formData.get('event-description'),
-    from: combineTime(formData, 'from'),
-    to: combineTime(formData, 'to'),
+    title: formData.get("event-title"),
+    description: formData.get("event-description"),
+    from: combineTime(formData, "from"),
+    to: combineTime(formData, "to"),
   };
 }
 
@@ -613,7 +613,7 @@ function combineTime(formData, type) {
   const hour = formData.get(`event-${type}-hour`);
   const minute = formData.get(`event-${type}-minute`);
 
-  return hour && minute ? `${hour}:${minute}` : '';
+  return hour && minute ? `${hour}:${minute}` : "";
 }
 
 export function initEventModal() {

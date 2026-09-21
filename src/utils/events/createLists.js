@@ -1,4 +1,3 @@
-import createElement from "../helpers/createElement.js";
 import dayjs from "../../day.js";
 import {
   colorLists,
@@ -77,12 +76,13 @@ const eventIcons = {
 export function renderIconsList() {
   iconsList.innerHTML = "";
   Object.entries(eventIcons).forEach(([key, value]) => {
-    createElement(iconsList, "icon-list-item", value, "li", {
-      attributes: {
-        "aria-label": `Seleziona icona ${key}`,
-        "data-testid": `icon-option-${key}`,
-      },
-    });
+    const item = document.createElement("li");
+    item.className = "icon-list-item";
+    item.setAttribute("aria-label", `Seleziona icona ${key}`);
+    item.setAttribute("data-testid", `icon-option-${key}`);
+    item.textContent = value;
+
+    iconsList.appendChild(item);
   });
 }
 
@@ -90,20 +90,14 @@ export function renderColorList() {
   colorLists.innerHTML = "";
 
   colors.forEach((color) => {
-    createElement(
-      colorLists,
-      "color",
-      `${color.name} <span>${color.icon}</span>`,
-      "li",
-      {
-        html: true,
-        dataset: { color: color.value },
-        attributes: {
-          "aria-label": `Seleziona colore ${color.name}`,
-          "data-testid": `color-option-${color.value}`,
-        },
-      },
-    );
+    const item = document.createElement("li");
+    item.className = "color";
+    item.dataset.color = color.value;
+    item.setAttribute("aria-label", `Seleziona colore ${color.name}`);
+    item.setAttribute("data-testid", `color-option-${color.value}`);
+    item.innerHTML = `${color.name} <span>${color.icon}</span>`;
+
+    colorLists.appendChild(item);
   });
 }
 
@@ -111,13 +105,14 @@ export function renderNotificationList() {
   notificationList.innerHTML = "";
 
   notifications.forEach((item) => {
-    createElement(notificationList, "single-notification", item.name, "li", {
-      dataset: { notification: item.value },
-      attributes: {
-        "aria-label": `Imposta notifica: ${item.name}`,
-        "data-testid": `notification-option-${item.value}`,
-      },
-    });
+    const option = document.createElement("li");
+    option.className = "single-notification";
+    option.dataset.notification = item.value;
+    option.setAttribute("aria-label", `Imposta notifica: ${item.name}`);
+    option.setAttribute("data-testid", `notification-option-${item.value}`);
+    option.textContent = item.name;
+
+    notificationList.appendChild(option);
   });
 }
 
@@ -130,12 +125,13 @@ export default function createCaroseul() {
     ul.innerHTML = "";
 
     array.forEach((item) => {
-      createElement(ul, "list-item", item, "li", {
-        dataset: { time: item },
-        attributes: {
-          "aria-label": `Seleziona ore ${item}`,
-        },
-      });
+      const option = document.createElement("li");
+      option.className = "list-item";
+      option.dataset.time = item;
+      option.setAttribute("aria-label", `Seleziona ore ${item}`);
+      option.textContent = item;
+
+      ul.appendChild(option);
     });
   });
 }
@@ -150,21 +146,14 @@ export function createDayOfWeek() {
     };
   });
   array.forEach((day) => {
-    createElement(
-      dayOfWeekList,
-      "weekly-repetion-item",
-      day.days.slice(0, 1),
-      "li",
-      {
-        dataset: {
-          day: day.days,
-          dayIndex: day.index,
-        },
-        attributes: {
-          "aria-label": `Seleziona ${day.days}`,
-          "data-testid": `weekly-repetion-item-${day.index}`,
-        },
-      },
-    );
+    const item = document.createElement("li");
+    item.className = "weekly-repetion-item";
+    item.dataset.day = day.days;
+    item.dataset.dayIndex = day.index;
+    item.setAttribute("aria-label", `Seleziona ${day.days}`);
+    item.setAttribute("data-testid", `weekly-repetion-item-${day.index}`);
+    item.textContent = day.days.slice(0, 1);
+
+    dayOfWeekList.appendChild(item);
   });
 }

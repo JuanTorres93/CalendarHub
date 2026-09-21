@@ -12,7 +12,7 @@ import {
   itemInput,
   addItemBtn,
   toDoProgress,
-} from "../utils/helpers/dom/toDoDom.js";
+} from '../utils/helpers/dom/toDoDom.js';
 
 import {
   createNewTodo,
@@ -21,35 +21,34 @@ import {
   resetStates,
   toDoItems,
   resetToDoItemsValues,
-} from "./toDoDraft.js";
+} from './toDoDraft.js';
 
 import {
   saveTodo,
   getTodoFromLocalStorage,
   deleteItemsFromLocalStorage,
   deleteTodoListFromLocalStorage,
-} from "./toDoStorage.js";
+} from './toDoStorage.js';
 
-import { createMessage } from "../utils/helpers/createElement.js";
-import createElement from "../utils/helpers/createElement.js";
-import { initRenderBadge } from "./toDoBadgeRendering.js";
-import { handleOutsideContextualMenuClick } from "./todoBadgeActions.js";
+import { createMessage } from '../utils/helpers/createElement.js';
+import { initRenderBadge } from './toDoBadgeRendering.js';
+import { handleOutsideContextualMenuClick } from './todoBadgeActions.js';
 
-const EMPTY_TODO_MESSAGE = "Nessuna attività";
+const EMPTY_TODO_MESSAGE = 'Nessuna attività';
 let activeTodoList = null;
 let todoContextDate = null;
 
 function cleanActiveTodoUi() {
-  addNewItemContainer.classList.remove("show-add-new-item");
-  toDoItemsContainer.innerHTML = "";
-  toDoProgress.classList.remove("show-modal");
+  addNewItemContainer.classList.remove('show-add-new-item');
+  toDoItemsContainer.innerHTML = '';
+  toDoProgress.classList.remove('show-modal');
   toDoProgress.innerText = EMPTY_TODO_MESSAGE;
 }
 
 export function openTodo(date) {
   const viewportWidth = window.innerWidth;
-  createList.classList.add("show-modal");
-  todoLayer.classList.add("show-modal");
+  createList.classList.add('show-modal');
+  todoLayer.classList.add('show-modal');
   const toDoWidth = createList.clientWidth;
   let toDoPosition = viewportWidth / 2 - toDoWidth / 2;
 
@@ -80,8 +79,8 @@ function rehydrateTodoList(todo) {
   headerTitle.value = todo.title;
   renderTodoHeader(todo.date);
 
-  toDoProgress.classList.add("show-modal");
-  addNewItemContainer.classList.add("show-add-new-item");
+  toDoProgress.classList.add('show-modal');
+  addNewItemContainer.classList.add('show-add-new-item');
 
   todo.items.forEach((item) => {
     renderTodoItem(item);
@@ -102,7 +101,7 @@ function formatTodoHeaderDate(fullDate) {
 function renderTodoHeader(fullDate) {
   const date = formatTodoHeaderDate(fullDate);
 
-  toDoHeader.classList.add("show-title-header");
+  toDoHeader.classList.add('show-title-header');
   headerDate.textContent = date;
 }
 
@@ -119,27 +118,27 @@ function titleValidator(title) {
 }
 
 function closeToDoList() {
-  resetStates("close");
-  toDoHeader.classList.remove("show-title-header");
-  todoLayer.classList.remove("show-modal");
-  createList.classList.remove("show-modal");
+  resetStates('close');
+  toDoHeader.classList.remove('show-title-header');
+  todoLayer.classList.remove('show-modal');
+  createList.classList.remove('show-modal');
   cleanActiveTodoUi();
   activeTodoList = null;
   todoContextDate = null;
 }
 
 function handleCreateTodoList() {
-  newToDoBtn.addEventListener("click", () => {
+  newToDoBtn.addEventListener('click', () => {
     if (!activeTodoList) {
       return initHeader();
     } else {
-      resetStates("delete");
+      resetStates('delete');
       cleanActiveTodoUi();
       activeTodoList = null;
     }
   });
 
-  headerTitle.addEventListener("change", () => {
+  headerTitle.addEventListener('change', () => {
     const isValid = titleValidator(headerTitle);
     if (!isValid) return;
     const date = toDoDraft.date;
@@ -152,8 +151,8 @@ function handleCreateTodoList() {
       existingTodo.push({ ...toDoDraft });
       activeTodoList = toDoDraft.id;
       saveTodo(existingTodo);
-      toDoProgress.classList.add("show-modal");
-      addNewItemContainer.classList.add("show-add-new-item");
+      toDoProgress.classList.add('show-modal');
+      addNewItemContainer.classList.add('show-add-new-item');
       initRenderBadge();
       return;
     }
@@ -185,7 +184,7 @@ function updateToDoCounter(updateList) {
 function handleCompletedItems(itemId, checkBtn) {
   const existingTodo = getTodoFromLocalStorage();
 
-  const checked = checkBtn.classList.toggle("checked");
+  const checked = checkBtn.classList.toggle('checked');
 
   const modTodo = existingTodo.map((todo) => {
     return todo.id === activeTodoList
@@ -219,19 +218,19 @@ function deleteAndCleanTodoList() {
 
   deleteTodoListFromLocalStorage(activeTodoList);
   initRenderBadge();
-  resetStates("delete");
+  resetStates('delete');
   cleanActiveTodoUi();
   activeTodoList = null;
 }
 
 function handleTodoItemActions(e) {
-  const item = e.target.closest(".todo-item");
+  const item = e.target.closest('.todo-item');
   if (!item) return;
 
   const id = item.dataset.id;
 
-  const deleteBtn = e.target.closest(".delete-item-todo-btn");
-  const checkBtn = e.target.closest(".check-btn");
+  const deleteBtn = e.target.closest('.delete-item-todo-btn');
+  const checkBtn = e.target.closest('.check-btn');
 
   if (deleteBtn) {
     deleteItems(id, item);
@@ -245,10 +244,12 @@ function handleTodoItemActions(e) {
 }
 
 function renderTodoItem(todoItem) {
-  const todoElement = createElement(
-    toDoItemsContainer,
-    "todo-item",
-    `<button type="button" class="check-btn ${todoItem.completed ? "checked" : ""}" aria-label="Completa attività" data-testid="todo-item-check-${todoItem.id}">
+  const todoElement = document.createElement('article');
+  todoElement.className = 'todo-item';
+  todoElement.dataset.id = todoItem.id;
+  todoElement.setAttribute('data-testid', `todo-item-${todoItem.id}`);
+
+  todoElement.innerHTML = `<button type="button" class="check-btn ${todoItem.completed ? 'checked' : ''}" aria-label="Completa attività" data-testid="todo-item-check-${todoItem.id}">
             <svg viewBox="0 0 24 24" class="todo-check-icon">
                 <rect x="3" y="3" width="18" height="18" rx="4"></rect>
                 <path d="M7 12.5l3 3 7-7"></path>
@@ -265,29 +266,25 @@ function renderTodoItem(todoItem) {
                 <path d="M10 11v6"></path>
                 <path d="M14 11v6"></path>
             </svg>
-        </button>`,
-    "article",
-    {
-      html: true,
-      dataset: { id: todoItem.id },
-      attributes: { "data-testid": `todo-item-${todoItem.id}` },
-    },
-  );
-  const titleElement = todoElement.querySelector(".title-item");
+        </button>`;
+
+  toDoItemsContainer.appendChild(todoElement);
+
+  const titleElement = todoElement.querySelector('.title-item');
 
   titleElement.textContent = todoItem.title;
 }
 
 function handleCreateItems() {
-  itemInput.addEventListener("change", () => {
+  itemInput.addEventListener('change', () => {
     const isValid = titleValidator(itemInput);
     if (!isValid) return;
     toDoItems.title = itemInput.value.trim();
   });
 
-  addItemBtn.addEventListener("click", () => {
+  addItemBtn.addEventListener('click', () => {
     if (!toDoItems.title) {
-      createMessage("Aggiungi un titolo", itemInput, addNewItemContainer);
+      createMessage('Aggiungi un titolo', itemInput, addNewItemContainer);
       return;
     } else {
       // toDoItems.id = crypto.randomUUID()
@@ -319,9 +316,9 @@ export function initToDobinds() {
   handleCreateItems();
   handleOutsideContextualMenuClick();
 
-  toDoItemsContainer.addEventListener("click", handleTodoItemActions);
+  toDoItemsContainer.addEventListener('click', handleTodoItemActions);
 
-  deleteList.addEventListener("click", deleteAndCleanTodoList);
+  deleteList.addEventListener('click', deleteAndCleanTodoList);
 
-  closeToDo.addEventListener("click", closeToDoList);
+  closeToDo.addEventListener('click', closeToDoList);
 }

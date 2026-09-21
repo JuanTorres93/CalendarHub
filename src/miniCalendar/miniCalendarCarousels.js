@@ -1,5 +1,4 @@
 import dayjs from "../day.js";
-import createElement from "../utils/helpers/createElement.js";
 import { handleListSelection } from "../utils/helpers/listSelection.js";
 import renderYears from "../utils/helpers/creatYearList.js";
 
@@ -17,12 +16,16 @@ export function renderMonthList(currentMonthIndex) {
     dayjs().month(i).format("MMMM"),
   );
   months.forEach((month, index) => {
-    const el = createElement(monthCaroseul, "mini-month-item", month, "div", {
-      attributes: { "data-testid": `mini-month-item-${index}` },
-    });
+    const el = document.createElement("div");
+    el.className = "mini-month-item";
+    el.setAttribute("data-testid", `mini-month-item-${index}`);
+    el.textContent = month;
+
     if (index === currentMonthIndex) {
       el.classList.add("current-month-item");
     }
+
+    monthCaroseul.appendChild(el);
   });
   return months;
 }
@@ -35,7 +38,7 @@ function monthItemsEvents(btn, list, itemsOfList, onDatePartSelect) {
     list,
     ".mini-month-item",
     (li) => {
-      onDatePartSelect("month", itemsOfList.indexOf(li.innerText));
+      onDatePartSelect("month", itemsOfList.indexOf(li.textContent));
     },
     "show-carousel",
   );
@@ -49,7 +52,7 @@ function yearListEvents(btn, list, onDatePartSelect) {
     list,
     ".mini-year-item",
     (li) => {
-      onDatePartSelect("year", Number(li.innerText));
+      onDatePartSelect("year", Number(li.textContent));
     },
     "show-carousel",
   );

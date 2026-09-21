@@ -1,5 +1,4 @@
 import dayjs from "./day.js";
-import createElement from "./utils/helpers/createElement.js";
 import { dayGrid } from "./utils/helpers/dom/mainCalendarDom.js";
 import { createHourCell } from "./components/features/calendar/hourCell.js";
 import { createTimeLabel } from "./components/features/calendar/timeLabel.js";
@@ -9,17 +8,32 @@ import { createTodoContainer } from "./components/features/calendar/todoContaine
 function createDailyGrid(currentview) {
   dayGrid.innerHTML = "";
 
-  let dataDay = currentview.format("YYYY-MM-DD");
-  const dailyHeader = createElement(dayGrid, "daily-header", null, "div", {
-    dataset: { day: dataDay },
-  });
-  dailyHeader.appendChild(createDayLabel({ type: "day", date: currentview }));
-  createElement(dailyHeader, "daily-allDay-container", null, "div");
-  dailyHeader.appendChild(createTodoContainer({ type: "day" }));
+  const dataDay = currentview.format("YYYY-MM-DD");
 
-  const dailyMain = createElement(dayGrid, "daily-main", null, "div");
-  const div = createElement(dailyMain, "ul-day-time", null, "div");
-  const list = createElement(div, "day-list", null, "ul");
+  const dailyHeader = document.createElement("div");
+  dailyHeader.className = "daily-header";
+  dailyHeader.dataset.day = dataDay;
+
+  dailyHeader.appendChild(createDayLabel({ type: "day", date: currentview }));
+
+  const allDayContainer = document.createElement("div");
+  allDayContainer.className = "daily-allDay-container";
+
+  dailyHeader.appendChild(allDayContainer);
+  dailyHeader.appendChild(createTodoContainer({ type: "day" }));
+  dayGrid.appendChild(dailyHeader);
+
+  const dailyMain = document.createElement("div");
+  dailyMain.className = "daily-main";
+
+  const div = document.createElement("div");
+  div.className = "ul-day-time";
+
+  const list = document.createElement("ul");
+  list.className = "day-list";
+
+  div.appendChild(list);
+  dailyMain.appendChild(div);
 
   for (let i = 0; i < 24; i++) {
     const time = dayjs().hour(i).minute(0).format("HH:mm");
@@ -31,15 +45,18 @@ function createDailyGrid(currentview) {
       }),
     );
   }
-  const dayStructure = createElement(dailyMain, "day-structure", null, "div");
 
-  dayStructure.insertAdjacentHTML(
-    "afterbegin",
-    `
-    <ul class="daily-name" data-day=${dataDay}> </ul>
-    `,
-  );
-  const dailyName = dayStructure.querySelector(".daily-name");
+  const dayStructure = document.createElement("div");
+  dayStructure.className = "day-structure";
+
+  dailyMain.appendChild(dayStructure);
+  dayGrid.appendChild(dailyMain);
+
+  const dailyName = document.createElement("ul");
+  dailyName.className = "daily-name";
+  dailyName.dataset.day = dataDay;
+
+  dayStructure.appendChild(dailyName);
 
   for (let j = 0; j < 24; j++) {
     const dataTime = currentview.hour(j);

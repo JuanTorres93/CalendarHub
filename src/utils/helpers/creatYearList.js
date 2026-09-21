@@ -1,5 +1,4 @@
 import dayjs from "../../day.js";
-import createElement from "./createElement.js";
 
 function renderYears(listClass, itemClass, currentYear, currentYearClass) {
   const carousel = document.querySelector(listClass);
@@ -9,12 +8,16 @@ function renderYears(listClass, itemClass, currentYear, currentYearClass) {
     return startYear;
   });
   yearList.forEach((year) => {
-    const el = createElement(carousel, itemClass, year, "div", {
-      attributes: { "data-testid": `mini-year-item-${year}` },
-    });
+    const el = document.createElement("div");
+    el.className = itemClass;
+    el.setAttribute("data-testid", `mini-year-item-${year}`);
+    el.textContent = year;
+
     if (year === currentYear) {
       el.classList.add(currentYearClass);
     }
+
+    carousel.appendChild(el);
   });
   return yearList;
 }

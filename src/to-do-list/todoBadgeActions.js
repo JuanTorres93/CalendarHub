@@ -1,5 +1,4 @@
 import { getTodoFromLocalStorage } from "./toDoStorage.js";
-import createElement from "../utils/helpers/createElement.js";
 import getDropDownPosition from "../utils/helpers/dropDownPositioner.js";
 import { monthGrid } from "../utils/helpers/dom/mainCalendarDom.js";
 
@@ -7,10 +6,13 @@ let todoMenuContext;
 
 function createItemsOfTodoMenu(items, father) {
   items.forEach((item) => {
-    const menuItem = createElement(father, "", item.title, "li", {
-      dataset: { id: item.id, action: "rehydrate-todo" },
-      attributes: { "data-testid": `todo-menu-item-${item.id}` },
-    });
+    const menuItem = document.createElement("li");
+    menuItem.dataset.id = item.id;
+    menuItem.dataset.action = "rehydrate-todo";
+    menuItem.setAttribute("data-testid", `todo-menu-item-${item.id}`);
+    menuItem.textContent = item.title;
+
+    father.appendChild(menuItem);
 
     menuItem.addEventListener("click", async (e) => {
       e.stopPropagation();
@@ -38,18 +40,17 @@ export function openContextualMenu(
 
   const todoOfTheDay = allTodo.filter((todo) => todo.date === date);
 
-  const menu = createElement(
-    fatherCell,
-    "contextual-menu",
-    `<ul class="contextual-menu-list" data-testid="todo-contextual-menu-list"></ul>
-        `,
-    "div",
-    {
-      html: true,
-      attributes: { "data-testid": "todo-contextual-menu" },
-    },
-  );
-  const ul = menu.querySelector(".contextual-menu-list");
+  const menu = document.createElement("div");
+  menu.className = "contextual-menu";
+  menu.setAttribute("data-testid", "todo-contextual-menu");
+
+  const ul = document.createElement("ul");
+  ul.className = "contextual-menu-list";
+  ul.setAttribute("data-testid", "todo-contextual-menu-list");
+
+  menu.appendChild(ul);
+  fatherCell.appendChild(menu);
+
   createItemsOfTodoMenu(todoOfTheDay, ul);
   if (contextElement === monthGrid) {
     //ho alzato lo z-index del padre perchè le celle vengono generate una dopo l'altra,

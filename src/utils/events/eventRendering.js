@@ -1,6 +1,5 @@
 import { AppGetAllEventsUsecase } from "../../interface-adapters/use-cases/AppGetAllEventsUsecase.js";
 import { getRepeatedEvents } from "../../eventCreation/generateRepeatEvents.js";
-import createElement from "../helpers/createElement.js";
 import { timeToMinutes } from "../helpers/timeHelper.js";
 
 export function getAllRenderableEvents() {
@@ -43,36 +42,49 @@ function renderMonthEvents(allEvents) {
       let eventElement;
 
       if (event.allDay) {
-        eventElement = createElement(
-          allDayContainer,
-          "monthly-event",
-          "",
-          "div",
-          {
-            dataset: { id: event.id },
-            attributes: { "data-testid": `monthly-event-${event.id}` },
-          },
-        );
+        eventElement = document.createElement("div");
+        eventElement.className = "monthly-event";
+        eventElement.dataset.id = event.id;
+        eventElement.setAttribute("data-testid", `monthly-event-${event.id}`);
 
-        createElement(eventElement, null, "Oggi:", "span");
+        const todayLabel = document.createElement("span");
+        todayLabel.textContent = "Oggi:";
 
-        createElement(eventElement, null, event.title, "p");
+        const title = document.createElement("p");
+        title.textContent = event.title;
 
+        eventElement.appendChild(todayLabel);
+        eventElement.appendChild(title);
         eventElement.classList.add("render-allDay");
       } else {
-        eventElement = createElement(container, "monthly-event", "", "div", {
-          dataset: { id: event.id },
-          attributes: { "data-testid": `monthly-event-${event.id}` },
-        });
+        eventElement = document.createElement("div");
+        eventElement.className = "monthly-event";
+        eventElement.dataset.id = event.id;
+        eventElement.setAttribute("data-testid", `monthly-event-${event.id}`);
 
-        createElement(eventElement, "icon-month", event.icon, "span");
+        const icon = document.createElement("span");
+        icon.className = "icon-month";
+        icon.textContent = event.icon;
 
-        createElement(eventElement, "title-month", event.title, "span");
+        const title = document.createElement("span");
+        title.className = "title-month";
+        title.textContent = event.title;
+
+        eventElement.appendChild(icon);
+        eventElement.appendChild(title);
 
         if (event.isOccurrence) {
-          createElement(eventElement, "repeat-icon", "🔗", "small");
+          const repeatIcon = document.createElement("small");
+          repeatIcon.className = "repeat-icon";
+          repeatIcon.textContent = "🔗";
+
+          eventElement.appendChild(repeatIcon);
         }
+
+        container.appendChild(eventElement);
       }
+
+      if (event.allDay) allDayContainer.appendChild(eventElement);
 
       eventElement.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -166,58 +178,70 @@ function renderHelper(
   const timedEvents = eventOfDay.filter((event) => !event.allDay);
 
   allDayEvents.forEach((event) => {
-    const eventElement = createElement(
-      allDayContainer,
-      allDayClass,
-      "",
-      "div",
-      {
-        dataset: { id: event.id },
-      },
-    );
+    const eventElement = document.createElement("div");
+    eventElement.className = allDayClass;
+    eventElement.dataset.id = event.id;
 
     bindEventInfoClick(eventElement, allDayClass === "week-allDay-event");
 
-    createElement(eventElement, "all-event-start-text", "Oggi:", "span");
+    const startText = document.createElement("span");
+    startText.className = "all-event-start-text";
+    startText.textContent = "Oggi:";
 
-    const titleContainer = createElement(eventElement, null, "", "p");
+    const titleContainer = document.createElement("p");
+    const titleIcon = document.createElement("span");
+    titleIcon.textContent = event.icon;
 
-    createElement(titleContainer, null, event.icon, "span");
-
+    titleContainer.appendChild(titleIcon);
     titleContainer.appendChild(document.createTextNode(event.title));
 
+    eventElement.appendChild(startText);
+    eventElement.appendChild(titleContainer);
     eventElement.classList.add(`event-${event.color}`);
 
     if (event.urgent) {
       eventElement.classList.add("event-urgent");
     }
+
+    allDayContainer.appendChild(eventElement);
   });
   timedEvents.forEach((event) => {
-    const eventElement = createElement(container, eventClass, "", "div", {
-      dataset: { id: event.id },
-    });
+    const eventElement = document.createElement("div");
+    eventElement.className = eventClass;
+    eventElement.dataset.id = event.id;
 
     bindEventInfoClick(eventElement, eventClass === "weekly-event");
 
     if (event.isOccurrence) {
-      createElement(eventElement, null, event.icon, "span");
+      const icon = document.createElement("span");
+      icon.textContent = event.icon;
 
-      createElement(eventElement, null, event.title, "span");
+      const title = document.createElement("span");
+      title.textContent = event.title;
 
-      createElement(eventElement, "repeat-icon-alt", "🔗", "small");
+      const repeatIcon = document.createElement("small");
+      repeatIcon.className = "repeat-icon-alt";
+      repeatIcon.textContent = "🔗";
+
+      eventElement.appendChild(icon);
+      eventElement.appendChild(title);
+      eventElement.appendChild(repeatIcon);
     } else {
-      createElement(eventElement, "render-time", event.from, "span");
+      const renderTime = document.createElement("span");
+      renderTime.className = "render-time";
+      renderTime.textContent = event.from;
 
-      const titleContainer = createElement(
-        eventElement,
-        "render-title",
-        "",
-        "p",
-      );
+      const titleContainer = document.createElement("p");
+      titleContainer.className = "render-title";
 
-      createElement(titleContainer, null, event.icon, "span");
+      const titleIcon = document.createElement("span");
+      titleIcon.textContent = event.icon;
 
+      titleContainer.appendChild(titleIcon);
       titleContainer.appendChild(document.createTextNode(` ${event.title}`));
+
+      eventElement.appendChild(renderTime);
+      eventElement.appendChild(titleContainer);
     }
 
     const start = timeToMinutes(event.from);
@@ -250,5 +274,7 @@ function renderHelper(
     if (event.urgent) {
       eventElement.classList.add("event-urgent");
     }
+
+    container.appendChild(eventElement);
   });
 }

@@ -4,7 +4,6 @@ import {
   dayGrid,
 } from "../utils/helpers/dom/mainCalendarDom.js";
 import { getTodoFromLocalStorage } from "./toDoStorage.js";
-import createElement from "../utils/helpers/createElement.js";
 import { openContextualMenu } from "./todoBadgeActions.js";
 
 function renderBadgeHelper(allTodo, dataDay, container, grid, dayCell) {
@@ -14,9 +13,11 @@ function renderBadgeHelper(allTodo, dataDay, container, grid, dayCell) {
 
   if (todoOfDay.length === 0) return;
 
-  const badge = createElement(container, "todo-btn-header", null, "button", {
-    attributes: { type: "button", "data-testid": `todo-badge-${dataDay}` },
-  });
+  const badge = document.createElement("button");
+  badge.className = "todo-btn-header";
+  badge.type = "button";
+  badge.setAttribute("data-testid", `todo-badge-${dataDay}`);
+  container.appendChild(badge);
 
   const count = document.createElement("span");
   count.classList.add("todo-count");

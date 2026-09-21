@@ -1,5 +1,4 @@
 import { tutorialSlides } from "./utils/data/tutorialData.js";
-import createElement from "./utils/helpers/createElement.js";
 
 const TUTORIAL_KEY = "calendar_tutorial_seen";
 let currentSlide = 0;
@@ -64,10 +63,13 @@ function renderNavTutorial() {
     new Set(tutorialSlides.map((item) => item.chapter)),
   );
   getChapters.forEach((chapter) => {
-    createElement(nav, "tutorial-navigation-btns", chapter, "button", {
-      attributes: { type: "button" },
-      dataset: { chapter },
-    });
+    const chapterBtn = document.createElement("button");
+    chapterBtn.className = "tutorial-navigation-btns";
+    chapterBtn.type = "button";
+    chapterBtn.dataset.chapter = chapter;
+    chapterBtn.textContent = chapter;
+
+    nav.appendChild(chapterBtn);
   });
 }
 
