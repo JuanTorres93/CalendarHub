@@ -50,13 +50,13 @@ export function getTodoListsFromLocalStorage() {
   }
 }
 
-export function deleteItemsFromLocalStorage(currentId, activeId) {
+export function deleteTodoFromList(todoId, listId) {
   const allTodo = getTodoListsFromLocalStorage();
   const modTodo = allTodo.map((todo) => {
-    return todo.id === activeId
+    return todo.id === listId
       ? {
           ...todo,
-          items: todo.items.filter((x) => x.id !== currentId),
+          items: todo.items.filter((x) => x.id !== todoId),
         }
       : todo;
   });

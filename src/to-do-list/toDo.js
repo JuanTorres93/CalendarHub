@@ -1,3 +1,5 @@
+import { AppGetAllTodoListsUsecase } from '../interface-adapters/use-cases/AppGetAllTodoListsUsecase.js';
+
 import {
   todoLayer,
   createList,
@@ -26,7 +28,7 @@ import {
 import {
   saveTodo,
   getTodoListsFromLocalStorage,
-  deleteItemsFromLocalStorage,
+  deleteTodoFromList,
   deleteTodoListFromLocalStorage,
 } from './toDoStorage.js';
 
@@ -69,8 +71,6 @@ export function getSelectedTodo(todoId) {
 }
 
 function rehydrateTodoList(todo) {
-  const todos = getTodoListsFromLocalStorage();
-
   activeTodoList = todo.id;
   todoContextDate = todo.date;
 
@@ -88,7 +88,7 @@ function rehydrateTodoList(todo) {
   // Sync draft date so "New" creates another list for the same rehydrated day.
   initTodoDraft(todo.date);
 
-  updateToDoCounter(todos);
+  updateToDoCounter();
 }
 
 function formatTodoHeaderDate(fullDate) {
@@ -163,9 +163,10 @@ function handleCreateTodoList() {
     saveTodo(updatedTodos);
   });
 }
-function updateToDoCounter(updateList) {
-  if (!updateList) return;
-  const updatedActiveList = updateList.find(
+
+function updateToDoCounter() {
+  const allTodo = AppGetAllTodoListsUsecase.execute();
+  const updatedActiveList = allTodo.find(
     (todoList) => todoList.id === activeTodoList,
   );
   if (!updatedActiveList) return;
@@ -174,10 +175,12 @@ function updateToDoCounter(updateList) {
   const completed = updatedActiveList.items.filter(
     (todoItem) => todoItem.completed,
   ).length;
+
   if (total === 0) {
     toDoProgress.innerText = EMPTY_TODO_MESSAGE;
     return;
   }
+
   toDoProgress.innerText = `${completed}/${total} attività completate`;
 }
 
@@ -202,15 +205,13 @@ function handleCompletedItems(itemId, checkBtn) {
       : todo;
   });
   saveTodo(modTodo);
-  // Passo lo stato aggiornato delle ToDo al counter,
-  // così evito di rileggere subito dal LocalStorage.
-  updateToDoCounter(modTodo);
+  updateToDoCounter();
 }
 
 function deleteItems(id, item) {
-  const modTodo = deleteItemsFromLocalStorage(id, activeTodoList);
+  deleteTodoFromList(id, activeTodoList);
   item.remove();
-  updateToDoCounter(modTodo);
+  updateToDoCounter();
 }
 
 function deleteAndCleanTodoList() {
@@ -305,7 +306,7 @@ function handleCreateItems() {
           : item;
       });
       saveTodo(modTodo);
-      updateToDoCounter(modTodo);
+      updateToDoCounter();
     }
     resetToDoItemsValues();
   });
