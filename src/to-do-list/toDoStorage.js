@@ -38,7 +38,7 @@ export function saveTodo(todos) {
   }
 }
 
-export function getTodoFromLocalStorage() {
+export function getTodoListFromLocalStorage() {
   try {
     const storedTodo = localStorage.getItem('todoEvents');
     if (!storedTodo) return [];
@@ -46,7 +46,7 @@ export function getTodoFromLocalStorage() {
 
     if (!Array.isArray(parsedTodo)) return [];
 
-    return parsedTodo.filter((todo, index) => {
+    const result = parsedTodo.filter((todo, index) => {
       const isValid = isValidTodoList(todo);
 
       if (!isValid) {
@@ -55,6 +55,8 @@ export function getTodoFromLocalStorage() {
 
       return isValid;
     });
+
+    return result;
   } catch (error) {
     console.error('invalid Todo in localSotrage', error);
     return [];
@@ -62,7 +64,7 @@ export function getTodoFromLocalStorage() {
 }
 
 export function deleteItemsFromLocalStorage(currentId, activeId) {
-  const allTodo = getTodoFromLocalStorage();
+  const allTodo = getTodoListFromLocalStorage();
   const modTodo = allTodo.map((todo) => {
     return todo.id === activeId
       ? {
@@ -81,7 +83,7 @@ export function deleteItemsFromLocalStorage(currentId, activeId) {
 }
 
 export function deleteTodoListFromLocalStorage(currentId) {
-  const allTodo = getTodoFromLocalStorage();
+  const allTodo = getTodoListFromLocalStorage();
   const updatedTodos = allTodo.filter((todo) => todo.id !== currentId);
 
   const hasBeenSaved = saveTodo(updatedTodos);

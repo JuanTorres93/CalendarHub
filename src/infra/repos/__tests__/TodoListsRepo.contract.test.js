@@ -146,7 +146,7 @@ repos.forEach(({ name, repoClass }) => {
     it.skipIf(name !== 'LocalStorageTodoListsRepo')(
       'should read no todo lists from empty storage',
       () => {
-        localStorage.removeItem('calendarTodoLists');
+        localStorage.removeItem('todoEvents');
 
         const emptyRepo = new repoClass();
 
@@ -158,7 +158,7 @@ repos.forEach(({ name, repoClass }) => {
     it.skipIf(name !== 'LocalStorageTodoListsRepo')(
       'should read no todo lists from corrupted storage data',
       () => {
-        localStorage.setItem('calendarTodoLists', '{corrupted json');
+        localStorage.setItem('todoEvents', '{corrupted json');
 
         const emptyRepo = new repoClass();
 

@@ -25,7 +25,7 @@ import {
 
 import {
   saveTodo,
-  getTodoFromLocalStorage,
+  getTodoListFromLocalStorage,
   deleteItemsFromLocalStorage,
   deleteTodoListFromLocalStorage,
 } from './toDoStorage.js';
@@ -60,7 +60,7 @@ export function openTodo(date) {
 }
 
 export function getSelectedTodo(todoId) {
-  const todos = getTodoFromLocalStorage();
+  const todos = getTodoListFromLocalStorage();
   const currentTodo = todos.find((todo) => todo.id === todoId);
   if (!currentTodo) return;
 
@@ -69,7 +69,7 @@ export function getSelectedTodo(todoId) {
 }
 
 function rehydrateTodoList(todo) {
-  const todos = getTodoFromLocalStorage();
+  const todos = getTodoListFromLocalStorage();
 
   activeTodoList = todo.id;
   todoContextDate = todo.date;
@@ -143,7 +143,7 @@ function handleCreateTodoList() {
     if (!isValid) return;
     const date = toDoDraft.date;
     const title = headerTitle.value.trim();
-    const existingTodo = getTodoFromLocalStorage();
+    const existingTodo = getTodoListFromLocalStorage();
 
     if (!activeTodoList) {
       createNewTodo(date, title);
@@ -182,7 +182,7 @@ function updateToDoCounter(updateList) {
 }
 
 function handleCompletedItems(itemId, checkBtn) {
-  const existingTodo = getTodoFromLocalStorage();
+  const existingTodo = getTodoListFromLocalStorage();
 
   const checked = checkBtn.classList.toggle('checked');
 
@@ -295,7 +295,7 @@ function handleCreateItems() {
       //add "checked" to the check-btn
       renderTodoItem(newItem);
 
-      const existingTodo = getTodoFromLocalStorage();
+      const existingTodo = getTodoListFromLocalStorage();
       const modTodo = existingTodo.map((item) => {
         return item.id === activeTodoList
           ? {

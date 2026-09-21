@@ -1,7 +1,7 @@
 import { TodoListsRepo } from '../../../application-layer/repos/TodoListsRepo.port.js';
 import { TodoList } from '../../../domain/entities/todolist/TodoList.js';
 
-const STORAGE_KEY = 'calendarTodoLists';
+const STORAGE_KEY = 'todoEvents';
 
 export class LocalStorageTodoListsRepo extends TodoListsRepo {
   getById(id) {
