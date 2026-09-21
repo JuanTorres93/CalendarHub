@@ -2,6 +2,7 @@ import "./modalOverlayInjector.js";
 import { replaceMarkers } from "./markerReplacer.js";
 import createMonthGrid from "./features/calendar/monthGrid.js";
 import createWeekGrid from "./features/calendar/weekGrid.js";
+import createDailyGrid from "./features/calendar/dayGrid.js";
 import { calendarLogic } from "../calendarLogic.js";
 import createCurrentTimeframeDisplay from "./navbar/currentTimeframeDisplay/currentTimeframeDisplay.js";
 import createLeftArrowButton from "./navbar/currentTimeframeDisplay/leftArrowButton.js";
@@ -45,6 +46,9 @@ const componentBuilders = {
   },
   replace_weekGrid() {
     return createWeekGrid(calendarLogic.date);
+  },
+  replace_dayGrid() {
+    return createDailyGrid(calendarLogic.date);
   },
 };
 

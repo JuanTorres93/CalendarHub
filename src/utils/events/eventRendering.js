@@ -100,9 +100,7 @@ function renderMonthEvents(allEvents) {
   });
 }
 
-function bindEventInfoClick(eventElement, enabled) {
-  if (!enabled) return;
-
+function bindEventInfoClick(eventElement) {
   eventElement.addEventListener("click", (e) => {
     e.stopPropagation();
     openEventInfo(eventElement, e);
@@ -182,7 +180,7 @@ function renderHelper(
     eventElement.className = allDayClass;
     eventElement.dataset.id = event.id;
 
-    bindEventInfoClick(eventElement, allDayClass === "week-allDay-event");
+    bindEventInfoClick(eventElement);
 
     const startText = document.createElement("span");
     startText.className = "all-event-start-text";
@@ -210,7 +208,7 @@ function renderHelper(
     eventElement.className = eventClass;
     eventElement.dataset.id = event.id;
 
-    bindEventInfoClick(eventElement, eventClass === "weekly-event");
+    bindEventInfoClick(eventElement);
 
     if (event.isOccurrence) {
       const icon = document.createElement("span");
