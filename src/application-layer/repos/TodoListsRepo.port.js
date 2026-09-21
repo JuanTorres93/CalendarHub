@@ -3,6 +3,10 @@ export class TodoListsRepo {
     throw new Error('TodoListsRepo.getById() not implemented');
   }
 
+  getAll() {
+    throw new Error('TodoListsRepo.getAll() not implemented');
+  }
+
   save(todoList) {
     throw new Error('TodoListsRepo.save() not implemented');
   }

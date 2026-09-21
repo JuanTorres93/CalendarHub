@@ -43,6 +43,33 @@ repos.forEach(({ name, repoClass }) => {
       });
     });
 
+    describe('getAll', () => {
+      it('should return all saved todo lists', () => {
+        const secondTodoList = createTestTodoList({
+          id: 'second-todolist-id',
+          title: 'Second todolist',
+        });
+
+        repo.save(secondTodoList);
+
+        const fetchedTodoLists = repo.getAll();
+
+        expect(
+          fetchedTodoLists.map((fetchedTodoList) =>
+            fetchedTodoList.toCreateProps(),
+          ),
+        ).toEqual([todoList.toCreateProps(), secondTodoList.toCreateProps()]);
+      });
+
+      it('should return an empty array if no todo lists are saved', () => {
+        if (name === 'LocalStorageTodoListsRepo') localStorage.clear();
+
+        const emptyRepo = new repoClass();
+
+        expect(emptyRepo.getAll()).toEqual([]);
+      });
+    });
+
     describe('save', () => {
       it('should save a new todo list', () => {
         const newTodoList = createTestTodoList({ id: 'new-todolist-id' });

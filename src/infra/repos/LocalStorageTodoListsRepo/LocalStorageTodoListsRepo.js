@@ -12,6 +12,12 @@ export class LocalStorageTodoListsRepo extends TodoListsRepo {
     return storedTodoList ? TodoList.create(storedTodoList) : null;
   }
 
+  getAll() {
+    return readRawTodoLists().map((storedTodoList) =>
+      TodoList.create(storedTodoList),
+    );
+  }
+
   save(todoList) {
     const storedTodoLists = readRawTodoLists();
     const todoListData = todoList.toCreateProps();

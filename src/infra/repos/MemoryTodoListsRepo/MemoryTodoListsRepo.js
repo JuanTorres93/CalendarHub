@@ -13,6 +13,10 @@ export class MemoryTodoListsRepo extends TodoListsRepo {
     return todoList ? todoList.clone() : null;
   }
 
+  getAll() {
+    return [...this.todoLists.values()].map((todoList) => todoList.clone());
+  }
+
   save(todoList) {
     this.todoLists.set(todoList.id, todoList.clone());
   }
