@@ -4,6 +4,11 @@ import { Todo } from '../domain/entities/todo/Todo.js';
 import { TodoList } from '../domain/entities/todolist/TodoList.js';
 import { AppGetAllTodoListsUsecase } from '../interface-adapters/use-cases/AppGetAllTodoListsUsecase.js';
 import { AppDeleteTodoFromListUsecase } from '../interface-adapters/use-cases/AppDeleteTodoFromListUsecase.js';
+import { AppDeleteTodoListUsecase } from '../interface-adapters/use-cases/AppDeleteTodoListUsecase.js';
+import { AppCreateTodoListUsecase } from '../interface-adapters/use-cases/AppCreateTodoListUsecase.js';
+import { AppAddTodoToListUsecase } from '../interface-adapters/use-cases/AppAddTodoToListUsecase.js';
+import { AppRenameTodoListUsecase } from '../interface-adapters/use-cases/AppRenameTodoListUsecase.js';
+import { AppToggleTodoCompletionUsecase } from '../interface-adapters/use-cases/AppToggleTodoCompletionUsecase.js';
 
 export function saveTodo(todos) {
   if (!Array.isArray(todos)) {
@@ -42,11 +47,10 @@ export function saveTodo(todos) {
 
 export function getTodoListsFromLocalStorage() {
   try {
-    const allTodo = AppGetAllTodoListsUsecase.execute();
-
-    return allTodo.map((todo) => todo.toJSON());
+    return AppGetAllTodoListsUsecase.execute();
   } catch (error) {
-    console.error('invalid Todo in localSotrage', error);
+    console.error('invalid Todo in localStorage', error);
+
     return [];
   }
 }
@@ -56,14 +60,23 @@ export function deleteTodoFromList(todoId, listId) {
 }
 
 export function deleteTodoListFromLocalStorage(currentId) {
-  const allTodo = getTodoListsFromLocalStorage();
-  const updatedTodos = allTodo.filter((todo) => todo.id !== currentId);
+  AppDeleteTodoListUsecase.execute({ id: currentId });
+}
 
-  const hasBeenSaved = saveTodo(updatedTodos);
+export function createTodoList(date, title) {
+  return AppCreateTodoListUsecase.execute({ date, title });
+}
 
-  if (!hasBeenSaved) return allTodo;
+export function addTodoToList(todoListId, title) {
+  AppAddTodoToListUsecase.execute({ todoListId, title });
+}
 
-  return updatedTodos;
+export function renameTodoList(todoListId, newTitle) {
+  AppRenameTodoListUsecase.execute({ id: todoListId, newTitle });
+}
+
+export function toggleTodoCompletion(todoId) {
+  AppToggleTodoCompletionUsecase.execute({ todoId });
 }
 
 function isValidTodoList(todo) {

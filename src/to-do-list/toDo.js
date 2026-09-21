@@ -17,7 +17,6 @@ import {
 } from '../utils/helpers/dom/toDoDom.js';
 
 import {
-  createNewTodo,
   toDoDraft,
   initTodoDraft,
   resetStates,
@@ -26,10 +25,13 @@ import {
 } from './toDoDraft.js';
 
 import {
-  saveTodo,
   getTodoListsFromLocalStorage,
   deleteTodoFromList,
   deleteTodoListFromLocalStorage,
+  createTodoList,
+  addTodoToList,
+  renameTodoList,
+  toggleTodoCompletion,
 } from './toDoStorage.js';
 
 import { createMessage } from '../utils/helpers/createElement.js';
@@ -139,28 +141,22 @@ function handleCreateTodoList() {
   });
 
   headerTitle.addEventListener('change', () => {
-    const isValid = titleValidator(headerTitle);
-    if (!isValid) return;
     const date = toDoDraft.date;
     const title = headerTitle.value.trim();
-    const existingTodo = getTodoListsFromLocalStorage();
 
     if (!activeTodoList) {
-      createNewTodo(date, title);
+      const createdTodoList = createTodoList(date, title);
 
-      existingTodo.push({ ...toDoDraft });
-      activeTodoList = toDoDraft.id;
-      saveTodo(existingTodo);
+      activeTodoList = createdTodoList.id;
       toDoProgress.classList.add('show-modal');
       addNewItemContainer.classList.add('show-add-new-item');
+
       initRenderBadge();
+
       return;
     }
-    const updatedTodos = existingTodo.map((todo) => {
-      return todo.id === activeTodoList ? { ...todo, title } : todo;
-    });
 
-    saveTodo(updatedTodos);
+    renameTodoList(activeTodoList, title);
   });
 }
 
@@ -185,26 +181,10 @@ function updateToDoCounter() {
 }
 
 function handleCompletedItems(itemId, checkBtn) {
-  const existingTodo = getTodoListsFromLocalStorage();
+  checkBtn.classList.toggle('checked');
 
-  const checked = checkBtn.classList.toggle('checked');
+  toggleTodoCompletion(itemId);
 
-  const modTodo = existingTodo.map((todo) => {
-    return todo.id === activeTodoList
-      ? {
-          ...todo,
-          items: todo.items.map((todoItem) => {
-            return todoItem.id === itemId
-              ? {
-                  ...todoItem,
-                  completed: checked,
-                }
-              : todoItem;
-          }),
-        }
-      : todo;
-  });
-  saveTodo(modTodo);
   updateToDoCounter();
 }
 
@@ -298,16 +278,7 @@ function handleCreateItems() {
       //add "checked" to the check-btn
       renderTodoItem(newItem);
 
-      const existingTodo = getTodoListsFromLocalStorage();
-      const modTodo = existingTodo.map((item) => {
-        return item.id === activeTodoList
-          ? {
-              ...item,
-              items: [...item.items, newItem],
-            }
-          : item;
-      });
-      saveTodo(modTodo);
+      addTodoToList(activeTodoList, newItem.title);
       updateToDoCounter();
     }
     resetToDoItemsValues();
