@@ -1,5 +1,7 @@
 import './modalOverlayInjector.js';
 import { replaceMarkers } from './markerReplacer.js';
+import createMonthGrid from './features/calendar/monthGrid.js';
+import { calendarLogic } from '../calendarLogic.js';
 import createCurrentTimeframeDisplay from './navbar/currentTimeframeDisplay/currentTimeframeDisplay.js';
 import createLeftArrowButton from './navbar/currentTimeframeDisplay/leftArrowButton.js';
 import createRightArrowButton from './navbar/currentTimeframeDisplay/rightArrowButton.js';
@@ -36,6 +38,9 @@ const componentBuilders = {
   replace_currentTimeframeDisplay(parts) {
     const [, timeframe] = parts;
     return createCurrentTimeframeDisplay(timeframe);
+  },
+  replace_monthGrid() {
+    return createMonthGrid(calendarLogic.date);
   },
 };
 

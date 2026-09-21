@@ -11,7 +11,6 @@ import {
 import { calendarLogic } from '../calendarLogic.js';
 import dayjs from '../day.js';
 import { validateAndReturnCustomDate } from '../eventCreation/repeatcustomDates.js';
-import { config } from '../utils/config/config.js';
 import { eventFormState } from '../utils/events/eventFormState.js';
 import { updateEventDateUI } from '../utils/events/eventsUI.js';
 import { updateUntilUIAndDraft } from '../utils/events/repeatEventsUi.js';
@@ -229,7 +228,7 @@ function createMiniCalendar(newDate) {
     },
   );
 
-  createMonthGrid(newDate, gridCalendar, config.mini);
+  gridCalendar.appendChild(createMonthGrid(newDate, true));
   selectDays();
 
   cancelBtn.addEventListener('click', cancelMiniCalendar);

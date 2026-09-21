@@ -12,10 +12,8 @@ import {
   closeContextualMenu,
   openContextualMenu,
 } from './to-do-list/todoBadgeActions.js';
-import { config } from './utils/config/config.js';
 import { renderEvents } from './utils/events/eventRendering.js';
 import { theme } from './utils/theme.js';
-
 import {
   currentDailyDisplay,
   currentMonthDisplay,
@@ -29,7 +27,6 @@ import {
 calendarLogic.init({
   createMonthGrid,
   monthGrid,
-  config,
   createWeekGrid,
   createDailyGrid,
   theme,

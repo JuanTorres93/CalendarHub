@@ -2,7 +2,46 @@ import { createDayCell } from './dayCell.js';
 import { createDayLabel } from './dayLabel.js';
 import { config } from '../../../utils/config/config.js';
 
-function createMonthGrid(currentView, gridType, gridConfig) {
+let mainMonthGrid = null;
+let mainMonthStructure = null;
+
+function createMonthGrid(currentView, isMini = false) {
+  if (!isMini) {
+    if (mainMonthStructure) {
+      reRenderMainGrid(currentView);
+      return mainMonthGrid;
+    }
+
+    const grid = buildMonthGrid(currentView, isMini);
+
+    mainMonthGrid = grid.monthContainer;
+    mainMonthStructure = grid.monthStructureContainer;
+
+    return mainMonthGrid;
+  }
+
+  return buildMonthGrid(currentView, isMini).monthContainer;
+}
+
+function buildMonthGrid(currentView, isMini) {
+  const monthContainer = initMonthContainer(isMini);
+  const monthStructureContainer = initMonthStructure();
+
+  monthContainer.appendChild(monthStructureContainer);
+  buildGridContent(monthStructureContainer, currentView, isMini);
+
+  return { monthContainer, monthStructureContainer };
+}
+
+function reRenderMainGrid(currentView) {
+  mainMonthStructure.innerHTML = '';
+
+  buildGridContent(mainMonthStructure, currentView, false);
+}
+
+function buildGridContent(monthStructureContainer, currentView, isMini) {
+  const gridConfig = isMini ? config.mini : config.main;
+
   const giorniMese = currentView.daysInMonth();
   const primoGiorno = currentView.date(1);
   const firstDayIndex = currentView.startOf('month').weekday();
@@ -10,11 +49,10 @@ function createMonthGrid(currentView, gridType, gridConfig) {
   const lastDayPrevMonth = primoGiorno.subtract(1, 'day');
   const firstDayNextMonth = ultimoGiorno.add(1, 'day');
 
-  gridType.innerHTML = '';
-
   const firstRow = document.createElement('div');
   firstRow.classList.add('day-grid');
-  gridType.appendChild(firstRow);
+
+  monthStructureContainer.appendChild(firstRow);
 
   for (let j = 0; j < 7; j++) {
     firstRow.appendChild(
@@ -27,7 +65,9 @@ function createMonthGrid(currentView, gridType, gridConfig) {
   }
   const secondRow = document.createElement('article');
   secondRow.classList.add(`${gridConfig.boxesContainer}`);
-  gridType.appendChild(secondRow);
+
+  monthStructureContainer.appendChild(secondRow);
+
   for (let i = 0; i < 42; i++) {
     let dataDayID, dayNumber, dayClass;
     if (i < firstDayIndex) {
@@ -52,10 +92,30 @@ function createMonthGrid(currentView, gridType, gridConfig) {
       createDayCell({
         dataDayID,
         extraClasses: [gridConfig.boxGrid, dayClass],
-        isMini: gridConfig === config.mini,
+        isMini,
       }),
     );
   }
+}
+
+function initMonthContainer(isMini) {
+  const monthContainer = document.createElement('div');
+
+  if (!isMini) {
+    monthContainer.id = 'month-body';
+    monthContainer.classList.add('month-view');
+    monthContainer.setAttribute('data-testid', 'month-view');
+  }
+
+  return monthContainer;
+}
+
+function initMonthStructure() {
+  const monthStructureContainer = document.createElement('div');
+
+  monthStructureContainer.classList.add('month-structure');
+
+  return monthStructureContainer;
 }
 
 export default createMonthGrid;

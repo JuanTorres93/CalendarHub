@@ -45,8 +45,6 @@ export class CalendarLogic {
   syncAll() {
     const {
       createMonthGrid,
-      monthGrid,
-      config,
       createWeekGrid,
       createDailyGrid,
       theme,
@@ -54,7 +52,7 @@ export class CalendarLogic {
       initRenderBadge,
     } = this.deps;
 
-    createMonthGrid(this.date, monthGrid, config.main);
+    createMonthGrid(this.date);
     createWeekGrid(this.date);
     createDailyGrid(this.date);
     this.updateOverlayDisplay();
