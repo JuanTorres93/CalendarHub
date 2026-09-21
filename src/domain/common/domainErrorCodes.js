@@ -41,4 +41,9 @@ export const DomainErrorCodes = {
   NOT_FOUND: {
     EVENT: 'event.not_found',
   },
+
+  TODO: {
+    ALREADY_EXISTS: 'todo.already_exists',
+    NOT_FOUND: 'todo.not_found',
+  },
 };

@@ -15,3 +15,5 @@ export function isDomainError(err) {
 export class ValidationDomainError extends DomainError {}
 
 export class NotFoundDomainError extends DomainError {}
+
+export class AlreadyExistsDomainError extends DomainError {}
