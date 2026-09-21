@@ -1,11 +1,12 @@
-import { isValidDateString } from "../utils/helpers/validationHelpers.js";
-import { createMessage } from "../utils/helpers/createElement.js";
-import { createList } from "../utils/helpers/dom/toDoDom.js";
+import { createMessage } from '../utils/helpers/createElement.js';
+import { createList } from '../utils/helpers/dom/toDoDom.js';
+import { Todo } from '../domain/entities/todo/Todo.js';
+import { TodoList } from '../domain/entities/todolist/TodoList.js';
 
 export function saveTodo(todos) {
   if (!Array.isArray(todos)) {
     createMessage(
-      "Salvataggio non riuscito: formato dei dati non valido.",
+      'Salvataggio non riuscito: formato dei dati non valido.',
       createList,
       document.body,
     );
@@ -15,7 +16,7 @@ export function saveTodo(todos) {
 
   if (!hasValidTodos) {
     createMessage(
-      "Salvataggio non riuscito: i dati della todo list non sono validi.",
+      'Salvataggio non riuscito: i dati della todo list non sono validi.',
       createList,
       document.body,
     );
@@ -23,12 +24,12 @@ export function saveTodo(todos) {
   }
 
   try {
-    localStorage.setItem("todoEvents", JSON.stringify(todos));
+    localStorage.setItem('todoEvents', JSON.stringify(todos));
     return true;
   } catch (error) {
-    console.error("Failed to save Todo lists in localStorage:", error);
+    console.error('Failed to save Todo lists in localStorage:', error);
     createMessage(
-      "Salvataggio non riuscito. Il browser non ha potuto memorizzare la Todo.",
+      'Salvataggio non riuscito. Il browser non ha potuto memorizzare la Todo.',
       createList,
       document.body,
     );
@@ -39,7 +40,7 @@ export function saveTodo(todos) {
 
 export function getTodoFromLocalStorage() {
   try {
-    const storedTodo = localStorage.getItem("todoEvents");
+    const storedTodo = localStorage.getItem('todoEvents');
     if (!storedTodo) return [];
     const parsedTodo = JSON.parse(storedTodo);
 
@@ -55,7 +56,7 @@ export function getTodoFromLocalStorage() {
       return isValid;
     });
   } catch (error) {
-    console.error("invalid Todo in localSotrage", error);
+    console.error('invalid Todo in localSotrage', error);
     return [];
   }
 }
@@ -91,40 +92,9 @@ export function deleteTodoListFromLocalStorage(currentId) {
 }
 
 function isValidTodoList(todo) {
-  if (typeof todo !== "object" || todo === null || Array.isArray(todo))
-    return false;
+  TodoList.create(todo);
 
-  const hasValidDate = isValidDateString(todo.date);
-
-  if (
-    typeof todo.id !== "string" ||
-    todo.id.trim() === "" ||
-    typeof todo.title !== "string" ||
-    todo.title.trim() === "" ||
-    !Array.isArray(todo.items) ||
-    !hasValidDate
-  ) {
-    return false;
-  }
-
-  const hasValidItems = todo.items.every((item) => isValidTodoItem(item));
-  if (!hasValidItems) return false;
-
-  return true;
-}
-
-function isValidTodoItem(item) {
-  if (typeof item !== "object" || item === null || Array.isArray(item))
-    return false;
-
-  if (
-    typeof item.id !== "string" ||
-    item.id.trim() === "" ||
-    typeof item.title !== "string" ||
-    item.title.trim() === "" ||
-    typeof item.completed !== "boolean"
-  )
-    return false;
+  todo.items.every((item) => Todo.create(item));
 
   return true;
 }
