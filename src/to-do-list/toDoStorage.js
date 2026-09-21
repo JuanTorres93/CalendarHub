@@ -3,6 +3,7 @@ import { createList } from '../utils/helpers/dom/toDoDom.js';
 import { Todo } from '../domain/entities/todo/Todo.js';
 import { TodoList } from '../domain/entities/todolist/TodoList.js';
 import { AppGetAllTodoListsUsecase } from '../interface-adapters/use-cases/AppGetAllTodoListsUsecase.js';
+import { AppDeleteTodoFromListUsecase } from '../interface-adapters/use-cases/AppDeleteTodoFromListUsecase.js';
 
 export function saveTodo(todos) {
   if (!Array.isArray(todos)) {
@@ -51,22 +52,7 @@ export function getTodoListsFromLocalStorage() {
 }
 
 export function deleteTodoFromList(todoId, listId) {
-  const allTodo = getTodoListsFromLocalStorage();
-  const modTodo = allTodo.map((todo) => {
-    return todo.id === listId
-      ? {
-          ...todo,
-          items: todo.items.filter((x) => x.id !== todoId),
-        }
-      : todo;
-  });
-
-  const hasBeenSaved = saveTodo(modTodo);
-
-  if (!hasBeenSaved) return allTodo;
-
-  //faccio il return di modTodo, cosi che posso usare questo array per accedere al numero variante di attività completate
-  return modTodo;
+  AppDeleteTodoFromListUsecase.execute({ todoId, todoListId: listId });
 }
 
 export function deleteTodoListFromLocalStorage(currentId) {

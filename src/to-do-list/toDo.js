@@ -208,9 +208,11 @@ function handleCompletedItems(itemId, checkBtn) {
   updateToDoCounter();
 }
 
-function deleteItems(id, item) {
+function deleteItems(id, domItem) {
   deleteTodoFromList(id, activeTodoList);
-  item.remove();
+
+  domItem.remove();
+
   updateToDoCounter();
 }
 
