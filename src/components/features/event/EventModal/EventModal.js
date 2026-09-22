@@ -6,15 +6,21 @@ import { createCategorySelector } from './subcomponents/categorySelector.js';
 import { createDateRow } from './subcomponents/dateRow.js';
 import { createTimeRow } from './subcomponents/timeRow.js';
 import { createNotificationRow } from './subcomponents/notificationRow.js';
+import getFloatingPosition from '../../../../utils/helpers/floatingPositioner.js';
+
+const EVENT_MODAL_ID = 'event-modal';
+const EVENT_CONTAINER_ID = 'event-container';
 
 export function createEventModal() {
   const fragment = document.createDocumentFragment();
 
   const overlay = document.createElement('div');
+  overlay.id = EVENT_MODAL_ID;
   overlay.classList.add('modal-overlay');
   overlay.setAttribute('aria-hidden', 'true');
 
   const eventContainer = document.createElement('section');
+  eventContainer.id = EVENT_CONTAINER_ID;
   eventContainer.className = 'event-container';
   eventContainer.setAttribute('role', 'dialog');
   eventContainer.setAttribute('aria-modal', 'true');
@@ -47,6 +53,26 @@ export function createEventModal() {
   fragment.appendChild(eventContainer);
 
   return fragment;
+}
+
+let modalOverlay = null;
+let modalEvents = null;
+
+export function openEventModal(e) {
+  if (!modalOverlay) {
+    modalOverlay = document.getElementById(EVENT_MODAL_ID);
+  }
+  if (!modalEvents) {
+    modalEvents = document.getElementById(EVENT_CONTAINER_ID);
+  }
+
+  const rect = e.target.getBoundingClientRect();
+
+  modalOverlay.classList.add('show-overlay');
+  modalEvents.classList.add('show-container');
+
+  const isDailyview = e.target.closest('.day-box, .day-half-box');
+  getFloatingPosition(modalEvents, rect, isDailyview);
 }
 
 export default createEventModal;
