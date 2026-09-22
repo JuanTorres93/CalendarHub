@@ -3,14 +3,10 @@ import createMonthGrid from './features/calendar/monthGrid.js';
 import createWeekGrid from './features/calendar/weekGrid.js';
 import createDailyGrid from './features/calendar/dayGrid.js';
 import { calendarLogic } from '../calendarLogic.js';
-import createCurrentTimeframeDisplay from './navbar/currentTimeframeDisplay/currentTimeframeDisplay.js';
-import createLeftArrowButton from './navbar/currentTimeframeDisplay/leftArrowButton.js';
-import createRightArrowButton from './navbar/currentTimeframeDisplay/rightArrowButton.js';
 import createViewModeSwitcher from './navbar/timeframeSwitcher.js';
 import createTodayButton from './navbar/todayButton.js';
 import createTodoListButton from './navbar/todoListButton.js';
 import createTutorialButton from './navbar/tutorialButton.js';
-import createCurrentYearDisplay from './navbar/currentYearDisplay.js';
 import createTodoPanel from './features/todo/todoPanel/TodoPanel.js';
 import createEventModal from './features/event/EventModal/EventModal.js';
 
@@ -26,21 +22,6 @@ const componentBuilders = {
   },
   replace_tutorialButton() {
     return createTutorialButton();
-  },
-  replace_currentYearDisplay() {
-    return createCurrentYearDisplay();
-  },
-  replace_leftArrowButton(parts) {
-    const [, timeFrame, ariaLabel, ...extraClasses] = parts;
-    return createLeftArrowButton({ timeFrame, ariaLabel, extraClasses });
-  },
-  replace_rightArrowButton(parts) {
-    const [, timeFrame, ariaLabel, ...extraClasses] = parts;
-    return createRightArrowButton({ timeFrame, ariaLabel, extraClasses });
-  },
-  replace_currentTimeframeDisplay(parts) {
-    const [, timeframe] = parts;
-    return createCurrentTimeframeDisplay(timeframe);
   },
   replace_monthGrid() {
     return createMonthGrid(calendarLogic.date);

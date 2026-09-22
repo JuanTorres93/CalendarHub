@@ -21,5 +21,10 @@ export default function createCurrentYearDisplay() {
 
   container.appendChild(button);
 
-  return container;
+  return {
+    node: container,
+    render: (date) => {
+      button.textContent = date.year();
+    },
+  };
 }

@@ -1,4 +1,5 @@
 import { TIMEFRAMES, ITALIAN_WORDS } from '../../../utils/config/config.js';
+import dayjs from '../../../day.js';
 
 import createCurrentTimeframeButton from './currentTimeframeButton.js';
 import createLeftArrowButton from './leftArrowButton.js';
@@ -17,11 +18,10 @@ export default function createCurrentTimeframeDisplay(timeframeString) {
       ariaLabel: `${config.italianTimeframeString} precedente`,
     }),
   );
-  container.appendChild(
-    createCurrentTimeframeButton({
-      timeframe: timeframeString,
-    }),
-  );
+  const button = createCurrentTimeframeButton({
+    timeframe: timeframeString,
+  });
+  container.appendChild(button);
   container.appendChild(
     createRightArrowButton({
       timeFrame: timeframeString,
@@ -29,7 +29,12 @@ export default function createCurrentTimeframeDisplay(timeframeString) {
     }),
   );
 
-  return container;
+  return {
+    node: container,
+    render: (date) => {
+      button.textContent = config.renderText(date);
+    },
+  };
 }
 
 const timeframeConfigs = {
@@ -37,15 +42,19 @@ const timeframeConfigs = {
     class: 'month',
     testId: TIMEFRAMES.month,
     italianTimeframeString: ITALIAN_WORDS.month,
+    renderText: (date) => date.month(date.month()).format('MMMM'),
   },
   week: {
     class: 'week',
     testId: TIMEFRAMES.week,
     italianTimeframeString: ITALIAN_WORDS.week,
+    renderText: (date) =>
+      `${date.weekday(0).format('DD MMMM')} - ${date.weekday(6).format('DD MMMM')}`,
   },
   day: {
     class: 'day',
     testId: TIMEFRAMES.day,
     italianTimeframeString: ITALIAN_WORDS.day,
+    renderText: (date) => date.format('DD MMMM'),
   },
 };

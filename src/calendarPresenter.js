@@ -29,25 +29,7 @@ export class CalendarPresenter {
   }
 
   updateOverlayDisplay() {
-    const {
-      currentMonthDisplay,
-      currentWeekDisplay,
-      currentDailyDisplay,
-      currentYearDisplay,
-    } = this.deps;
-
-    const date = calendarLogic.date;
-
-    const displayMonth = date.month(date.month()).format('MMMM');
-    const monday = date.weekday(0).format('DD MMMM');
-    const sunday = date.weekday(6).format('DD MMMM');
-    const showDailyDate = date.format('DD MMMM');
-    const year = date.year();
-
-    currentMonthDisplay.textContent = displayMonth;
-    currentWeekDisplay.textContent = `${monday} - ${sunday}`;
-    currentDailyDisplay.textContent = showDailyDate;
-    currentYearDisplay.textContent = year;
+    this.deps.renderDisplays.forEach((render) => render(calendarLogic.date));
   }
 }
 
