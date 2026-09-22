@@ -39,7 +39,10 @@ export function createDateRow() {
   allDayBtn.setAttribute('aria-label', "Evento per l'intera giornata");
   allDayBtn.setAttribute('aria-pressed', 'false');
   allDayBtn.setAttribute('data-testid', 'event-all-day-button');
-  allDayBtn.appendChild(createCheckboxIcon());
+
+  const checkboxIcon = createCheckboxIcon();
+  allDayBtn.appendChild(checkboxIcon.mainComponent);
+  const allDayCheckBox = checkboxIcon.internalDomElements.checkBox;
 
   allDay.appendChild(allDayText);
   allDay.appendChild(allDayBtn);
@@ -47,5 +50,13 @@ export function createDateRow() {
   dateRow.appendChild(eventDate);
   dateRow.appendChild(allDay);
 
-  return dateRow;
+  return {
+    mainComponent: dateRow,
+    internalDomElements: {
+      eventDateDiv: eventDate,
+      miniCalendarBtn,
+      allDayBtn,
+      allDayCheckBox,
+    },
+  };
 }

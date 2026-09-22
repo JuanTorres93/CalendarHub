@@ -17,15 +17,19 @@ import { updateEventDateUI } from "../utils/events/eventsUI.js";
 import { updateUntilUIAndDraft } from "../utils/events/repeatEventsUi.js";
 import { initMonthList, initYearList } from "./miniCalendarCarousels.js";
 
-import { eventDateDiv } from "../utils/helpers/dom/eventModalDom.js";
 import createMonthGrid from "../components/features/calendar/monthGrid.js";
 
 let miniLocalDate = null;
 let miniCalendarCommitTarget = "normal";
 let displayOverlays = [];
+let eventModalDomElements = null;
 
 export function initMiniCalendarDeps(deps) {
   displayOverlays = deps.displayOverlays;
+}
+
+export function wireEventFormElementsToMiniCalendar(elements) {
+  eventModalDomElements = elements;
 }
 
 function syncMiniInputs() {
@@ -73,7 +77,7 @@ export function openMiniCalendar(
     createMiniCalendar(miniLocalDate);
     showModal.classList.add("show-mini-calendar");
 
-    const eventDateDivRect = eventDateDiv.getBoundingClientRect();
+    const eventDateDivRect = eventModalDomElements.eventDateDiv.getBoundingClientRect();
     top = eventDateDivRect.top - miniCalendar.clientHeight / 2;
     left = eventDateDivRect.left + 80;
   }
@@ -111,13 +115,13 @@ function commitMiniDate() {
     case "event-date":
       eventFormState.date = selectedDate;
 
-      updateEventDateUI(selectedDate);
+      updateEventDateUI(selectedDate, eventModalDomElements);
       break;
     case "repeat-until":
-      updateUntilUIAndDraft(selectedDate);
+      updateUntilUIAndDraft(selectedDate, eventModalDomElements);
       break;
     case "custom-dates":
-      validateAndReturnCustomDate(selectedDate);
+      validateAndReturnCustomDate(selectedDate, eventModalDomElements);
       break;
   }
   closeMiniCalendar();

@@ -8,8 +8,6 @@ import {
   customList,
 } from "../utils/helpers/dom/repeatModalDom.js";
 
-import { header } from "../utils/helpers/dom/eventModalDom.js";
-
 let listOfDates = [];
 
 function renderCustomDateItem(date) {
@@ -33,8 +31,8 @@ function renderCustomDateItem(date) {
   return item;
 }
 
-export function validateAndReturnCustomDate(date) {
-  const initialDate = header.firstElementChild.dataset.day;
+export function validateAndReturnCustomDate(date, eventModalDomElements) {
+  const initialDate = eventModalDomElements.header.firstElementChild.dataset.day;
   const isNotValid = dateValidator(initialDate, date);
 
   if (isNotValid) {

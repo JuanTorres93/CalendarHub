@@ -20,41 +20,6 @@ import { renderEvents } from '../utils/events/eventRendering.js';
 import { formatDate } from '../utils/events/eventsUI.js';
 import { createMessage } from '../utils/helpers/createElement.js';
 import {
-  allDayBtn,
-  allDayCheckBox,
-  btnDesc,
-  categoryBtn,
-  closeBtn,
-  colorLists,
-  colorPreview,
-  fromHourInput,
-  fromMinuteInput,
-  header,
-  iconBtn,
-  iconsList,
-  inputDesc,
-  inputTitle,
-  listedTimeBtnFrom,
-  listedTimeBtnTo,
-  listedTimeFrom,
-  listedTimeTo,
-  miniCalendarBtn,
-  modalEvents,
-  modalInfoMode,
-  modalOverlay,
-  notificationBtn,
-  notificationList,
-  repeatBtn,
-  saveBtn,
-  showDesc,
-  smallMessage,
-  timeSelectionContainer,
-  toHourInput,
-  toMinuteInput,
-  urgentBtn,
-  urgentCheckBox,
-} from '../utils/helpers/dom/eventModalDom.js';
-import {
   handleListSelection,
   handleOutSideClick,
 } from '../utils/helpers/listSelection.js';
@@ -68,43 +33,55 @@ import {
   repeatOverlay,
 } from '../utils/helpers/dom/repeatModalDom.js';
 
-const outsideDropdowns = [
-  {
-    selector: '.icons-list, #icons-btn',
-    dropdown: iconsList,
-    className: 'show-icons-list',
-  },
+let eventModalDomElements = null;
 
-  {
-    selector: '.description-area, .btn-description',
-    dropdown: showDesc,
-    className: 'show-desc-area',
-  },
+export function wireEventFormToEventLogic(refs) {
+  eventModalDomElements = refs;
 
-  {
-    selector: '.color-list, #color-btn',
-    dropdown: colorLists,
-    className: 'show-color-list',
-  },
+  initEventFormEvents();
 
-  {
-    selector: '.notification-list, .notification-button',
-    dropdown: notificationList,
-    className: 'show-container',
-  },
+  initRepeatEvents(refs);
+}
 
-  {
-    selector: '.interactive-time-list.from, .listed-time.from',
-    dropdown: listedTimeFrom,
-    className: 'show-menù',
-  },
+function getOutsideDropdowns() {
+  return [
+    {
+      selector: '.icons-list, #icons-btn',
+      dropdown: eventModalDomElements.iconsList,
+      className: 'show-icons-list',
+    },
 
-  {
-    selector: '.interactive-time-list.to, .listed-time.to',
-    dropdown: listedTimeTo,
-    className: 'show-menù',
-  },
-];
+    {
+      selector: '.description-area, .btn-description',
+      dropdown: eventModalDomElements.showDesc,
+      className: 'show-desc-area',
+    },
+
+    {
+      selector: '.color-list, #color-btn',
+      dropdown: eventModalDomElements.colorLists,
+      className: 'show-color-list',
+    },
+
+    {
+      selector: '.notification-list, .notification-button',
+      dropdown: eventModalDomElements.notificationList,
+      className: 'show-container',
+    },
+
+    {
+      selector: '.interactive-time-list.from, .listed-time.from',
+      dropdown: eventModalDomElements.listedTimeFrom,
+      className: 'show-menù',
+    },
+
+    {
+      selector: '.interactive-time-list.to, .listed-time.to',
+      dropdown: eventModalDomElements.listedTimeTo,
+      className: 'show-menù',
+    },
+  ];
+}
 
 const EVENT_DRAFT_FIELDS = [
   'title',
@@ -167,31 +144,36 @@ export function resetEventModal() {
   originalSeriesDate = null;
 
   const sections = [
-    { section: colorLists, class: 'show-color-list' },
-    { section: urgentCheckBox, class: 'checked' },
-    { section: iconsList, class: 'show-icons-list' },
-    { section: notificationList, class: 'show-container' },
-    { section: showDesc, class: 'show-desc-area' },
-    { section: listedTimeFrom, class: 'show-menù' },
-    { section: listedTimeTo, class: 'show-menù' },
+    { section: eventModalDomElements.colorLists, class: 'show-color-list' },
+    { section: eventModalDomElements.urgentCheckBox, class: 'checked' },
+    { section: eventModalDomElements.iconsList, class: 'show-icons-list' },
+    {
+      section: eventModalDomElements.notificationList,
+      class: 'show-container',
+    },
+    { section: eventModalDomElements.showDesc, class: 'show-desc-area' },
+    { section: eventModalDomElements.listedTimeFrom, class: 'show-menù' },
+    { section: eventModalDomElements.listedTimeTo, class: 'show-menù' },
   ];
-  if (allDayCheckBox.classList.contains('checked')) {
-    allDayCheckBox.classList.remove('checked');
-    timeSelectionContainer.classList.remove('hide-time-section');
+  if (eventModalDomElements.allDayCheckBox.classList.contains('checked')) {
+    eventModalDomElements.allDayCheckBox.classList.remove('checked');
+    eventModalDomElements.timeSelectionContainer.classList.remove(
+      'hide-time-section',
+    );
   }
 
   classRemovalHelper(sections);
 
-  iconBtn.innerText = '✏️';
-  inputTitle.value = '';
-  inputDesc.value = '';
-  colorPreview.style.backgroundColor = 'blue';
-  fromHourInput.value = '';
-  fromMinuteInput.value = '';
-  toHourInput.value = '';
-  toMinuteInput.value = '';
-  notificationList.style.left = '';
-  notificationBtn.innerText = '5 minuti prima';
+  eventModalDomElements.iconBtn.innerText = '✏️';
+  eventModalDomElements.inputTitle.value = '';
+  eventModalDomElements.inputDesc.value = '';
+  eventModalDomElements.colorPreview.style.backgroundColor = 'blue';
+  eventModalDomElements.fromHourInput.value = '';
+  eventModalDomElements.fromMinuteInput.value = '';
+  eventModalDomElements.toHourInput.value = '';
+  eventModalDomElements.toMinuteInput.value = '';
+  eventModalDomElements.notificationList.style.left = '';
+  eventModalDomElements.notificationBtn.innerText = '5 minuti prima';
 
   eventFormState.from = '';
   eventFormState.to = '';
@@ -200,23 +182,24 @@ export function resetEventModal() {
 }
 
 const renderModeTextInfo = (mode, eventTitle) => {
-  const header = modalInfoMode;
-  smallMessage.innerText = '';
+  const modalTitle = eventModalDomElements.modalInfoMode;
+  eventModalDomElements.smallMessage.innerText = '';
   switch (mode) {
     case 'create':
-      header.innerText = 'Crea un nuovo evento!';
+      modalTitle.innerText = 'Crea un nuovo evento!';
       break;
     case 'edit':
-      header.innerText = `Stai modificando : ${eventTitle}`;
+      modalTitle.innerText = `Stai modificando : ${eventTitle}`;
       break;
     case 'edit-series':
-      header.innerText = `Stai modificando la serie ${eventTitle}`;
-      smallMessage.innerText =
+      modalTitle.innerText = `Stai modificando la serie ${eventTitle}`;
+      eventModalDomElements.smallMessage.innerText =
         'Le modifiche verranno applicate a tutta la serie.';
       break;
     case 'edit-single-occurrence':
-      header.innerText = `Stai modificando : ${eventTitle}`;
-      smallMessage.innerText = 'Questa occorrenza verrà separata dalla serie.';
+      modalTitle.innerText = `Stai modificando : ${eventTitle}`;
+      eventModalDomElements.smallMessage.innerText =
+        'Questa occorrenza verrà separata dalla serie.';
       break;
     default:
       break;
@@ -229,12 +212,13 @@ export function preCompiler(e) {
 
   eventFormState.date = date;
 
-  header.firstElementChild.textContent = formatDate(date);
-  header.firstElementChild.dataset.day = date;
-  header.firstElementChild.nextElementSibling.textContent = time;
+  eventModalDomElements.header.firstElementChild.textContent = formatDate(date);
+  eventModalDomElements.header.firstElementChild.dataset.day = date;
+  eventModalDomElements.header.firstElementChild.nextElementSibling.textContent =
+    time;
 
-  setTimeUIAndDraft('from', time);
-  setTimeUIAndDraft('to', endTime);
+  setTimeUIAndDraft('from', time, eventModalDomElements);
+  setTimeUIAndDraft('to', endTime, eventModalDomElements);
 
   renderModeTextInfo(eventFormState.mode);
 }
@@ -292,27 +276,34 @@ export function preCompilerEdit(event, mode) {
     originalSeriesDate = event.date;
   }
 
-  header.firstElementChild.textContent = formatDate(event.date);
-  header.firstElementChild.dataset.day = event.date; //risolve il miniCalendario data iniziale
-  header.firstElementChild.nextElementSibling.textContent = event.from;
+  eventModalDomElements.header.firstElementChild.textContent = formatDate(
+    event.date,
+  );
+  eventModalDomElements.header.firstElementChild.dataset.day = event.date; //risolve il miniCalendario data iniziale
+  eventModalDomElements.header.firstElementChild.nextElementSibling.textContent =
+    event.from;
 
-  iconBtn.innerText = event.icon;
-  inputTitle.value = event.title;
-  inputDesc.value = event.description;
+  eventModalDomElements.iconBtn.innerText = event.icon;
+  eventModalDomElements.inputTitle.value = event.title;
+  eventModalDomElements.inputDesc.value = event.description;
 
-  colorPreview.style.backgroundColor = `${event.color}`;
+  eventModalDomElements.colorPreview.style.backgroundColor = `${event.color}`;
 
   if (event.urgent) {
-    urgentCheckBox.classList.add('checked');
+    eventModalDomElements.urgentCheckBox.classList.add('checked');
   }
   if (event.allDay) {
-    allDayCheckBox.classList.add('checked');
-    timeSelectionContainer.classList.add('hide-time-section');
+    eventModalDomElements.allDayCheckBox.classList.add('checked');
+    eventModalDomElements.timeSelectionContainer.classList.add(
+      'hide-time-section',
+    );
   }
-  setTimeUIAndDraft('from', event.from);
-  setTimeUIAndDraft('to', event.to);
+  setTimeUIAndDraft('from', event.from, eventModalDomElements);
+  setTimeUIAndDraft('to', event.to, eventModalDomElements);
 
-  notificationBtn.innerText = toItalianNotification(event.notification);
+  eventModalDomElements.notificationBtn.innerText = toItalianNotification(
+    event.notification,
+  );
 }
 
 function updateTimeInput(part, value) {
@@ -345,14 +336,14 @@ function inputTimeHelper(caseType, input, classType) {
     caseType === 'hour'
       ? time
       : isFrom
-        ? fromHourInput.value
-        : toHourInput.value;
+        ? eventModalDomElements.fromHourInput.value
+        : eventModalDomElements.toHourInput.value;
   const minute =
     caseType === 'minute'
       ? time
       : isFrom
-        ? fromMinuteInput.value
-        : toMinuteInput.value;
+        ? eventModalDomElements.fromMinuteInput.value
+        : eventModalDomElements.toMinuteInput.value;
 
   if (hour !== '' && minute !== '') {
     eventFormState[classType] = `${hour}:${minute}`;
@@ -360,30 +351,30 @@ function inputTimeHelper(caseType, input, classType) {
 }
 
 function inputTimeReader() {
-  fromHourInput.addEventListener('change', () => {
-    inputTimeHelper('hour', fromHourInput, 'from');
+  eventModalDomElements.fromHourInput.addEventListener('change', () => {
+    inputTimeHelper('hour', eventModalDomElements.fromHourInput, 'from');
   });
-  fromMinuteInput.addEventListener('change', () => {
-    inputTimeHelper('minute', fromMinuteInput, 'from');
+  eventModalDomElements.fromMinuteInput.addEventListener('change', () => {
+    inputTimeHelper('minute', eventModalDomElements.fromMinuteInput, 'from');
   });
-  toHourInput.addEventListener('change', () => {
-    inputTimeHelper('hour', toHourInput, 'to');
+  eventModalDomElements.toHourInput.addEventListener('change', () => {
+    inputTimeHelper('hour', eventModalDomElements.toHourInput, 'to');
   });
-  toMinuteInput.addEventListener('change', () => {
-    inputTimeHelper('minute', toMinuteInput, 'to');
+  eventModalDomElements.toMinuteInput.addEventListener('change', () => {
+    inputTimeHelper('minute', eventModalDomElements.toMinuteInput, 'to');
   });
 }
 
 function applySelectedTime(type, time) {
-  setTimeUIAndDraft(type, time);
+  setTimeUIAndDraft(type, time, eventModalDomElements);
 }
 
 function closeModal() {
-  modalOverlay.classList.remove('show-overlay');
-  modalEvents.classList.remove('show-container');
+  eventModalDomElements.modalOverlay.classList.remove('show-overlay');
+  eventModalDomElements.modalEvents.classList.remove('show-container');
 
-  modalEvents.style.top = '';
-  modalEvents.style.left = '';
+  eventModalDomElements.modalEvents.style.top = '';
+  eventModalDomElements.modalEvents.style.left = '';
 
   forceResetRepeatModalState();
   resetEventModal();
@@ -392,96 +383,104 @@ function closeModal() {
 export function initEventFormEvents() {
   let title, desc;
 
-  renderColorList();
-  renderNotificationList();
-  createCaroseul();
-  renderIconsList();
+  renderColorList(eventModalDomElements);
+  renderNotificationList(eventModalDomElements);
+  createCaroseul(eventModalDomElements);
+  renderIconsList(eventModalDomElements);
 
-  outsideDropdowns.forEach((item) => {
+  getOutsideDropdowns().forEach((item) => {
     handleOutSideClick(item.selector, item.dropdown, item.className);
   });
 
-  iconBtn.addEventListener('click', () => {
-    iconsList.classList.toggle('show-icons-list');
+  eventModalDomElements.iconBtn.addEventListener('click', () => {
+    eventModalDomElements.iconsList.classList.toggle('show-icons-list');
   });
 
   handleListSelection(
-    iconsList,
+    eventModalDomElements.iconsList,
     '.icon-list-item',
     (li) => {
       eventFormState.icon = li.textContent;
 
-      iconBtn.innerText = li.textContent;
+      eventModalDomElements.iconBtn.innerText = li.textContent;
 
       eventFormState.icon = li.textContent;
     },
     'show-icons-list',
   );
 
-  btnDesc.addEventListener('click', () => {
-    showDesc.classList.toggle('show-desc-area');
+  eventModalDomElements.btnDesc.addEventListener('click', () => {
+    eventModalDomElements.showDesc.classList.toggle('show-desc-area');
   });
 
-  inputTitle.addEventListener('change', () => {
-    title = inputTitle.value;
+  eventModalDomElements.inputTitle.addEventListener('change', () => {
+    title = eventModalDomElements.inputTitle.value;
 
     eventFormState.title = title;
   });
-  inputDesc.addEventListener('change', () => {
-    desc = inputDesc.value;
+  eventModalDomElements.inputDesc.addEventListener('change', () => {
+    desc = eventModalDomElements.inputDesc.value;
 
     eventFormState.description = desc;
   });
-  categoryBtn.addEventListener('click', () => {
-    colorLists.classList.toggle('show-color-list');
+  eventModalDomElements.categoryBtn.addEventListener('click', () => {
+    eventModalDomElements.colorLists.classList.toggle('show-color-list');
   });
 
   handleListSelection(
-    colorLists,
+    eventModalDomElements.colorLists,
     '.color',
     (li) => {
       eventFormState.color = li.dataset.color;
 
-      colorPreview.style.backgroundColor = li.dataset.color;
+      eventModalDomElements.colorPreview.style.backgroundColor =
+        li.dataset.color;
 
       eventFormState.color = li.dataset.color;
     },
     'show-color-list',
   );
 
-  urgentBtn.addEventListener('click', () => {
-    const isChecked = urgentCheckBox.classList.toggle('checked');
+  eventModalDomElements.urgentBtn.addEventListener('click', () => {
+    const isChecked =
+      eventModalDomElements.urgentCheckBox.classList.toggle('checked');
 
     eventFormState.urgent = isChecked;
   });
 
-  miniCalendarBtn.addEventListener('click', () => {
-    const date = header.firstElementChild.dataset.day;
+  eventModalDomElements.miniCalendarBtn.addEventListener('click', () => {
+    const date = eventModalDomElements.header.firstElementChild.dataset.day;
 
     openMiniCalendar('event', date, 'event-date');
   });
 
-  allDayBtn.addEventListener('click', () => {
-    const isChecked = allDayCheckBox.classList.toggle('checked');
+  eventModalDomElements.allDayBtn.addEventListener('click', () => {
+    const isChecked =
+      eventModalDomElements.allDayCheckBox.classList.toggle('checked');
 
     eventFormState.allDay = isChecked;
 
     if (isChecked) {
-      timeSelectionContainer.classList.add('hide-time-section');
+      eventModalDomElements.timeSelectionContainer.classList.add(
+        'hide-time-section',
+      );
     } else {
-      timeSelectionContainer.classList.remove('hide-time-section');
+      eventModalDomElements.timeSelectionContainer.classList.remove(
+        'hide-time-section',
+      );
     }
   });
 
   inputTimeReader();
 
-  listedTimeBtnFrom.addEventListener('click', (e) => {
-    const isOpen = listedTimeFrom.classList.toggle('show-menù');
+  eventModalDomElements.listedTimeBtnFrom.addEventListener('click', (e) => {
+    const isOpen =
+      eventModalDomElements.listedTimeFrom.classList.toggle('show-menù');
 
     if (isOpen) {
       const targetTime = eventFormState.from;
       const target = nowTarget(
-        listedTimeFrom.querySelectorAll('.list-item'),
+        eventModalDomElements.listedTimeFrom.querySelectorAll('.list-item'),
         null,
         'cellTime',
         targetTime,
@@ -489,13 +488,14 @@ export function initEventFormEvents() {
       target?.scrollIntoView({ block: 'center', behavior: 'auto' });
     }
   });
-  listedTimeBtnTo.addEventListener('click', () => {
-    const isOpen = listedTimeTo.classList.toggle('show-menù');
+  eventModalDomElements.listedTimeBtnTo.addEventListener('click', () => {
+    const isOpen =
+      eventModalDomElements.listedTimeTo.classList.toggle('show-menù');
 
     if (isOpen) {
       const targetTime = eventFormState.to;
       const target = nowTarget(
-        listedTimeTo.querySelectorAll('.list-item'),
+        eventModalDomElements.listedTimeTo.querySelectorAll('.list-item'),
         null,
         'cellTime',
         targetTime,
@@ -505,7 +505,7 @@ export function initEventFormEvents() {
   });
 
   handleListSelection(
-    listedTimeFrom,
+    eventModalDomElements.listedTimeFrom,
     '.list-item',
     (li) => {
       applySelectedTime('from', li.dataset.time);
@@ -513,7 +513,7 @@ export function initEventFormEvents() {
     'show-menù',
   );
   handleListSelection(
-    listedTimeTo,
+    eventModalDomElements.listedTimeTo,
     '.list-item',
     (li) => {
       applySelectedTime('to', li.dataset.time);
@@ -521,29 +521,30 @@ export function initEventFormEvents() {
     'show-menù',
   );
 
-  repeatBtn.addEventListener('click', () => {
+  eventModalDomElements.repeatBtn.addEventListener('click', () => {
     repeatModal.classList.toggle('show-repeat-modal');
     repeatOverlay.classList.add('show-repeat-overlay');
   });
 
-  notificationBtn.addEventListener('click', () => {
-    const position = notificationBtn.getClientRects()[0].right;
-    notificationList.style.left = position + 'px';
-    notificationList.classList.toggle('show-container');
+  eventModalDomElements.notificationBtn.addEventListener('click', () => {
+    const position =
+      eventModalDomElements.notificationBtn.getClientRects()[0].right;
+    eventModalDomElements.notificationList.style.left = position + 'px';
+    eventModalDomElements.notificationList.classList.toggle('show-container');
   });
 
   handleListSelection(
-    notificationList,
+    eventModalDomElements.notificationList,
     '.single-notification',
     (li) => {
       eventFormState.notification = toDomainNotification(li.textContent);
 
-      notificationBtn.innerText = li.textContent;
+      eventModalDomElements.notificationBtn.innerText = li.textContent;
     },
     'show-container',
   );
 
-  saveBtn.addEventListener('click', (e) => {
+  eventModalDomElements.saveBtn.addEventListener('click', (e) => {
     const eventFormProps = getEventRawPropsFromForm(e);
 
     const createEventProps = {
@@ -583,17 +584,21 @@ export function initEventFormEvents() {
       }
 
       if (feedbackMessage) {
-        createMessage(feedbackMessage, modalEvents, document.body);
+        createMessage(
+          feedbackMessage,
+          eventModalDomElements.modalEvents,
+          document.body,
+        );
       }
 
       closeModal();
       renderEvents();
     } catch (error) {
-      handleKnownErrors(error);
+      handleKnownErrors(error, eventModalDomElements);
     }
   });
 
-  closeBtn.addEventListener('click', () => {
+  eventModalDomElements.closeBtn.addEventListener('click', () => {
     closeModal();
   });
 }
@@ -616,12 +621,7 @@ function combineTime(formData, type) {
   return hour && minute ? `${hour}:${minute}` : '';
 }
 
-export function initEventModal() {
-  initEventFormEvents();
-  initRepeatEvents();
-}
-
 export function handleOpenCreate(e) {
   preCompiler(e);
-  openEventModal(e);
+  openEventModal(e, eventModalDomElements);
 }

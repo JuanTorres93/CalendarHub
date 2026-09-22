@@ -41,11 +41,10 @@ import {
   saveBtn,
 } from '../utils/helpers/dom/repeatModalDom.js';
 
-import { header } from '../utils/helpers/dom/eventModalDom.js';
-
 let editMode = false;
 let repeatUiState = 'default';
 let selectedDays = [];
+let eventModalDomElements = null;
 
 function removeClassHelper(sections) {
   sections.forEach((section) => {
@@ -120,7 +119,7 @@ export function rehydrateRepeatModal() {
     }
   });
 
-  unitlDateDefault('edit', repeatDraftInfo.until);
+  unitlDateDefault('edit', repeatDraftInfo.until, eventModalDomElements);
 
   hydrateCustomDates(repeatDraftInfo.customDates);
 
@@ -247,7 +246,8 @@ function defaultRepeatFormProps(eventDate) {
   };
 }
 
-export function initRepeatEvents() {
+export function initRepeatEvents(refs) {
+  eventModalDomElements = refs;
   createDayOfWeek();
   handleOutSideClick(
     '.repeat-mode-list, .repeat-mode-btn',
@@ -270,7 +270,7 @@ export function initRepeatEvents() {
         type: li.dataset.repeatType,
       };
 
-      const date = unitlDateDefault('normal');
+      const date = unitlDateDefault('normal', undefined, eventModalDomElements);
 
       initRepeatDraft(repeatUiState, date);
 
@@ -320,16 +320,17 @@ export function initRepeatEvents() {
       const untilDateRestored = unitlDateDefault(
         'edit',
         eventFormState.repeat.until,
+        eventModalDomElements,
       );
       openMiniCalendar('event', untilDateRestored, 'repeat-until');
     } else {
-      const date = unitlDateDefault('normal');
+      const date = unitlDateDefault('normal', undefined, eventModalDomElements);
       openMiniCalendar('event', date, 'repeat-until');
     }
   });
 
   customMiniCalendarBtn.addEventListener('click', () => {
-    const date = header.firstElementChild.dataset.day;
+    const date = eventModalDomElements.header.firstElementChild.dataset.day;
     openMiniCalendar('event', date, 'custom-dates');
   });
 

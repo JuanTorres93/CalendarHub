@@ -69,5 +69,15 @@ export function createEventDescription() {
   descriptionRow.appendChild(titleContainer);
   descriptionRow.appendChild(descriptionContainer);
 
-  return descriptionRow;
+  return {
+    mainComponent: descriptionRow,
+    internalDomElements: {
+      iconBtn,
+      iconsList,
+      inputTitle: titleInput,
+      btnDesc: descriptionBtn,
+      showDesc: descriptionArea,
+      inputDesc: descriptionInput,
+    },
+  };
 }

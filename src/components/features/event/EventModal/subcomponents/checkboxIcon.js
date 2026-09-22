@@ -36,5 +36,8 @@ export function createCheckboxIcon() {
   icon.appendChild(checkPath);
   icon.appendChild(checkboxRect);
 
-  return icon;
+  return {
+    mainComponent: icon,
+    internalDomElements: { checkBox: checkPath },
+  };
 }

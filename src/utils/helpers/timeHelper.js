@@ -16,16 +16,16 @@ export const timeToMinutes = (time) => {
   return Number(hour) * 60 + Number(minute);
 };
 
-export function setTimeUIAndDraft(type, time) {
+export function setTimeUIAndDraft(type, time, eventModalDomElements) {
   const { hour, minute } = separateHourFromMinute(time);
 
   if (type === 'from') {
-    document.querySelector('.input-hour.from').value = hour;
-    document.querySelector('.input-minute.from').value = minute;
+    eventModalDomElements.fromHourInput.value = hour;
+    eventModalDomElements.fromMinuteInput.value = minute;
   }
   if (type === 'to') {
-    document.querySelector('.input-hour.to').value = hour;
-    document.querySelector('.input-minute.to').value = minute;
+    eventModalDomElements.toHourInput.value = hour;
+    eventModalDomElements.toMinuteInput.value = minute;
   }
 
   eventFormState[type] = time;

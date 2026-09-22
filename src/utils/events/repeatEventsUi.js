@@ -4,7 +4,6 @@ import { updateRepeatDraft } from './repeatEventsDraft.js';
 import { eventFormState } from './eventFormState.js';
 import dateValidator from '../helpers/dateValidator.js';
 import dayjs from '../../day.js';
-import { header } from '../helpers/dom/eventModalDom.js';
 import {
   repeatContainer,
   intervalText,
@@ -37,10 +36,10 @@ export function updateIntervaltext(state, interval) {
   }
 }
 
-export const unitlDateDefault = (type, currentDate) => {
+export const unitlDateDefault = (type, currentDate, eventModalDomElements) => {
   let dateDisplayed;
   if (type === 'normal') {
-    const date = header.firstElementChild.dataset.day;
+    const date = eventModalDomElements.header.firstElementChild.dataset.day;
     const month = dayjs(date).add(1, 'month').format('YYYY-MM-DD');
     dateDisplayed = formatDate(month);
     untilText.innerText = dateDisplayed;
@@ -65,8 +64,8 @@ export const unitlDateDefault = (type, currentDate) => {
   }
 };
 
-export function updateUntilUIAndDraft(date) {
-  const initialDate = header.firstElementChild.dataset.day;
+export function updateUntilUIAndDraft(date, eventModalDomElements) {
+  const initialDate = eventModalDomElements.header.firstElementChild.dataset.day;
   const dateDisplayed = formatDate(date);
 
   const isNotValid = dateValidator(initialDate, date);

@@ -1,10 +1,4 @@
 import dayjs from "../../day.js";
-import {
-  colorLists,
-  ulContainer,
-  notificationList,
-  iconsList,
-} from "../helpers/dom/eventModalDom.js";
 import { dayOfWeekList } from "../helpers/dom/repeatModalDom.js";
 
 const notifications = [
@@ -73,8 +67,8 @@ const eventIcons = {
   dog: "🐶",
   cat: "🐱",
 };
-export function renderIconsList() {
-  iconsList.innerHTML = "";
+export function renderIconsList(eventModalDomElements) {
+  eventModalDomElements.iconsList.innerHTML = "";
   Object.entries(eventIcons).forEach(([key, value]) => {
     const item = document.createElement("li");
     item.className = "icon-list-item";
@@ -82,12 +76,12 @@ export function renderIconsList() {
     item.setAttribute("data-testid", `icon-option-${key}`);
     item.textContent = value;
 
-    iconsList.appendChild(item);
+    eventModalDomElements.iconsList.appendChild(item);
   });
 }
 
-export function renderColorList() {
-  colorLists.innerHTML = "";
+export function renderColorList(eventModalDomElements) {
+  eventModalDomElements.colorLists.innerHTML = "";
 
   colors.forEach((color) => {
     const item = document.createElement("li");
@@ -97,12 +91,12 @@ export function renderColorList() {
     item.setAttribute("data-testid", `color-option-${color.value}`);
     item.innerHTML = `${color.name} <span>${color.icon}</span>`;
 
-    colorLists.appendChild(item);
+    eventModalDomElements.colorLists.appendChild(item);
   });
 }
 
-export function renderNotificationList() {
-  notificationList.innerHTML = "";
+export function renderNotificationList(eventModalDomElements) {
+  eventModalDomElements.notificationList.innerHTML = "";
 
   notifications.forEach((item) => {
     const option = document.createElement("li");
@@ -112,16 +106,16 @@ export function renderNotificationList() {
     option.setAttribute("data-testid", `notification-option-${item.value}`);
     option.textContent = item.name;
 
-    notificationList.appendChild(option);
+    eventModalDomElements.notificationList.appendChild(option);
   });
 }
 
-export default function createCaroseul() {
+export default function createCaroseul(eventModalDomElements) {
   const array = Array.from({ length: 24 }, (_, i) => {
     const hour = String(i).padStart(2, "0");
     return [`${hour}:00`, `${hour}:30`];
   }).flat();
-  ulContainer.forEach((ul) => {
+  eventModalDomElements.ulContainer.forEach((ul) => {
     ul.innerHTML = "";
 
     array.forEach((item) => {

@@ -8,7 +8,6 @@ import createTodayButton from './navbar/todayButton.js';
 import createTodoListButton from './navbar/todoListButton.js';
 import createTutorialButton from './navbar/tutorialButton.js';
 import createTodoPanel from './features/todo/todoPanel/TodoPanel.js';
-import createEventModal from './features/event/EventModal/EventModal.js';
 
 const componentBuilders = {
   replace_viewModeSwitcher() {
@@ -34,9 +33,6 @@ const componentBuilders = {
   },
   replace_todoPanel() {
     return createTodoPanel();
-  },
-  replace_eventModal() {
-    return createEventModal();
   },
 };
 

@@ -8,19 +8,14 @@ import { createTimeRow } from './subcomponents/timeRow.js';
 import { createNotificationRow } from './subcomponents/notificationRow.js';
 import getFloatingPosition from '../../../../utils/helpers/floatingPositioner.js';
 
-const EVENT_MODAL_ID = 'event-modal';
-const EVENT_CONTAINER_ID = 'event-container';
-
 export function createEventModal() {
   const fragment = document.createDocumentFragment();
 
   const overlay = document.createElement('div');
-  overlay.id = EVENT_MODAL_ID;
   overlay.classList.add('modal-overlay');
   overlay.setAttribute('aria-hidden', 'true');
 
   const eventContainer = document.createElement('section');
-  eventContainer.id = EVENT_CONTAINER_ID;
   eventContainer.className = 'event-container';
   eventContainer.setAttribute('role', 'dialog');
   eventContainer.setAttribute('aria-modal', 'true');
@@ -28,18 +23,31 @@ export function createEventModal() {
   eventContainer.setAttribute('aria-describedby', 'event-modal-description');
   eventContainer.setAttribute('data-testid', 'event-popup-container');
 
-  eventContainer.appendChild(createCurrentEventMode());
+  const currentEventMode = createCurrentEventMode();
+  eventContainer.appendChild(currentEventMode.mainComponent);
 
   const eventForm = document.createElement('form');
   eventForm.className = 'event-form';
   eventForm.setAttribute('data-testid', 'event-form');
 
-  eventForm.appendChild(createShowDate());
-  eventForm.appendChild(createEventDescription());
-  eventForm.appendChild(createCategorySelector());
-  eventForm.appendChild(createDateRow());
-  eventForm.appendChild(createTimeRow());
-  eventForm.appendChild(createNotificationRow());
+  const showDate = createShowDate();
+  eventForm.appendChild(showDate.mainComponent);
+
+  const eventDescription = createEventDescription();
+  eventForm.appendChild(eventDescription.mainComponent);
+
+  const categorySelector = createCategorySelector();
+  eventForm.appendChild(categorySelector.mainComponent);
+
+  const dateRow = createDateRow();
+  eventForm.appendChild(dateRow.mainComponent);
+
+  const timeRow = createTimeRow();
+  eventForm.appendChild(timeRow.mainComponent);
+
+  const notificationRow = createNotificationRow();
+  eventForm.appendChild(notificationRow.mainComponent);
+
   eventForm.appendChild(createEventRepeatModal());
 
   const repeatOverlay = document.createElement('div');
@@ -52,27 +60,29 @@ export function createEventModal() {
   fragment.appendChild(overlay);
   fragment.appendChild(eventContainer);
 
-  return fragment;
+  const internalDomElements = {
+    modalOverlay: overlay,
+    modalEvents: eventContainer,
+    eventForm,
+    ...currentEventMode.internalDomElements,
+    ...showDate.internalDomElements,
+    ...eventDescription.internalDomElements,
+    ...categorySelector.internalDomElements,
+    ...dateRow.internalDomElements,
+    ...timeRow.internalDomElements,
+    ...notificationRow.internalDomElements,
+    repeatOverlay,
+  };
+
+  return { fragment, internalDomElements };
 }
 
-let modalOverlay = null;
-let modalEvents = null;
-
-export function openEventModal(e) {
-  if (!modalOverlay) {
-    modalOverlay = document.getElementById(EVENT_MODAL_ID);
-  }
-  if (!modalEvents) {
-    modalEvents = document.getElementById(EVENT_CONTAINER_ID);
-  }
-
+export function openEventModal(e, eventModalDomElements) {
   const rect = e.target.getBoundingClientRect();
-
-  modalOverlay.classList.add('show-overlay');
-  modalEvents.classList.add('show-container');
-
+  eventModalDomElements.modalOverlay.classList.add('show-overlay');
+  eventModalDomElements.modalEvents.classList.add('show-container');
   const isDailyview = e.target.closest('.day-box, .day-half-box');
-  getFloatingPosition(modalEvents, rect, isDailyview);
+  getFloatingPosition(eventModalDomElements.modalEvents, rect, isDailyview);
 }
 
 export default createEventModal;

@@ -47,5 +47,13 @@ export function createToTime() {
   toContainer.appendChild(toInputGroup);
   toContainer.appendChild(toList);
 
-  return toContainer;
+  return {
+    mainComponent: toContainer,
+    internalDomElements: {
+      listedTimeBtnTo: toBtn,
+      toHourInput,
+      toMinuteInput,
+      listedTimeTo: toList,
+    },
+  };
 }

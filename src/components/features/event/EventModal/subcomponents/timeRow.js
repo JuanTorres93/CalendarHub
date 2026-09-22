@@ -8,8 +8,11 @@ export function createTimeRow() {
   const timeSelection = document.createElement('div');
   timeSelection.className = 'time-selection';
 
-  timeSelection.appendChild(createFromTime());
-  timeSelection.appendChild(createToTime());
+  const fromTime = createFromTime();
+  const toTime = createToTime();
+
+  timeSelection.appendChild(fromTime.mainComponent);
+  timeSelection.appendChild(toTime.mainComponent);
 
   const eventRepeat = document.createElement('div');
   eventRepeat.id = 'event-repeat';
@@ -32,5 +35,15 @@ export function createTimeRow() {
   timeRow.appendChild(timeSelection);
   timeRow.appendChild(eventRepeat);
 
-  return timeRow;
+  return {
+    mainComponent: timeRow,
+    internalDomElements: {
+      timeRow,
+      timeSelectionContainer: timeSelection,
+      repeatBtn,
+      ulContainer: [fromTime.internalDomElements.listedTimeFrom, toTime.internalDomElements.listedTimeTo],
+      ...fromTime.internalDomElements,
+      ...toTime.internalDomElements,
+    },
+  };
 }

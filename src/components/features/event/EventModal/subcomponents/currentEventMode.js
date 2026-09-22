@@ -13,5 +13,8 @@ export function createCurrentEventMode() {
   currentEventMode.appendChild(title);
   currentEventMode.appendChild(description);
 
-  return currentEventMode;
+  return {
+    mainComponent: currentEventMode,
+    internalDomElements: { modalInfoMode: title, smallMessage: description },
+  };
 }

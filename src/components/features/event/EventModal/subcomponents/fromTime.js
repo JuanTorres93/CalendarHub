@@ -47,5 +47,13 @@ export function createFromTime() {
   fromContainer.appendChild(fromInputGroup);
   fromContainer.appendChild(fromList);
 
-  return fromContainer;
+  return {
+    mainComponent: fromContainer,
+    internalDomElements: {
+      listedTimeBtnFrom: fromBtn,
+      fromHourInput,
+      fromMinuteInput,
+      listedTimeFrom: fromList,
+    },
+  };
 }

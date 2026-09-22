@@ -15,6 +15,38 @@ import { miniCalendarLayer as modalLayer } from '../utils/helpers/dom/miniCalend
 
 let selectedCurrentID = null;
 let colorClass = null;
+let eventModalDomElements = null;
+
+export function initOptionsBanner(eventModalDeps) {
+  eventModalDomElements = eventModalDeps;
+
+  const optionsBanner = document.createElement('div');
+  optionsBanner.className = 'option-banner-container';
+  optionsBanner.setAttribute('data-testid', 'event-banner');
+  document.body.appendChild(optionsBanner);
+
+  const close = document.createElement('button');
+  close.className = 'close-banner';
+  close.type = 'button';
+  close.textContent = 'x';
+
+  const infoWrapper = document.createElement('div');
+  infoWrapper.className = 'info-wrapper';
+
+  const infoSection = document.createElement('section');
+  infoSection.className = 'info-section';
+
+  const optionsSection = document.createElement('section');
+  optionsSection.className = 'options-section';
+
+  optionsBanner.appendChild(close);
+  optionsBanner.appendChild(infoWrapper);
+  infoWrapper.appendChild(infoSection);
+  infoWrapper.appendChild(optionsSection);
+
+  optionsSection.addEventListener('click', handleOptionsClick);
+  close.addEventListener('click', closeInfoBanner);
+}
 
 function handleOptionsClick(e) {
   const button = e.target.closest('button[data-action]');
@@ -42,35 +74,6 @@ function handleOptionsClick(e) {
       deleteEventsOccurrencies();
       break;
   }
-}
-
-export function initOptionsBanner(currentEvent) {
-  const optionsBanner = document.createElement('div');
-  optionsBanner.className = 'option-banner-container';
-  optionsBanner.setAttribute('data-testid', 'event-banner');
-  document.body.appendChild(optionsBanner);
-
-  const close = document.createElement('button');
-  close.className = 'close-banner';
-  close.type = 'button';
-  close.textContent = 'x';
-
-  const infoWrapper = document.createElement('div');
-  infoWrapper.className = 'info-wrapper';
-
-  const infoSection = document.createElement('section');
-  infoSection.className = 'info-section';
-
-  const optionsSection = document.createElement('section');
-  optionsSection.className = 'options-section';
-
-  optionsBanner.appendChild(close);
-  optionsBanner.appendChild(infoWrapper);
-  infoWrapper.appendChild(infoSection);
-  infoWrapper.appendChild(optionsSection);
-
-  optionsSection.addEventListener('click', handleOptionsClick);
-  close.addEventListener('click', closeInfoBanner);
 }
 
 function getOptionButtons(isRepeatedEvent) {
@@ -313,7 +316,7 @@ function handleEditFlow(event, mode, shouldRehydrate, e) {
   if (shouldRehydrate) {
     rehydrateRepeatModal();
   }
-  openEventModal(e);
+  openEventModal(e, eventModalDomElements);
   closeInfoBanner();
 }
 

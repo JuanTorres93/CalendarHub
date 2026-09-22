@@ -55,5 +55,13 @@ export function createNotificationRow() {
   notificationRow.appendChild(saveContainer);
   notificationRow.appendChild(closeContainer);
 
-  return notificationRow;
+  return {
+    mainComponent: notificationRow,
+    internalDomElements: {
+      notificationBtn,
+      notificationList,
+      saveBtn,
+      closeBtn,
+    },
+  };
 }

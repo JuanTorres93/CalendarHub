@@ -43,7 +43,10 @@ export function createCategorySelector() {
   urgentBtn.setAttribute('aria-label', 'Contrassegna come urgente');
   urgentBtn.setAttribute('aria-pressed', 'false');
   urgentBtn.setAttribute('data-testid', 'event-urgent-button');
-  urgentBtn.appendChild(createCheckboxIcon());
+
+  const checkboxIcon = createCheckboxIcon();
+  urgentBtn.appendChild(checkboxIcon.mainComponent);
+  const urgentCheckBox = checkboxIcon.internalDomElements.checkBox;
 
   urgentContainer.appendChild(urgentText);
   urgentContainer.appendChild(urgentBtn);
@@ -52,5 +55,14 @@ export function createCategorySelector() {
   categoryRow.appendChild(colorList);
   categoryRow.appendChild(urgentContainer);
 
-  return categoryRow;
+  return {
+    mainComponent: categoryRow,
+    internalDomElements: {
+      categoryBtn: colorBtn,
+      colorLists: colorList,
+      colorPreview,
+      urgentBtn,
+      urgentCheckBox,
+    },
+  };
 }

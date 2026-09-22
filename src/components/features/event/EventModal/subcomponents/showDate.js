@@ -12,5 +12,8 @@ export function createShowDate() {
   showDate.appendChild(date);
   showDate.appendChild(separator);
 
-  return showDate;
+  return {
+    mainComponent: showDate,
+    internalDomElements: { header: showDate },
+  };
 }
