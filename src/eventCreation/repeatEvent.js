@@ -1,9 +1,4 @@
 import {
-  updateRepeatDraft,
-  initRepeatDraft,
-  validatorRepeatDraft,
-} from '../utils/events/repeatEventsDraft.js';
-import {
   handleListSelection,
   handleOutSideClick,
 } from '../utils/helpers/listSelection.js';
@@ -50,27 +45,43 @@ function repeatModalUiState(state) {
       break;
     case 'daily':
       removeClassHelper(sections);
-      eventModalDomElements.repeat.intervalContainer.classList.add('show-repeat-section');
-      eventModalDomElements.repeat.untilContainer.classList.add('show-repeat-section');
+      eventModalDomElements.repeat.intervalContainer.classList.add(
+        'show-repeat-section',
+      );
+      eventModalDomElements.repeat.untilContainer.classList.add(
+        'show-repeat-section',
+      );
       break;
     case 'weekly':
       eventFormState.repeat.weekdays = [...selectedDays];
 
       removeClassHelper(sections);
-      eventModalDomElements.repeat.intervalContainer.classList.add('show-repeat-section');
-      eventModalDomElements.repeat.untilContainer.classList.add('show-repeat-section');
-      eventModalDomElements.repeat.weeklyContainer.classList.add('show-repeat-section');
+      eventModalDomElements.repeat.intervalContainer.classList.add(
+        'show-repeat-section',
+      );
+      eventModalDomElements.repeat.untilContainer.classList.add(
+        'show-repeat-section',
+      );
+      eventModalDomElements.repeat.weeklyContainer.classList.add(
+        'show-repeat-section',
+      );
       break;
     case 'monthly':
       removeClassHelper(sections);
-      eventModalDomElements.repeat.intervalContainer.classList.add('show-repeat-section');
-      eventModalDomElements.repeat.untilContainer.classList.add('show-repeat-section');
+      eventModalDomElements.repeat.intervalContainer.classList.add(
+        'show-repeat-section',
+      );
+      eventModalDomElements.repeat.untilContainer.classList.add(
+        'show-repeat-section',
+      );
       break;
     case 'custom':
       eventFormState.repeat.customDates = getStoredCustomDates();
 
       removeClassHelper(sections);
-      eventModalDomElements.repeat.customContainer.classList.add('show-repeat-section');
+      eventModalDomElements.repeat.customContainer.classList.add(
+        'show-repeat-section',
+      );
       break;
   }
 }
@@ -81,21 +92,21 @@ export function rehydrateRepeatModal() {
   const repeatDraftInfo = eventFormState.repeat;
   if (repeatDraftInfo === null) return;
 
-  initRepeatDraft(
-    repeatDraftInfo.type,
-    repeatDraftInfo.until,
-    repeatDraftInfo.seriesId,
-  );
-
   repeatUiState = repeatDraftInfo.type;
   repeatModalUiState(repeatUiState);
 
   eventModalDomElements.repeat.modeBtn.innerText = repeatDraftInfo.type;
   eventModalDomElements.repeat.intervalInput.value = repeatDraftInfo.interval;
 
-  updateIntervaltext(repeatDraftInfo.type, repeatDraftInfo.interval, eventModalDomElements);
+  updateIntervaltext(
+    repeatDraftInfo.type,
+    repeatDraftInfo.interval,
+    eventModalDomElements,
+  );
 
-  const days = eventModalDomElements.repeat.repeatContainer.querySelectorAll('.weekly-repetion-item');
+  const days = eventModalDomElements.repeat.repeatContainer.querySelectorAll(
+    '.weekly-repetion-item',
+  );
   days.forEach((item) => {
     if (repeatDraftInfo.weekdays.includes(Number(item.dataset.dayIndex))) {
       item.classList.add('weekly-repetion-item-selected');
@@ -175,7 +186,9 @@ function resetRepeatModalState() {
 //devo aggiungfere la funzione per chiudere
 
 function closeRepeatEvent() {
-  eventModalDomElements.repeat.repeatContainer.classList.remove('show-repeat-modal');
+  eventModalDomElements.repeat.repeatContainer.classList.remove(
+    'show-repeat-modal',
+  );
   eventModalDomElements.repeatOverlay.classList.remove('show-repeat-overlay');
   if (editMode) {
     return;
@@ -190,8 +203,16 @@ export function forceResetRepeatModalState() {
 }
 
 function saveRepeatEvent() {
-  const isValid = validatorRepeatDraft(eventModalDomElements);
-  if (!isValid) {
+  // Repeat draft is already validated by the Repeat value object at creation. This is here for italian message reference
+  if (
+    eventFormState.repeat?.type === 'custom' &&
+    eventFormState.repeat?.customDates.length === 0
+  ) {
+    createMessage(
+      'inserisci almeno una data',
+      eventModalDomElements.repeat.customContainer,
+      eventModalDomElements.repeat.repeatContainer,
+    );
     return;
   }
 
@@ -255,13 +276,26 @@ export function initRepeatEvents(refs) {
 
       const date = unitlDateDefault('normal', undefined, eventModalDomElements);
 
-      initRepeatDraft(repeatUiState, date);
+      eventFormState.repeat = {
+        seriesId: 'fake-init-id',
+        type: repeatUiState,
+        interval: 1,
+        weekdays: [],
+        customDates: [],
+        until: date,
+        exceptions: [],
+      };
 
-      eventModalDomElements.repeat.intervalInput.value = eventFormState.repeat.interval;
+      eventModalDomElements.repeat.intervalInput.value =
+        eventFormState.repeat.interval;
       eventModalDomElements.repeat.modeBtn.innerText = li.innerText;
 
       repeatModalUiState(repeatUiState);
-      updateIntervaltext(repeatUiState, eventFormState.repeat.interval, eventModalDomElements);
+      updateIntervaltext(
+        repeatUiState,
+        eventFormState.repeat.interval,
+        eventModalDomElements,
+      );
     },
     'show-mode-list',
   );
@@ -269,13 +303,18 @@ export function initRepeatEvents(refs) {
   eventModalDomElements.repeat.intervalInput.addEventListener('change', () => {
     const newValue = Number(eventModalDomElements.repeat.intervalInput.value);
     if (!intervalInputValidator(repeatUiState, newValue)) {
-      eventModalDomElements.repeat.intervalInput.value = eventFormState.repeat.interval;
+      eventModalDomElements.repeat.intervalInput.value =
+        eventFormState.repeat.interval;
       return;
     }
 
     eventFormState.repeat.interval = newValue;
 
-    updateIntervaltext(repeatUiState, eventFormState.repeat.interval, eventModalDomElements);
+    updateIntervaltext(
+      repeatUiState,
+      eventFormState.repeat.interval,
+      eventModalDomElements,
+    );
   });
 
   eventModalDomElements.repeat.dayOfWeekList.addEventListener('click', (e) => {
@@ -294,28 +333,36 @@ export function initRepeatEvents(refs) {
     }
 
     eventFormState.repeat.weekdays = [...selectedDays];
-
-    updateRepeatDraft('weekdays', selectedDays);
   });
 
-  eventModalDomElements.repeat.untilMiniCalendarBtn.addEventListener('click', () => {
-    if (editMode) {
-      const untilDateRestored = unitlDateDefault(
-        'edit',
-        eventFormState.repeat.until,
-        eventModalDomElements,
-      );
-      openMiniCalendar('event', untilDateRestored, 'repeat-until');
-    } else {
-      const date = unitlDateDefault('normal', undefined, eventModalDomElements);
-      openMiniCalendar('event', date, 'repeat-until');
-    }
-  });
+  eventModalDomElements.repeat.untilMiniCalendarBtn.addEventListener(
+    'click',
+    () => {
+      if (editMode) {
+        const untilDateRestored = unitlDateDefault(
+          'edit',
+          eventFormState.repeat.until,
+          eventModalDomElements,
+        );
+        openMiniCalendar('event', untilDateRestored, 'repeat-until');
+      } else {
+        const date = unitlDateDefault(
+          'normal',
+          undefined,
+          eventModalDomElements,
+        );
+        openMiniCalendar('event', date, 'repeat-until');
+      }
+    },
+  );
 
-  eventModalDomElements.repeat.customMiniCalendarBtn.addEventListener('click', () => {
-    const date = eventModalDomElements.header.firstElementChild.dataset.day;
-    openMiniCalendar('event', date, 'custom-dates');
-  });
+  eventModalDomElements.repeat.customMiniCalendarBtn.addEventListener(
+    'click',
+    () => {
+      const date = eventModalDomElements.header.firstElementChild.dataset.day;
+      openMiniCalendar('event', date, 'custom-dates');
+    },
+  );
 
   initCustomDateRemoval(eventModalDomElements);
 

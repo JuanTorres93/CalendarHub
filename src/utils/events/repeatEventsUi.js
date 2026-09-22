@@ -1,6 +1,5 @@
 import { formatDate } from './eventsUI.js';
 import { createMessage } from '../helpers/createElement.js';
-import { updateRepeatDraft } from './repeatEventsDraft.js';
 import { eventFormState } from './eventFormState.js';
 import dateValidator from '../helpers/dateValidator.js';
 import dayjs from '../../day.js';
@@ -75,7 +74,5 @@ export function updateUntilUIAndDraft(date, eventModalDomElements) {
     eventModalDomElements.repeat.untilText.innerText = dateDisplayed;
 
     eventFormState.repeat.until = date;
-
-    updateRepeatDraft('until', date);
   }
 }
