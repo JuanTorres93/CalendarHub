@@ -15,13 +15,6 @@ const seasonalBackgrounds = {
   winter: backgroundImage("inverno.png"),
 };
 
-export function preloadSeasonlBackgrounds() {
-  Object.values(seasonalBackgrounds).forEach((src) => {
-    const img = new Image();
-    img.src = src;
-  });
-}
-
 const seasonLoadMap = {
   winter: {
     active: "winter",

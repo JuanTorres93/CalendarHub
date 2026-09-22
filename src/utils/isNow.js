@@ -20,22 +20,6 @@ export function nowTarget(target, type, nowType, targetTime) {
   return targetHour;
 }
 
-export function dateListTarget(target, mode) {
-  let now, targetList;
-
-  if (mode === "month") {
-    now = dayjs().month().format("MMMM");
-  }
-
-  target.forEach((item) => {
-    if (item.innerText === now) {
-      targetList = item;
-    }
-  });
-
-  return targetList;
-}
-
 export function isNow() {
   const selectHourDaily = document.querySelectorAll(".day-box");
   const selectHourWeek = document.querySelectorAll(".week-box");

@@ -332,7 +332,3 @@ function handleClickEditSeriesBtn(e) {
   const currentEvent = getEventFromID().motherEvent;
   handleEditFlow(currentEvent, 'edit-series', true, e);
 }
-
-export function initExtraInfos() {
-  initOptionsBanner();
-}
