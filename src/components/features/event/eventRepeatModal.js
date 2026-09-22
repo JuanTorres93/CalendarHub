@@ -5,15 +5,34 @@ export function createEventRepeatModal() {
   repeatContainer.setAttribute('aria-labelledby', 'repeat-modal-title');
   repeatContainer.setAttribute('data-testid', 'event-repeat-modal');
 
-  repeatContainer.appendChild(createRepeatTitle());
-  repeatContainer.appendChild(createRepeatModeContainer());
-  repeatContainer.appendChild(createRepeatIntervalContainer());
-  repeatContainer.appendChild(createWeeklyRepetitionContainer());
-  repeatContainer.appendChild(createEndRepeatEventContainer());
-  repeatContainer.appendChild(createCustomDatesContainer());
-  repeatContainer.appendChild(createCloseRepeatContainer());
+  const repeatTitle = createRepeatTitle();
+  const mode = createRepeatModeContainer();
+  const interval = createRepeatIntervalContainer();
+  const weekly = createWeeklyRepetitionContainer();
+  const until = createEndRepeatEventContainer();
+  const custom = createCustomDatesContainer();
+  const close = createCloseRepeatContainer();
 
-  return repeatContainer;
+  repeatContainer.appendChild(repeatTitle.mainComponent);
+  repeatContainer.appendChild(mode.mainComponent);
+  repeatContainer.appendChild(interval.mainComponent);
+  repeatContainer.appendChild(weekly.mainComponent);
+  repeatContainer.appendChild(until.mainComponent);
+  repeatContainer.appendChild(custom.mainComponent);
+  repeatContainer.appendChild(close.mainComponent);
+
+  return {
+    mainComponent: repeatContainer,
+    internalDomElements: {
+      repeatContainer,
+      ...mode.internalDomElements,
+      ...interval.internalDomElements,
+      ...weekly.internalDomElements,
+      ...until.internalDomElements,
+      ...custom.internalDomElements,
+      ...close.internalDomElements,
+    },
+  };
 }
 
 function createRepeatTitle() {
@@ -22,7 +41,7 @@ function createRepeatTitle() {
   title.className = 'visually-hidden';
   title.textContent = 'Configura ripetizione evento';
 
-  return title;
+  return { mainComponent: title };
 }
 
 function createRepeatModeContainer() {
@@ -64,7 +83,10 @@ function createRepeatModeContainer() {
   modeContainer.appendChild(modeBtn);
   modeContainer.appendChild(modeList);
 
-  return modeContainer;
+  return {
+    mainComponent: modeContainer,
+    internalDomElements: { modeContainer, modeBtn, modeList },
+  };
 }
 
 function createRepeatIntervalContainer() {
@@ -103,7 +125,10 @@ function createRepeatIntervalContainer() {
   intervalContainer.appendChild(intervalTextContainer);
   intervalContainer.appendChild(dynamicText);
 
-  return intervalContainer;
+  return {
+    mainComponent: intervalContainer,
+    internalDomElements: { intervalContainer, intervalInput, intervalText: dynamicText },
+  };
 }
 
 function createWeeklyRepetitionContainer() {
@@ -121,7 +146,10 @@ function createWeeklyRepetitionContainer() {
   weeklyContainer.appendChild(text);
   weeklyContainer.appendChild(weeklyList);
 
-  return weeklyContainer;
+  return {
+    mainComponent: weeklyContainer,
+    internalDomElements: { weeklyContainer, dayOfWeekList: weeklyList },
+  };
 }
 
 function createEndRepeatEventContainer() {
@@ -154,7 +182,10 @@ function createEndRepeatEventContainer() {
   untilContainer.appendChild(openUntilContainer);
   untilContainer.appendChild(untilText);
 
-  return untilContainer;
+  return {
+    mainComponent: untilContainer,
+    internalDomElements: { untilContainer, untilMiniCalendarBtn: untilBtn, untilText },
+  };
 }
 
 function createCustomDatesContainer() {
@@ -186,7 +217,14 @@ function createCustomDatesContainer() {
   customContainer.appendChild(openCustomContainer);
   customContainer.appendChild(customList);
 
-  return customContainer;
+  return {
+    mainComponent: customContainer,
+    internalDomElements: {
+      customContainer,
+      customMiniCalendarBtn: customBtn,
+      customList,
+    },
+  };
 }
 
 function createCloseRepeatContainer() {
@@ -210,5 +248,8 @@ function createCloseRepeatContainer() {
   closeContainer.appendChild(saveBtn);
   closeContainer.appendChild(closeBtn);
 
-  return closeContainer;
+  return {
+    mainComponent: closeContainer,
+    internalDomElements: { closeRepeatContainer: closeContainer, closeBtn, saveBtn },
+  };
 }

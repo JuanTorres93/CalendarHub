@@ -1,8 +1,4 @@
 import { createMessage } from '../helpers/createElement.js';
-import {
-  customContainer,
-  repeatContainer,
-} from '../helpers/dom/repeatModalDom.js';
 import { eventFormState } from './eventFormState.js';
 
 export const initRepeatDraft = (type, date) => {
@@ -35,7 +31,7 @@ export function updateRepeatDraft(field, value) {
   };
 }
 
-export function validatorRepeatDraft() {
+export function validatorRepeatDraft(eventModalDomElements) {
   // Legacy code, Repeat draft will already be validated if creation succedes
   if (
     eventFormState.repeat?.type === 'custom' &&
@@ -43,8 +39,8 @@ export function validatorRepeatDraft() {
   ) {
     createMessage(
       'inserisci almeno una data',
-      customContainer,
-      repeatContainer,
+      eventModalDomElements.repeat.customContainer,
+      eventModalDomElements.repeat.repeatContainer,
     );
     return false;
   }

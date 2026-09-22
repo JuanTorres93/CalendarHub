@@ -2,15 +2,10 @@ import { createMessage } from "../utils/helpers/createElement.js";
 import { updateRepeatDraft } from "../utils/events/repeatEventsDraft.js";
 import { formatDate } from "../utils/events/eventsUI.js";
 import dateValidator from "../utils/helpers/dateValidator.js";
-import {
-  repeatContainer,
-  customContainer,
-  customList,
-} from "../utils/helpers/dom/repeatModalDom.js";
 
 let listOfDates = [];
 
-function renderCustomDateItem(date) {
+function renderCustomDateItem(date, customList) {
   const item = document.createElement("li");
   item.className = "custom-date-item";
   item.dataset.day = date;
@@ -38,12 +33,15 @@ export function validateAndReturnCustomDate(date, eventModalDomElements) {
   if (isNotValid) {
     return createMessage(
       "La data deve essere successiva all'evento",
-      customContainer,
-      repeatContainer,
+      eventModalDomElements.repeat.customContainer,
+      eventModalDomElements.repeat.repeatContainer,
     );
   } else {
     if (date && !listOfDates.includes(date)) {
-      const li = renderCustomDateItem(date);
+      const li = renderCustomDateItem(
+        date,
+        eventModalDomElements.repeat.customList,
+      );
 
       listOfDates.push(li.dataset.day);
       syncCustomDatesDraft();
@@ -51,8 +49,8 @@ export function validateAndReturnCustomDate(date, eventModalDomElements) {
   }
 }
 
-export function initCustomDateRemoval() {
-  customList.addEventListener("click", (e) => {
+export function initCustomDateRemoval(eventModalDomElements) {
+  eventModalDomElements.repeat.customList.addEventListener("click", (e) => {
     const btn = e.target.closest(".remove-custom-date");
     if (!btn) return;
 
@@ -72,17 +70,17 @@ function syncCustomDatesDraft() {
 export function getStoredCustomDates() {
   return [...listOfDates];
 }
-export function clearDatesStates() {
+export function clearDatesStates(eventModalDomElements) {
   listOfDates = [];
-  customList.innerHTML = "";
+  eventModalDomElements.repeat.customList.innerHTML = "";
 }
 
-export function hydrateCustomDates(dates) {
+export function hydrateCustomDates(dates, eventModalDomElements) {
   listOfDates = [...dates];
-  customList.innerHTML = "";
+  eventModalDomElements.repeat.customList.innerHTML = "";
 
   dates.forEach((date) => {
-    renderCustomDateItem(date);
+    renderCustomDateItem(date, eventModalDomElements.repeat.customList);
   });
 
   syncCustomDatesDraft();

@@ -24,23 +24,6 @@ import { hydrateCustomDates } from './repeatcustomDates.js';
 import { Repeat } from '../domain/value-objets/Repeat/Repeat.js';
 import dayjs from '../day.js';
 
-import {
-  repeatContainer,
-  modeBtn,
-  modeList,
-  intervalContainer,
-  weeklyContainer,
-  untilContainer,
-  customContainer,
-  intervalInput,
-  dayOfWeekList,
-  untilMiniCalendarBtn,
-  customMiniCalendarBtn,
-  repeatOverlay,
-  closeBtn,
-  saveBtn,
-} from '../utils/helpers/dom/repeatModalDom.js';
-
 let editMode = false;
 let repeatUiState = 'default';
 let selectedDays = [];
@@ -56,10 +39,10 @@ function removeClassHelper(sections) {
 
 function repeatModalUiState(state) {
   const sections = [
-    intervalContainer,
-    weeklyContainer,
-    untilContainer,
-    customContainer,
+    eventModalDomElements.repeat.intervalContainer,
+    eventModalDomElements.repeat.weeklyContainer,
+    eventModalDomElements.repeat.untilContainer,
+    eventModalDomElements.repeat.customContainer,
   ];
   switch (state) {
     case 'default':
@@ -67,27 +50,27 @@ function repeatModalUiState(state) {
       break;
     case 'daily':
       removeClassHelper(sections);
-      intervalContainer.classList.add('show-repeat-section');
-      untilContainer.classList.add('show-repeat-section');
+      eventModalDomElements.repeat.intervalContainer.classList.add('show-repeat-section');
+      eventModalDomElements.repeat.untilContainer.classList.add('show-repeat-section');
       break;
     case 'weekly':
       eventFormState.repeat.weekdays = [...selectedDays];
 
       removeClassHelper(sections);
-      intervalContainer.classList.add('show-repeat-section');
-      untilContainer.classList.add('show-repeat-section');
-      weeklyContainer.classList.add('show-repeat-section');
+      eventModalDomElements.repeat.intervalContainer.classList.add('show-repeat-section');
+      eventModalDomElements.repeat.untilContainer.classList.add('show-repeat-section');
+      eventModalDomElements.repeat.weeklyContainer.classList.add('show-repeat-section');
       break;
     case 'monthly':
       removeClassHelper(sections);
-      intervalContainer.classList.add('show-repeat-section');
-      untilContainer.classList.add('show-repeat-section');
+      eventModalDomElements.repeat.intervalContainer.classList.add('show-repeat-section');
+      eventModalDomElements.repeat.untilContainer.classList.add('show-repeat-section');
       break;
     case 'custom':
       eventFormState.repeat.customDates = getStoredCustomDates();
 
       removeClassHelper(sections);
-      customContainer.classList.add('show-repeat-section');
+      eventModalDomElements.repeat.customContainer.classList.add('show-repeat-section');
       break;
   }
 }
@@ -107,12 +90,12 @@ export function rehydrateRepeatModal() {
   repeatUiState = repeatDraftInfo.type;
   repeatModalUiState(repeatUiState);
 
-  modeBtn.innerText = repeatDraftInfo.type;
-  intervalInput.value = repeatDraftInfo.interval;
+  eventModalDomElements.repeat.modeBtn.innerText = repeatDraftInfo.type;
+  eventModalDomElements.repeat.intervalInput.value = repeatDraftInfo.interval;
 
-  updateIntervaltext(repeatDraftInfo.type, repeatDraftInfo.interval);
+  updateIntervaltext(repeatDraftInfo.type, repeatDraftInfo.interval, eventModalDomElements);
 
-  const days = repeatContainer.querySelectorAll('.weekly-repetion-item');
+  const days = eventModalDomElements.repeat.repeatContainer.querySelectorAll('.weekly-repetion-item');
   days.forEach((item) => {
     if (repeatDraftInfo.weekdays.includes(Number(item.dataset.dayIndex))) {
       item.classList.add('weekly-repetion-item-selected');
@@ -121,7 +104,7 @@ export function rehydrateRepeatModal() {
 
   unitlDateDefault('edit', repeatDraftInfo.until, eventModalDomElements);
 
-  hydrateCustomDates(repeatDraftInfo.customDates);
+  hydrateCustomDates(repeatDraftInfo.customDates, eventModalDomElements);
 
   eventFormState.repeat.type = repeatDraftInfo.type;
   eventFormState.repeat.interval = repeatDraftInfo.interval;
@@ -137,16 +120,16 @@ function intervalInputValidator(state, interval) {
   if (!Number.isInteger(interval) || interval < 1) {
     createMessage(
       'inserisci un intervallo valido',
-      intervalContainer,
-      repeatContainer,
+      eventModalDomElements.repeat.intervalContainer,
+      eventModalDomElements.repeat.repeatContainer,
     );
     return false;
   }
   if (state === 'daily' && interval > 30) {
     createMessage(
       "l'intervallo giornaliero non può superare 30 giorni",
-      intervalContainer,
-      repeatContainer,
+      eventModalDomElements.repeat.intervalContainer,
+      eventModalDomElements.repeat.repeatContainer,
     );
     return false;
   }
@@ -154,8 +137,8 @@ function intervalInputValidator(state, interval) {
   if (state === 'weekly' && interval > 12) {
     createMessage(
       "l'intervallo settimanale non può superare 12 settimane",
-      intervalContainer,
-      repeatContainer,
+      eventModalDomElements.repeat.intervalContainer,
+      eventModalDomElements.repeat.repeatContainer,
     );
     return false;
   }
@@ -163,8 +146,8 @@ function intervalInputValidator(state, interval) {
   if (state === 'monthly' && interval > 24) {
     createMessage(
       "l'intervallo mensile non può superare 24 mesi",
-      intervalContainer,
-      repeatContainer,
+      eventModalDomElements.repeat.intervalContainer,
+      eventModalDomElements.repeat.repeatContainer,
     );
     return false;
   }
@@ -177,12 +160,12 @@ function resetRepeatModalState() {
   editMode = false;
   selectedDays = [];
 
-  modeBtn.innerText = '';
-  intervalInput.value = '';
+  eventModalDomElements.repeat.modeBtn.innerText = '';
+  eventModalDomElements.repeat.intervalInput.value = '';
 
-  modeList.classList.remove('show-mode-list');
+  eventModalDomElements.repeat.modeList.classList.remove('show-mode-list');
 
-  dayOfWeekList
+  eventModalDomElements.repeat.dayOfWeekList
     .querySelectorAll('.weekly-repetion-item-selected')
     .forEach((item) => item.classList.remove('weekly-repetion-item-selected'));
 
@@ -192,22 +175,22 @@ function resetRepeatModalState() {
 //devo aggiungfere la funzione per chiudere
 
 function closeRepeatEvent() {
-  repeatContainer.classList.remove('show-repeat-modal');
-  repeatOverlay.classList.remove('show-repeat-overlay');
+  eventModalDomElements.repeat.repeatContainer.classList.remove('show-repeat-modal');
+  eventModalDomElements.repeatOverlay.classList.remove('show-repeat-overlay');
   if (editMode) {
     return;
   }
   resetRepeatModalState();
-  clearDatesStates();
+  clearDatesStates(eventModalDomElements);
 }
 
 export function forceResetRepeatModalState() {
   resetRepeatModalState();
-  clearDatesStates();
+  clearDatesStates(eventModalDomElements);
 }
 
 function saveRepeatEvent() {
-  const isValid = validatorRepeatDraft();
+  const isValid = validatorRepeatDraft(eventModalDomElements);
   if (!isValid) {
     return;
   }
@@ -248,19 +231,19 @@ function defaultRepeatFormProps(eventDate) {
 
 export function initRepeatEvents(refs) {
   eventModalDomElements = refs;
-  createDayOfWeek();
+  createDayOfWeek(eventModalDomElements);
   handleOutSideClick(
     '.repeat-mode-list, .repeat-mode-btn',
-    modeList,
+    eventModalDomElements.repeat.modeList,
     'show-mode-list',
   );
 
-  modeBtn.addEventListener('click', () => {
-    modeList.classList.toggle('show-mode-list');
+  eventModalDomElements.repeat.modeBtn.addEventListener('click', () => {
+    eventModalDomElements.repeat.modeList.classList.toggle('show-mode-list');
   });
 
   handleListSelection(
-    modeList,
+    eventModalDomElements.repeat.modeList,
     '.repeat-mode-list-item',
     (li) => {
       repeatUiState = li.dataset.repeatType;
@@ -274,28 +257,28 @@ export function initRepeatEvents(refs) {
 
       initRepeatDraft(repeatUiState, date);
 
-      intervalInput.value = eventFormState.repeat.interval;
-      modeBtn.innerText = li.innerText;
+      eventModalDomElements.repeat.intervalInput.value = eventFormState.repeat.interval;
+      eventModalDomElements.repeat.modeBtn.innerText = li.innerText;
 
       repeatModalUiState(repeatUiState);
-      updateIntervaltext(repeatUiState, eventFormState.repeat.interval);
+      updateIntervaltext(repeatUiState, eventFormState.repeat.interval, eventModalDomElements);
     },
     'show-mode-list',
   );
 
-  intervalInput.addEventListener('change', () => {
-    const newValue = Number(intervalInput.value);
+  eventModalDomElements.repeat.intervalInput.addEventListener('change', () => {
+    const newValue = Number(eventModalDomElements.repeat.intervalInput.value);
     if (!intervalInputValidator(repeatUiState, newValue)) {
-      intervalInput.value = eventFormState.repeat.interval;
+      eventModalDomElements.repeat.intervalInput.value = eventFormState.repeat.interval;
       return;
     }
 
     eventFormState.repeat.interval = newValue;
 
-    updateIntervaltext(repeatUiState, eventFormState.repeat.interval);
+    updateIntervaltext(repeatUiState, eventFormState.repeat.interval, eventModalDomElements);
   });
 
-  dayOfWeekList.addEventListener('click', (e) => {
+  eventModalDomElements.repeat.dayOfWeekList.addEventListener('click', (e) => {
     const li = e.target.closest('.weekly-repetion-item');
     if (!li) return;
     const selected = li.classList.toggle('weekly-repetion-item-selected');
@@ -315,7 +298,7 @@ export function initRepeatEvents(refs) {
     updateRepeatDraft('weekdays', selectedDays);
   });
 
-  untilMiniCalendarBtn.addEventListener('click', () => {
+  eventModalDomElements.repeat.untilMiniCalendarBtn.addEventListener('click', () => {
     if (editMode) {
       const untilDateRestored = unitlDateDefault(
         'edit',
@@ -329,18 +312,18 @@ export function initRepeatEvents(refs) {
     }
   });
 
-  customMiniCalendarBtn.addEventListener('click', () => {
+  eventModalDomElements.repeat.customMiniCalendarBtn.addEventListener('click', () => {
     const date = eventModalDomElements.header.firstElementChild.dataset.day;
     openMiniCalendar('event', date, 'custom-dates');
   });
 
-  initCustomDateRemoval();
+  initCustomDateRemoval(eventModalDomElements);
 
-  closeBtn.addEventListener('click', () => {
+  eventModalDomElements.repeat.closeBtn.addEventListener('click', () => {
     closeRepeatEvent();
   });
 
-  saveBtn.addEventListener('click', (e) => {
+  eventModalDomElements.repeat.saveBtn.addEventListener('click', (e) => {
     saveRepeatEvent(e);
   });
 }

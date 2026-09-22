@@ -28,11 +28,6 @@ import { nowTarget } from '../utils/isNow.js';
 import { openEventModal } from '../components/features/event/EventModal/EventModal.js';
 import { forceResetRepeatModalState, initRepeatEvents } from './repeatEvent.js';
 
-import {
-  repeatContainer as repeatModal,
-  repeatOverlay,
-} from '../utils/helpers/dom/repeatModalDom.js';
-
 let eventModalDomElements = null;
 
 export function wireEventFormToEventLogic(refs) {
@@ -522,8 +517,8 @@ export function initEventFormEvents() {
   );
 
   eventModalDomElements.repeatBtn.addEventListener('click', () => {
-    repeatModal.classList.toggle('show-repeat-modal');
-    repeatOverlay.classList.add('show-repeat-overlay');
+    eventModalDomElements.repeat.repeatContainer.classList.toggle('show-repeat-modal');
+    eventModalDomElements.repeatOverlay.classList.add('show-repeat-overlay');
   });
 
   eventModalDomElements.notificationBtn.addEventListener('click', () => {

@@ -48,7 +48,8 @@ export function createEventModal() {
   const notificationRow = createNotificationRow();
   eventForm.appendChild(notificationRow.mainComponent);
 
-  eventForm.appendChild(createEventRepeatModal());
+  const repeatModal = createEventRepeatModal();
+  eventForm.appendChild(repeatModal.mainComponent);
 
   const repeatOverlay = document.createElement('div');
   repeatOverlay.className = 'repeat-overlay';
@@ -71,6 +72,7 @@ export function createEventModal() {
     ...dateRow.internalDomElements,
     ...timeRow.internalDomElements,
     ...notificationRow.internalDomElements,
+    repeat: repeatModal.internalDomElements,
     repeatOverlay,
   };
 

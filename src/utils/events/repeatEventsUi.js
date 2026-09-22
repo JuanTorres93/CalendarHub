@@ -4,14 +4,9 @@ import { updateRepeatDraft } from './repeatEventsDraft.js';
 import { eventFormState } from './eventFormState.js';
 import dateValidator from '../helpers/dateValidator.js';
 import dayjs from '../../day.js';
-import {
-  repeatContainer,
-  intervalText,
-  untilContainer,
-  untilText,
-} from '../helpers/dom/repeatModalDom.js';
 
-export function updateIntervaltext(state, interval) {
+export function updateIntervaltext(state, interval, eventModalDomElements) {
+  const intervalText = eventModalDomElements.repeat.intervalText;
   if (state === 'custom') return;
   if (state === 'daily') {
     if (interval === 1) {
@@ -37,6 +32,7 @@ export function updateIntervaltext(state, interval) {
 }
 
 export const unitlDateDefault = (type, currentDate, eventModalDomElements) => {
+  const untilText = eventModalDomElements.repeat.untilText;
   let dateDisplayed;
   if (type === 'normal') {
     const date = eventModalDomElements.header.firstElementChild.dataset.day;
@@ -72,11 +68,11 @@ export function updateUntilUIAndDraft(date, eventModalDomElements) {
   if (isNotValid) {
     return createMessage(
       "La data deve essere successiva all'evento",
-      untilContainer,
-      repeatContainer,
+      eventModalDomElements.repeat.untilContainer,
+      eventModalDomElements.repeat.repeatContainer,
     );
   } else {
-    untilText.innerText = dateDisplayed;
+    eventModalDomElements.repeat.untilText.innerText = dateDisplayed;
 
     eventFormState.repeat.until = date;
 

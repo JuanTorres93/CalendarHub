@@ -1,5 +1,4 @@
 import dayjs from "../../day.js";
-import { dayOfWeekList } from "../helpers/dom/repeatModalDom.js";
 
 const notifications = [
   {
@@ -130,7 +129,8 @@ export default function createCaroseul(eventModalDomElements) {
   });
 }
 // con dayjs().weekday(i).day() prendo l'index stabile, che non varia con il cambio formato, il che mi verrà d'aiuto per indicare i giorni della settimana ove ripetere l'evento.
-export function createDayOfWeek() {
+export function createDayOfWeek(eventModalDomElements) {
+  const dayOfWeekList = eventModalDomElements.repeat.dayOfWeekList;
   const array = Array.from({ length: 7 }, (_, i) => {
     const days = dayjs().weekday(i).format("dddd");
     const index = dayjs().weekday(i).day();
