@@ -13,7 +13,7 @@ import { calendarPresenter } from "../calendarPresenter.js";
 import dayjs from "../day.js";
 import { validateAndReturnCustomDate } from "../eventCreation/repeatcustomDates.js";
 import { eventFormState } from "../utils/events/eventFormState.js";
-import { updateEventDateUI } from "../utils/events/eventsUI.js";
+import { formatDate } from "../utils/helpers/timeHelper.js";
 import { updateUntilUIAndDraft } from "../eventCreation/repeatEvent.js";
 import { initMonthList, initYearList } from "./miniCalendarCarousels.js";
 
@@ -115,7 +115,9 @@ function commitMiniDate() {
     case "event-date":
       eventFormState.date = selectedDate;
 
-      updateEventDateUI(selectedDate, eventModalDomElements);
+      eventModalDomElements.header.firstElementChild.textContent =
+        formatDate(selectedDate);
+      eventModalDomElements.header.firstElementChild.dataset.day = selectedDate;
       break;
     case "repeat-until":
       updateUntilUIAndDraft(selectedDate);

@@ -12,7 +12,7 @@ import {
 import { eventFormState } from '../utils/events/eventFormState.js';
 import { hydrateCustomDates } from './repeatcustomDates.js';
 import { Repeat } from '../domain/value-objets/Repeat/Repeat.js';
-import { formatDate } from '../utils/events/eventsUI.js';
+import { formatDate } from '../utils/helpers/timeHelper.js';
 import dateValidator from '../utils/helpers/dateValidator.js';
 import dayjs from '../day.js';
 

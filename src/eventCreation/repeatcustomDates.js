@@ -1,5 +1,5 @@
 import { createMessage } from "../utils/helpers/createElement.js";
-import { formatDate } from "../utils/events/eventsUI.js";
+import { formatDate } from "../utils/helpers/timeHelper.js";
 import { eventFormState } from "../utils/events/eventFormState.js";
 import dateValidator from "../utils/helpers/dateValidator.js";
 
