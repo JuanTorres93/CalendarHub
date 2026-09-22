@@ -1,6 +1,7 @@
 import { createDayLabel } from "./dayLabel.js";
 import { createTodoContainer } from "./todoContainer.js";
 import { calendarLogic } from "../../../calendarLogic.js";
+import { calendarPresenter } from "../../../calendarPresenter.js";
 
 export function createWeekDayLabel({ date }) {
   const weekDayLabel = document.createElement("div");
@@ -12,6 +13,7 @@ export function createWeekDayLabel({ date }) {
   headerButton.addEventListener("click", (e) => {
     e.stopPropagation();
     calendarLogic.setDate(date);
+    calendarPresenter.render();
   });
 
   weekDayLabel.appendChild(headerButton);

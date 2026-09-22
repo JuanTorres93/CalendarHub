@@ -1,4 +1,5 @@
 import { calendarLogic } from '../../../calendarLogic.js';
+import { calendarPresenter } from '../../../calendarPresenter.js';
 
 export default function createRightArrowButton({
   timeFrame,
@@ -35,5 +36,5 @@ function goToNextTimeframe(timeFrame) {
     calendarLogic.nextDay();
   }
 
-  calendarLogic.syncAll();
+  calendarPresenter.render();
 }

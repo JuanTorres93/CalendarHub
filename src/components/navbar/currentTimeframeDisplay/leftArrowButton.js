@@ -1,4 +1,5 @@
 import { calendarLogic } from '../../../calendarLogic.js';
+import { calendarPresenter } from '../../../calendarPresenter.js';
 
 export default function createLeftArrowButton({
   timeFrame,
@@ -35,5 +36,5 @@ function goToPreviousTimeframe(timeFrame) {
     calendarLogic.prevDay();
   }
 
-  calendarLogic.syncAll();
+  calendarPresenter.render();
 }

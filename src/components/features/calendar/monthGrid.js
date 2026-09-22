@@ -84,6 +84,9 @@ function buildGridContent(monthStructureContainer, currentView, isMini) {
       dataDayID = primoGiorno.date(dayNumber).format("YYYY-MM-DD");
       if (dataDayID === currentView.format("YYYY-MM-DD")) {
         dayClass = `${gridConfig.today} ${gridConfig.colorBox}`;
+        if (!isMini) {
+          dayClass += ` selected`;
+        }
       } else {
         dayClass = `${gridConfig.colorBox}`;
       }

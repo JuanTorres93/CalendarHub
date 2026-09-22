@@ -1,6 +1,7 @@
 import dayjs from "../../../day.js";
 import { createTodoContainer } from "./todoContainer.js";
 import { calendarLogic } from "../../../calendarLogic.js";
+import { calendarPresenter } from "../../../calendarPresenter.js";
 
 export function createDayCell({
   dataDayID,
@@ -100,6 +101,7 @@ function createDayNumberButton({ isMini, dataDayID }) {
     dayNumberButton.addEventListener("click", (e) => {
       e.stopPropagation();
       calendarLogic.setDate(dayjs(dataDayID));
+      calendarPresenter.render();
     });
   }
 

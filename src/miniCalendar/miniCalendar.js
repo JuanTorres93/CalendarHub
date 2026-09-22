@@ -9,6 +9,7 @@ import {
 } from "../utils/helpers/dom/miniCalendarDom.js";
 
 import { calendarLogic } from "../calendarLogic.js";
+import { calendarPresenter } from "../calendarPresenter.js";
 import dayjs from "../day.js";
 import { validateAndReturnCustomDate } from "../eventCreation/repeatcustomDates.js";
 import { eventFormState } from "../utils/events/eventFormState.js";
@@ -105,6 +106,7 @@ function commitMiniDate() {
   switch (miniCalendarCommitTarget) {
     case "normal":
       calendarLogic.setDate(dayjs(miniLocalDate));
+      calendarPresenter.render();
       break;
     case "event-date":
       eventFormState.date = selectedDate;

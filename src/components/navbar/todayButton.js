@@ -1,4 +1,5 @@
 import { calendarLogic } from '../../calendarLogic.js';
+import { calendarPresenter } from '../../calendarPresenter.js';
 import dayjs from '../../day.js';
 
 export default function createTodayButton() {
@@ -12,6 +13,7 @@ export default function createTodayButton() {
 
   button.addEventListener('click', () => {
     calendarLogic.setDate(dayjs());
+    calendarPresenter.render();
   });
 
   return button;
