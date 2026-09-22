@@ -1,18 +1,18 @@
-import { replaceMarkers } from "./markerReplacer.js";
-import createMonthGrid from "./features/calendar/monthGrid.js";
-import createWeekGrid from "./features/calendar/weekGrid.js";
-import createDailyGrid from "./features/calendar/dayGrid.js";
-import { calendarLogic } from "../calendarLogic.js";
-import createCurrentTimeframeDisplay from "./navbar/currentTimeframeDisplay/currentTimeframeDisplay.js";
-import createLeftArrowButton from "./navbar/currentTimeframeDisplay/leftArrowButton.js";
-import createRightArrowButton from "./navbar/currentTimeframeDisplay/rightArrowButton.js";
-import createViewModeSwitcher from "./navbar/timeframeSwitcher.js";
-import createTodayButton from "./navbar/todayButton.js";
-import createTodoListButton from "./navbar/todoListButton.js";
-import createTutorialButton from "./navbar/tutorialButton.js";
-import createCurrentYearDisplay from "./navbar/currentYearDisplay.js";
-import createTodoPanel from "./features/todo/todoPanel/TodoPanel.js";
-import createEventModal from "./features/event/EventModal.js";
+import { replaceMarkers } from './markerReplacer.js';
+import createMonthGrid from './features/calendar/monthGrid.js';
+import createWeekGrid from './features/calendar/weekGrid.js';
+import createDailyGrid from './features/calendar/dayGrid.js';
+import { calendarLogic } from '../calendarLogic.js';
+import createCurrentTimeframeDisplay from './navbar/currentTimeframeDisplay/currentTimeframeDisplay.js';
+import createLeftArrowButton from './navbar/currentTimeframeDisplay/leftArrowButton.js';
+import createRightArrowButton from './navbar/currentTimeframeDisplay/rightArrowButton.js';
+import createViewModeSwitcher from './navbar/timeframeSwitcher.js';
+import createTodayButton from './navbar/todayButton.js';
+import createTodoListButton from './navbar/todoListButton.js';
+import createTutorialButton from './navbar/tutorialButton.js';
+import createCurrentYearDisplay from './navbar/currentYearDisplay.js';
+import createTodoPanel from './features/todo/todoPanel/TodoPanel.js';
+import createEventModal from './features/event/EventModal/EventModal.js';
 
 const componentBuilders = {
   replace_viewModeSwitcher() {
