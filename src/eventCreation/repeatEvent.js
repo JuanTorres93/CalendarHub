@@ -2,12 +2,7 @@ import {
   handleListSelection,
   handleOutSideClick,
 } from '../utils/helpers/listSelection.js';
-import {
-  updateIntervaltext,
-  unitlDateDefault,
-} from '../utils/events/repeatEventsUi.js';
 import { createMessage } from '../utils/helpers/createElement.js';
-import { createDayOfWeek } from '../utils/events/createLists.js';
 import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
 import {
   getStoredCustomDates,
@@ -17,12 +12,87 @@ import {
 import { eventFormState } from '../utils/events/eventFormState.js';
 import { hydrateCustomDates } from './repeatcustomDates.js';
 import { Repeat } from '../domain/value-objets/Repeat/Repeat.js';
+import { formatDate } from '../utils/events/eventsUI.js';
+import dateValidator from '../utils/helpers/dateValidator.js';
 import dayjs from '../day.js';
 
 let editMode = false;
 let repeatUiState = 'default';
 let selectedDays = [];
 let eventModalDomElements = null;
+
+function updateIntervaltext(state, interval) {
+  const intervalText = eventModalDomElements.repeat.intervalText;
+  if (state === 'custom') return;
+  if (state === 'daily') {
+    if (interval === 1) {
+      intervalText.innerText = 'ogni giorno';
+    } else {
+      intervalText.innerText = `ogni ${interval} giorni`;
+    }
+  }
+  if (state === 'weekly') {
+    if (interval === 1) {
+      intervalText.innerText = 'ogni settimana';
+    } else {
+      intervalText.innerText = `ogni ${interval} settimane`;
+    }
+  }
+  if (state === 'monthly') {
+    if (interval === 1) {
+      intervalText.innerText = 'ogni mese';
+    } else {
+      intervalText.innerText = `ogni ${interval} mesi`;
+    }
+  }
+}
+
+const unitlDateDefault = (type, currentDate) => {
+  const untilText = eventModalDomElements.repeat.untilText;
+  let dateDisplayed;
+  if (type === 'normal') {
+    const date = eventModalDomElements.header.firstElementChild.dataset.day;
+    const month = dayjs(date).add(1, 'month').format('YYYY-MM-DD');
+    dateDisplayed = formatDate(month);
+    untilText.innerText = dateDisplayed;
+
+    eventFormState.repeat = {
+      ...eventFormState.repeat,
+      until: month,
+    };
+
+    return month;
+  }
+  if (type === 'edit') {
+    dateDisplayed = formatDate(currentDate);
+    untilText.innerText = dateDisplayed;
+
+    eventFormState.repeat = {
+      ...eventFormState.repeat,
+      until: currentDate,
+    };
+
+    return currentDate;
+  }
+};
+
+export function updateUntilUIAndDraft(date) {
+  const initialDate = eventModalDomElements.header.firstElementChild.dataset.day;
+  const dateDisplayed = formatDate(date);
+
+  const isNotValid = dateValidator(initialDate, date);
+  if (isNotValid) {
+    return createMessage(
+      "La data deve essere successiva all'evento",
+      eventModalDomElements.repeat.untilContainer,
+      eventModalDomElements.repeat.repeatContainer,
+    );
+  } else {
+    eventModalDomElements.repeat.untilText.innerText = dateDisplayed;
+
+    eventFormState.repeat.until = date;
+  }
+}
 
 function removeClassHelper(sections) {
   sections.forEach((section) => {
@@ -101,7 +171,6 @@ export function rehydrateRepeatModal() {
   updateIntervaltext(
     repeatDraftInfo.type,
     repeatDraftInfo.interval,
-    eventModalDomElements,
   );
 
   const days = eventModalDomElements.repeat.repeatContainer.querySelectorAll(
@@ -113,7 +182,7 @@ export function rehydrateRepeatModal() {
     }
   });
 
-  unitlDateDefault('edit', repeatDraftInfo.until, eventModalDomElements);
+  unitlDateDefault('edit', repeatDraftInfo.until);
 
   hydrateCustomDates(repeatDraftInfo.customDates, eventModalDomElements);
 
@@ -252,7 +321,6 @@ function defaultRepeatFormProps(eventDate) {
 
 export function initRepeatEvents(refs) {
   eventModalDomElements = refs;
-  createDayOfWeek(eventModalDomElements);
   handleOutSideClick(
     '.repeat-mode-list, .repeat-mode-btn',
     eventModalDomElements.repeat.modeList,
@@ -274,7 +342,7 @@ export function initRepeatEvents(refs) {
         type: li.dataset.repeatType,
       };
 
-      const date = unitlDateDefault('normal', undefined, eventModalDomElements);
+      const date = unitlDateDefault('normal', undefined);
 
       eventFormState.repeat = {
         seriesId: 'fake-init-id',
@@ -294,7 +362,6 @@ export function initRepeatEvents(refs) {
       updateIntervaltext(
         repeatUiState,
         eventFormState.repeat.interval,
-        eventModalDomElements,
       );
     },
     'show-mode-list',
@@ -313,7 +380,6 @@ export function initRepeatEvents(refs) {
     updateIntervaltext(
       repeatUiState,
       eventFormState.repeat.interval,
-      eventModalDomElements,
     );
   });
 
@@ -342,14 +408,12 @@ export function initRepeatEvents(refs) {
         const untilDateRestored = unitlDateDefault(
           'edit',
           eventFormState.repeat.until,
-          eventModalDomElements,
         );
         openMiniCalendar('event', untilDateRestored, 'repeat-until');
       } else {
         const date = unitlDateDefault(
           'normal',
           undefined,
-          eventModalDomElements,
         );
         openMiniCalendar('event', date, 'repeat-until');
       }

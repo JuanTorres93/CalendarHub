@@ -1,5 +1,15 @@
 import { createCheckboxIcon } from './checkboxIcon';
 
+const colors = [
+  { name: 'Blue', value: 'blue', icon: '🟦' },
+  { name: 'Green', value: 'green', icon: '🟩' },
+  { name: 'Purple', value: 'purple', icon: '🟪' },
+  { name: 'Red', value: 'red', icon: '🟥' },
+  { name: 'Yellow', value: 'yellow', icon: '🟨' },
+  { name: 'Orange', value: 'orange', icon: '🟧' },
+  { name: 'Pink', value: 'pink', icon: '🩷' },
+];
+
 export function createCategorySelector() {
   const categoryRow = document.createElement('div');
   categoryRow.className = 'category-selector';
@@ -29,6 +39,17 @@ export function createCategorySelector() {
   const colorList = document.createElement('ul');
   colorList.className = 'color-list';
   colorList.setAttribute('data-testid', 'event-color-list');
+
+  colors.forEach((color) => {
+    const item = document.createElement('li');
+    item.className = 'color';
+    item.dataset.color = color.value;
+    item.setAttribute('aria-label', `Seleziona colore ${color.name}`);
+    item.setAttribute('data-testid', `color-option-${color.value}`);
+    item.innerHTML = `${color.name} <span>${color.icon}</span>`;
+
+    colorList.appendChild(item);
+  });
 
   const urgentContainer = document.createElement('div');
   urgentContainer.id = 'urgent-container';

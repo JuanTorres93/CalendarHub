@@ -10,11 +10,6 @@ import { AppUpdateSingleEventOccurrenceUsecase } from '../interface-adapters/use
 import { handleKnownErrors } from '../interface-adapters/other/handleKnownErrors.js';
 import { AppCreateEventUsecase } from '../interface-adapters/use-cases/AppCreateEventUsecase.js';
 import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
-import createCaroseul, {
-  renderColorList,
-  renderIconsList,
-  renderNotificationList,
-} from '../utils/events/createLists.js';
 import { eventFormState } from '../utils/events/eventFormState.js';
 import { renderEvents } from '../utils/events/eventRendering.js';
 import { formatDate } from '../utils/events/eventsUI.js';
@@ -377,11 +372,6 @@ function closeModal() {
 
 export function initEventFormEvents() {
   let title, desc;
-
-  renderColorList(eventModalDomElements);
-  renderNotificationList(eventModalDomElements);
-  createCaroseul(eventModalDomElements);
-  renderIconsList(eventModalDomElements);
 
   getOutsideDropdowns().forEach((item) => {
     handleOutSideClick(item.selector, item.dropdown, item.className);

@@ -1,3 +1,13 @@
+const notifications = [
+  { name: 'nessuna notifica', value: '0' },
+  { name: '5 minuti prima', value: 5 },
+  { name: '15 minuti prima', value: 15 },
+  { name: '1 ora prima', value: 60 },
+  { name: '2 ore prima', value: 120 },
+  { name: '4 ore prima', value: 240 },
+  { name: '24 ore prima', value: 1440 },
+];
+
 export function createNotificationRow() {
   const notificationRow = document.createElement('div');
   notificationRow.id = 'notification-row';
@@ -22,6 +32,17 @@ export function createNotificationRow() {
   const notificationList = document.createElement('ul');
   notificationList.className = 'notification-list';
   notificationList.setAttribute('data-testid', 'event-notification-list');
+
+  notifications.forEach((item) => {
+    const option = document.createElement('li');
+    option.className = 'single-notification';
+    option.dataset.notification = item.value;
+    option.setAttribute('aria-label', `Imposta notifica: ${item.name}`);
+    option.setAttribute('data-testid', `notification-option-${item.value}`);
+    option.textContent = item.name;
+
+    notificationList.appendChild(option);
+  });
 
   notificationContainer.appendChild(notificationIcon);
   notificationContainer.appendChild(notificationBtn);

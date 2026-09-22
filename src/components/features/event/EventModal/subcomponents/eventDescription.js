@@ -1,4 +1,28 @@
-import { createCheckboxIcon } from './checkboxIcon';
+const eventIcons = {
+  notes: '✏️',
+  work: '💼',
+  study: '📚',
+  gym: '🏋️',
+  doctor: '💉',
+  food: '🍕',
+  travel: '✈️',
+  music: '🎵',
+  gaming: '🕹️',
+  meeting: '📅',
+  money: '💰',
+  coding: '💻',
+  idea: '💡',
+  shopping: '🛒',
+  party: '🎉',
+  warning: '‼️',
+  love: '🩷',
+  book: '📖',
+  tree: '🌳',
+  luck: '🍀',
+  medicine: '💊',
+  dog: '🐶',
+  cat: '🐱',
+};
 
 export function createEventDescription() {
   const descriptionRow = document.createElement('div');
@@ -17,6 +41,16 @@ export function createEventDescription() {
   const iconsList = document.createElement('ul');
   iconsList.className = 'icons-list';
   iconsList.setAttribute('data-testid', 'event-icon-list');
+
+  Object.entries(eventIcons).forEach(([key, value]) => {
+    const item = document.createElement('li');
+    item.className = 'icon-list-item';
+    item.setAttribute('aria-label', `Seleziona icona ${key}`);
+    item.setAttribute('data-testid', `icon-option-${key}`);
+    item.textContent = value;
+
+    iconsList.appendChild(item);
+  });
 
   iconsContainer.appendChild(iconBtn);
   iconsContainer.appendChild(iconsList);

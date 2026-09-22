@@ -43,6 +43,20 @@ export function createFromTime() {
   fromList.className = 'interactive-time-list from';
   fromList.setAttribute('data-testid', 'event-from-time-list');
 
+  const timeOptions = Array.from({ length: 24 }, (_, i) => {
+    const hour = String(i).padStart(2, '0');
+    return [`${hour}:00`, `${hour}:30`];
+  }).flat();
+  timeOptions.forEach((time) => {
+    const option = document.createElement('li');
+    option.className = 'list-item';
+    option.dataset.time = time;
+    option.setAttribute('aria-label', `Seleziona ore ${time}`);
+    option.textContent = time;
+
+    fromList.appendChild(option);
+  });
+
   fromContainer.appendChild(fromBtn);
   fromContainer.appendChild(fromInputGroup);
   fromContainer.appendChild(fromList);

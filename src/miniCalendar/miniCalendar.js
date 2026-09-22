@@ -14,7 +14,7 @@ import dayjs from "../day.js";
 import { validateAndReturnCustomDate } from "../eventCreation/repeatcustomDates.js";
 import { eventFormState } from "../utils/events/eventFormState.js";
 import { updateEventDateUI } from "../utils/events/eventsUI.js";
-import { updateUntilUIAndDraft } from "../utils/events/repeatEventsUi.js";
+import { updateUntilUIAndDraft } from "../eventCreation/repeatEvent.js";
 import { initMonthList, initYearList } from "./miniCalendarCarousels.js";
 
 import createMonthGrid from "../components/features/calendar/monthGrid.js";
@@ -118,7 +118,7 @@ function commitMiniDate() {
       updateEventDateUI(selectedDate, eventModalDomElements);
       break;
     case "repeat-until":
-      updateUntilUIAndDraft(selectedDate, eventModalDomElements);
+      updateUntilUIAndDraft(selectedDate);
       break;
     case "custom-dates":
       validateAndReturnCustomDate(selectedDate, eventModalDomElements);

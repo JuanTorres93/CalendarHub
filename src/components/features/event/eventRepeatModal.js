@@ -1,3 +1,5 @@
+import dayjs from '../../../day.js';
+
 export function createEventRepeatModal() {
   const repeatContainer = document.createElement('section');
   repeatContainer.className = 'modal-repeat';
@@ -142,6 +144,24 @@ function createWeeklyRepetitionContainer() {
   weeklyList.className = 'weekly-repetion-list';
   weeklyList.setAttribute('aria-label', 'Giorni della settimana');
   weeklyList.setAttribute('data-testid', 'event-repeat-weekdays-list');
+
+  // con dayjs().weekday(i).day() prendo l'index stabile, che non varia con il cambio formato
+  const weekDays = Array.from({ length: 7 }, (_, i) => {
+    const days = dayjs().weekday(i).format('dddd');
+    const index = dayjs().weekday(i).day();
+    return { days, index };
+  });
+  weekDays.forEach((day) => {
+    const item = document.createElement('li');
+    item.className = 'weekly-repetion-item';
+    item.dataset.day = day.days;
+    item.dataset.dayIndex = day.index;
+    item.setAttribute('aria-label', `Seleziona ${day.days}`);
+    item.setAttribute('data-testid', `weekly-repetion-item-${day.index}`);
+    item.textContent = day.days.slice(0, 1);
+
+    weeklyList.appendChild(item);
+  });
 
   weeklyContainer.appendChild(text);
   weeklyContainer.appendChild(weeklyList);
