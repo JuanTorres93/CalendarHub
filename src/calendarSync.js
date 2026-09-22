@@ -1,6 +1,6 @@
-import createMonthGrid from './components/features/calendar/monthGrid.js';
-import createWeekGrid from './components/features/calendar/weekGrid.js';
-import createDailyGrid from './components/features/calendar/dayGrid.js';
+import createMonthGrid, { getMonthView } from './components/features/calendar/monthGrid.js';
+import createWeekGrid, { getWeekView } from './components/features/calendar/weekGrid.js';
+import createDailyGrid, { getDayView } from './components/features/calendar/dayGrid.js';
 
 import createCurrentTimeframeDisplay from './components/navbar/currentTimeframeDisplay/currentTimeframeDisplay.js';
 import createCurrentYearDisplay from './components/navbar/currentYearDisplay.js';
@@ -11,7 +11,6 @@ import { renderEvents } from './utils/events/eventRendering.js';
 import { theme } from './utils/theme.js';
 import { viewSwitcher } from './utils/helpers/viewSwitcher.js';
 import { initMiniCalendarDeps } from './miniCalendar/miniCalendar.js';
-import { monthView, weekView, dayView } from './utils/helpers/dom/mainCalendarDom.js';
 
 const monthDisplay = createCurrentTimeframeDisplay('month');
 const weekDisplay = createCurrentTimeframeDisplay('week');
@@ -30,9 +29,9 @@ layer.insertBefore(dayDisplay.node, actionBtns);
 const displayOverlays = [monthDisplay.node, weekDisplay.node, dayDisplay.node];
 
 viewSwitcher.init({
-  monthView,
-  weekView,
-  dayView,
+  monthView: getMonthView(),
+  weekView: getWeekView(),
+  dayView: getDayView(),
   displayOverlays,
   displayOverlayMonth: monthDisplay.node,
 });

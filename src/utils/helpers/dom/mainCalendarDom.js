@@ -32,17 +32,14 @@ const notificationIconOn = notificationPermissionBtn.querySelector(
 const monthCarousel = document.getElementById("month-carousel");
 const monthBody = monthCarousel.querySelector("#month-body");
 const monthGrid = monthBody.querySelector(".month-structure");
-const monthView = monthCarousel.querySelector(".month-view");
 
 const weekCarousel = document.querySelector(".week-carousel");
 const weekBody = weekCarousel.querySelector("#week-body");
 const weekGrid = weekBody.querySelector("#full-week-view");
-const weekView = weekCarousel.querySelector(".week-view");
 
 const dayCarousel = document.getElementById("day-corousel");
 const dayBody = dayCarousel.querySelector("#day-body");
 const dayGrid = dayBody.querySelector("#full-day-view");
-const dayView = dayCarousel.querySelector(".day-view");
 
 export {
   prevThemeImage,
@@ -65,13 +62,10 @@ export {
   monthCarousel,
   monthBody,
   monthGrid,
-  monthView,
   weekCarousel,
   weekBody,
   weekGrid,
-  weekView,
   dayCarousel,
   dayBody,
   dayGrid,
-  dayView,
 };

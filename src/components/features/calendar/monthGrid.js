@@ -24,6 +24,10 @@ function createMonthGrid(currentView, isMini = false) {
   return buildMonthGrid(currentView, isMini).monthContainer;
 }
 
+export function getMonthView() {
+  return existingMainMonthGrid;
+}
+
 function buildMonthGrid(currentView, isMini) {
   const monthContainer = initMonthContainer(isMini);
   const monthStructureContainer = initMonthStructure();

@@ -21,6 +21,10 @@ function createDayGrid(currentView) {
   return existingMainDayGrid;
 }
 
+export function getDayView() {
+  return existingMainDayGrid;
+}
+
 function buildDayGrid(currentView) {
   const { dayContainer, list } = initDayContainer();
   const dayStructure = initDayStructure();

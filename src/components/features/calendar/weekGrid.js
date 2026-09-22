@@ -20,6 +20,10 @@ function createWeekGrid(currentView) {
   return existingMainWeekGrid;
 }
 
+export function getWeekView() {
+  return existingMainWeekGrid;
+}
+
 function buildWeekGrid(currentView) {
   const { weekContainer, list } = initWeekContainer();
   const weekStructure = initWeekStructure();
