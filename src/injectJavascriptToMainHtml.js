@@ -3,6 +3,7 @@ import "./components/componentInjector.js";
 import { eventModalDomElements } from "./eventModalBootstrap.js";
 import { miniCalendarDomElements } from "./miniCalendarBootstrap.js";
 import { loaderDomElements } from "./loaderAndThemeBootstrap.js";
+import { todoPanelDomElements } from "./todoPanelBootstrap.js";
 
 import { initNavbar } from "./navbar.js";
 import initCalendar from "./calendarSync.js";
@@ -15,7 +16,7 @@ import {
   wireEventFormElementsToMiniCalendar,
   wireMiniCalendarDomElements,
 } from "./miniCalendar/miniCalendarLogic.js";
-import { initToDobinds } from "./to-do-list/toDo.js";
+import { initToDobinds, wireTodoPanelToTodoLogic } from "./to-do-list/toDo.js";
 import { initNotifications } from "./utils/notifications/createNotifications.js";
 
 export function injectJavascriptToMainHtml() {
@@ -26,6 +27,7 @@ export function injectJavascriptToMainHtml() {
   wireEventFormToEventLogic(eventModalDomElements);
   wireEventFormElementsToMiniCalendar(eventModalDomElements);
   wireMiniCalendarDomElements(miniCalendarDomElements);
+  wireTodoPanelToTodoLogic(todoPanelDomElements);
   initiMiniCalendarInputs();
   initToDobinds();
 

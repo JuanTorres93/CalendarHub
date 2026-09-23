@@ -3,7 +3,6 @@ import createMonthGrid from './features/calendar/monthGrid.js';
 import createWeekGrid from './features/calendar/weekGrid.js';
 import createDailyGrid from './features/calendar/dayGrid.js';
 import { calendarLogic } from '../calendarLogic.js';
-import createTodoPanel from './features/todo/todoPanel/TodoPanel.js';
 
 const componentBuilders = {
   replace_monthGrid() {
@@ -14,9 +13,6 @@ const componentBuilders = {
   },
   replace_dayGrid() {
     return createDailyGrid(calendarLogic.date);
-  },
-  replace_todoPanel() {
-    return createTodoPanel();
   },
 };
 

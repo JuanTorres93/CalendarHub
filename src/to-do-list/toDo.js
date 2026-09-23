@@ -1,22 +1,6 @@
 import { AppGetAllTodoListsUsecase } from '../interface-adapters/use-cases/AppGetAllTodoListsUsecase.js';
 
 import {
-  todoLayer,
-  createList,
-  newToDoBtn,
-  closeToDo,
-  toDoHeader,
-  headerDate,
-  headerTitle,
-  deleteList,
-  toDoItemsContainer,
-  addNewItemContainer,
-  itemInput,
-  addItemBtn,
-  toDoProgress,
-} from '../utils/helpers/dom/toDoDom.js';
-
-import {
   getTodoListsFromLocalStorage,
   deleteTodoFromList,
   deleteTodoListFromLocalStorage,
@@ -32,28 +16,33 @@ import { handleOutsideContextualMenuClick } from './todoBadgeActions.js';
 import { createTodoItem } from '../components/features/todo/todoItem.js';
 
 const EMPTY_TODO_MESSAGE = 'Nessuna attività';
+let todoPanelDomElements = null;
 let activeTodoList = null;
 let todoContextDate = null;
 
+export function wireTodoPanelToTodoLogic(elements) {
+  todoPanelDomElements = elements;
+}
+
 function cleanActiveTodoUi() {
-  addNewItemContainer.classList.remove('show-add-new-item');
-  toDoItemsContainer.innerHTML = '';
-  toDoProgress.classList.remove('show-modal');
-  toDoProgress.innerText = EMPTY_TODO_MESSAGE;
+  todoPanelDomElements.addNewItemContainer.classList.remove('show-add-new-item');
+  todoPanelDomElements.toDoItemsContainer.innerHTML = '';
+  todoPanelDomElements.toDoProgress.classList.remove('show-modal');
+  todoPanelDomElements.toDoProgress.innerText = EMPTY_TODO_MESSAGE;
 }
 
 function resetTodoForm() {
-  headerTitle.value = '';
+  todoPanelDomElements.headerTitle.value = '';
 }
 
 export function openTodo(date) {
   const viewportWidth = window.innerWidth;
-  createList.classList.add('show-modal');
-  todoLayer.classList.add('show-modal');
-  const toDoWidth = createList.clientWidth;
+  todoPanelDomElements.createList.classList.add('show-modal');
+  todoPanelDomElements.todoLayer.classList.add('show-modal');
+  const toDoWidth = todoPanelDomElements.createList.clientWidth;
   let toDoPosition = viewportWidth / 2 - toDoWidth / 2;
 
-  createList.style.left = `${toDoPosition}px`;
+  todoPanelDomElements.createList.style.left = `${toDoPosition}px`;
 
   if (date) {
     todoContextDate = date;
@@ -75,11 +64,11 @@ function rehydrateTodoList(todo) {
 
   cleanActiveTodoUi();
 
-  headerTitle.value = todo.title;
+  todoPanelDomElements.headerTitle.value = todo.title;
   renderTodoHeader(todo.date);
 
-  toDoProgress.classList.add('show-modal');
-  addNewItemContainer.classList.add('show-add-new-item');
+  todoPanelDomElements.toDoProgress.classList.add('show-modal');
+  todoPanelDomElements.addNewItemContainer.classList.add('show-add-new-item');
 
   todo.items.forEach((item) => {
     renderTodoItem(item);
@@ -98,8 +87,8 @@ function formatTodoHeaderDate(fullDate) {
 function renderTodoHeader(fullDate) {
   const date = formatTodoHeaderDate(fullDate);
 
-  toDoHeader.classList.add('show-title-header');
-  headerDate.textContent = date;
+  todoPanelDomElements.toDoHeader.classList.add('show-title-header');
+  todoPanelDomElements.headerDate.textContent = date;
 }
 
 function initHeader() {
@@ -108,16 +97,16 @@ function initHeader() {
 
 function closeToDoList() {
   resetTodoForm();
-  toDoHeader.classList.remove('show-title-header');
-  todoLayer.classList.remove('show-modal');
-  createList.classList.remove('show-modal');
+  todoPanelDomElements.toDoHeader.classList.remove('show-title-header');
+  todoPanelDomElements.todoLayer.classList.remove('show-modal');
+  todoPanelDomElements.createList.classList.remove('show-modal');
   cleanActiveTodoUi();
   activeTodoList = null;
   todoContextDate = null;
 }
 
 function handleCreateTodoList() {
-  newToDoBtn.addEventListener('click', () => {
+  todoPanelDomElements.newToDoBtn.addEventListener('click', () => {
     if (!activeTodoList) {
       return initHeader();
     } else {
@@ -127,16 +116,16 @@ function handleCreateTodoList() {
     }
   });
 
-  headerTitle.addEventListener('change', () => {
+  todoPanelDomElements.headerTitle.addEventListener('change', () => {
     const date = todoContextDate;
-    const title = headerTitle.value.trim();
+    const title = todoPanelDomElements.headerTitle.value.trim();
 
     if (!activeTodoList) {
       const createdTodoList = createTodoList(date, title);
 
       activeTodoList = createdTodoList.id;
-      toDoProgress.classList.add('show-modal');
-      addNewItemContainer.classList.add('show-add-new-item');
+      todoPanelDomElements.toDoProgress.classList.add('show-modal');
+      todoPanelDomElements.addNewItemContainer.classList.add('show-add-new-item');
 
       initRenderBadge();
 
@@ -160,11 +149,11 @@ function updateToDoCounter() {
   ).length;
 
   if (total === 0) {
-    toDoProgress.innerText = EMPTY_TODO_MESSAGE;
+    todoPanelDomElements.toDoProgress.innerText = EMPTY_TODO_MESSAGE;
     return;
   }
 
-  toDoProgress.innerText = `${completed}/${total} attività completate`;
+  todoPanelDomElements.toDoProgress.innerText = `${completed}/${total} attività completate`;
 }
 
 function handleCompletedItems(itemId, checkBtn) {
@@ -214,14 +203,14 @@ function handleTodoItemActions(e) {
 }
 
 function renderTodoItem(todoItem) {
-  toDoItemsContainer.appendChild(createTodoItem(todoItem));
+  todoPanelDomElements.toDoItemsContainer.appendChild(createTodoItem(todoItem));
 }
 
 function handleCreateItems() {
-  addItemBtn.addEventListener('click', () => {
-    const title = itemInput.value.trim();
+  todoPanelDomElements.addItemBtn.addEventListener('click', () => {
+    const title = todoPanelDomElements.itemInput.value.trim();
     if (!title) {
-      createMessage('Aggiungi un titolo', itemInput, addNewItemContainer);
+      createMessage('Aggiungi un titolo', todoPanelDomElements.itemInput, todoPanelDomElements.addNewItemContainer);
       return;
     }
 
@@ -234,7 +223,7 @@ function handleCreateItems() {
     addTodoToList(activeTodoList, title);
     updateToDoCounter();
 
-    itemInput.value = '';
+    todoPanelDomElements.itemInput.value = '';
   });
 }
 
@@ -243,9 +232,9 @@ export function initToDobinds() {
   handleCreateItems();
   handleOutsideContextualMenuClick();
 
-  toDoItemsContainer.addEventListener('click', handleTodoItemActions);
+  todoPanelDomElements.toDoItemsContainer.addEventListener('click', handleTodoItemActions);
 
-  deleteList.addEventListener('click', deleteAndCleanTodoList);
+  todoPanelDomElements.deleteList.addEventListener('click', deleteAndCleanTodoList);
 
-  closeToDo.addEventListener('click', closeToDoList);
+  todoPanelDomElements.closeToDo.addEventListener('click', closeToDoList);
 }

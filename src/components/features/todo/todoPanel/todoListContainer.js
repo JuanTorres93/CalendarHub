@@ -3,7 +3,8 @@ export function createTodoListContainer() {
   todoContainer.setAttribute('data-id', 'list-id');
   todoContainer.className = 'to-do-container';
 
-  todoContainer.appendChild(createTodoListTitle());
+  const todoTitle = createTodoListTitle();
+  todoContainer.appendChild(todoTitle.mainComponent);
 
   const progressSection = document.createElement('section');
 
@@ -21,9 +22,23 @@ export function createTodoListContainer() {
   itemsContainer.setAttribute('data-testid', 'todo-items-container');
   todoContainer.appendChild(itemsContainer);
 
-  todoContainer.appendChild(createAddTodoRow());
+  const addTodoRow = createAddTodoRow();
+  todoContainer.appendChild(addTodoRow.mainComponent);
 
-  return todoContainer;
+  return {
+    mainComponent: todoContainer,
+    internalDomElements: {
+      toDoHeader: todoTitle.internalDomElements.toDoTitle,
+      headerDate: todoTitle.internalDomElements.headerDate,
+      headerTitle: todoTitle.internalDomElements.headerTitle,
+      deleteList: todoTitle.internalDomElements.deleteList,
+      toDoItemsContainer: itemsContainer,
+      addNewItemContainer: addTodoRow.internalDomElements.addTodoRow,
+      itemInput: addTodoRow.internalDomElements.itemInput,
+      addItemBtn: addTodoRow.internalDomElements.addItemBtn,
+      toDoProgress: progress,
+    },
+  };
 }
 
 function createTodoListTitle() {
@@ -71,7 +86,15 @@ function createTodoListTitle() {
   todoTitle.appendChild(titleInput);
   todoTitle.appendChild(deleteButton);
 
-  return todoTitle;
+  return {
+    mainComponent: todoTitle,
+    internalDomElements: {
+      toDoTitle: todoTitle,
+      headerDate: date,
+      headerTitle: titleInput,
+      deleteList: deleteButton,
+    },
+  };
 }
 
 function createAddTodoRow() {
@@ -95,5 +118,8 @@ function createAddTodoRow() {
   addTodoRow.appendChild(input);
   addTodoRow.appendChild(addButton);
 
-  return addTodoRow;
+  return {
+    mainComponent: addTodoRow,
+    internalDomElements: { addTodoRow, itemInput: input, addItemBtn: addButton },
+  };
 }

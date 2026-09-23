@@ -13,14 +13,28 @@ export function createTodoPanel() {
   todoPanel.setAttribute('aria-labelledby', 'todo-panel-title');
   todoPanel.setAttribute('data-testid', 'todo-panel');
 
-  todoPanel.appendChild(createTodoPanelHeader());
-  todoPanel.appendChild(createTodoListsHeader());
-  todoPanel.appendChild(createTodoListContainer());
+  const panelHeader = createTodoPanelHeader();
+  todoPanel.appendChild(panelHeader.mainComponent);
+
+  const listsHeader = createTodoListsHeader();
+  todoPanel.appendChild(listsHeader.mainComponent);
+
+  const listContainer = createTodoListContainer();
+  todoPanel.appendChild(listContainer.mainComponent);
 
   fragment.appendChild(todoLayer);
   fragment.appendChild(todoPanel);
 
-  return fragment;
+  return {
+    fragment,
+    internalDomElements: {
+      todoLayer,
+      createList: todoPanel,
+      newToDoBtn: listsHeader.internalDomElements.newToDoBtn,
+      closeToDo: panelHeader.internalDomElements.closeToDo,
+      ...listContainer.internalDomElements,
+    },
+  };
 }
 
 function createTodoPanelHeader() {
@@ -42,7 +56,10 @@ function createTodoPanelHeader() {
   todoHeader.appendChild(title);
   todoHeader.appendChild(closeButton);
 
-  return todoHeader;
+  return {
+    mainComponent: todoHeader,
+    internalDomElements: { closeToDo: closeButton },
+  };
 }
 
 function createTodoListsHeader() {
@@ -73,7 +90,10 @@ function createTodoListsHeader() {
   fragment.appendChild(myListRow);
   fragment.appendChild(underline);
 
-  return fragment;
+  return {
+    mainComponent: fragment,
+    internalDomElements: { newToDoBtn: newListButton },
+  };
 }
 
 export default createTodoPanel;
