@@ -12,11 +12,13 @@ export default function createCurrentYearDisplay() {
   button.setAttribute('data-testid', 'show-year-mini-calendar-button');
 
   button.addEventListener('click', async (e) => {
+    const anchorElement = e.currentTarget;
+
     const { openMiniCalendar } = await import(
       '../../miniCalendar/miniCalendar.js'
     );
 
-    openMiniCalendar('normal', null, 'normal', e.currentTarget);
+    openMiniCalendar('normal', null, 'normal', anchorElement);
   });
 
   container.appendChild(button);

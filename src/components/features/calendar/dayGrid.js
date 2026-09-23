@@ -1,8 +1,7 @@
-import dayjs from '../../../day.js';
 import { createDayLabel } from './dayLabel.js';
 import { createTodoContainer } from './todoContainer.js';
-import { createHourCell } from './hourCell.js';
-import { createTimeLabel } from './timeLabel.js';
+import { createTimeColumn } from './timeColumn.js';
+import { createHourColumn } from './hourColumn.js';
 import { createTimedEvent } from './timedEvent.js';
 import { createAllDayEvent } from './allDayEvent.js';
 import { bindEventInfoClick } from './eventInfoClick.js';
@@ -96,66 +95,18 @@ function reRenderMainGrid(currentView) {
 function buildGridContent(dayStructure, currentView) {
   const dataDay = currentView.format('YYYY-MM-DD');
 
-  const dailyHeader = document.createElement('div');
-  dailyHeader.className = 'daily-header';
-  dailyHeader.dataset.day = dataDay;
+  const { mainComponent: header, allDayContainer } = buildGridHeader(
+    currentView,
+    dataDay,
+  );
+  dayStructure.appendChild(header);
 
-  dailyHeader.appendChild(createDayLabel({ type: 'day', date: currentView }));
-
-  const allDayContainer = document.createElement('div');
-  allDayContainer.className = 'daily-allDay-container';
-
-  dailyHeader.appendChild(allDayContainer);
-  dailyHeader.appendChild(createTodoContainer({ type: 'day' }));
-  dayStructure.appendChild(dailyHeader);
-
-  const dailyMain = document.createElement('div');
-  dailyMain.className = 'daily-main';
-
-  const timeColumn = document.createElement('div');
-  timeColumn.className = 'ul-day-time';
-
-  const list = document.createElement('ul');
-  list.className = 'day-list';
-
-  timeColumn.appendChild(list);
-  dailyMain.appendChild(timeColumn);
-  dayStructure.appendChild(dailyMain);
-
-  for (let i = 0; i < 24; i++) {
-    const time = dayjs().hour(i).minute(0).format('HH:mm');
-
-    list.appendChild(createTimeLabel({ type: 'day', time }));
-  }
-
-  const dayGrid = document.createElement('div');
-  dayGrid.className = 'day-structure';
-
-  const dailyName = document.createElement('ul');
-  dailyName.className = 'daily-name';
-  dailyName.dataset.day = dataDay;
-
-  dayGrid.appendChild(dailyName);
-  dailyMain.appendChild(dayGrid);
-
-  let dayBox = null;
-
-  for (let j = 0; j < 24; j++) {
-    const dataTime = currentView.hour(j);
-    const hour = dataTime.minute(0).format('HH:mm');
-    const halfHour = dataTime.minute(30).format('HH:mm');
-
-    const hourCell = createHourCell({
-      type: 'day',
-      time: hour,
-      halfTime: halfHour,
-      extraClasses: j === 0 ? ['first'] : [],
-    });
-
-    if (j === 0) dayBox = hourCell.internalDomElements.hourCell;
-
-    dailyName.appendChild(hourCell.mainComponent);
-  }
+  const {
+    mainComponent: body,
+    dailyName,
+    dayBox,
+  } = buildGridBody(currentView, dataDay);
+  dayStructure.appendChild(body);
 
   mainDayInfo = {
     dataDay,
@@ -164,6 +115,44 @@ function buildGridContent(dayStructure, currentView) {
     dayBox,
     eventElements: [],
   };
+}
+
+function buildGridHeader(currentView, dataDay) {
+  const header = document.createElement('div');
+  header.className = 'daily-header';
+  header.dataset.day = dataDay;
+
+  const allDayContainer = document.createElement('div');
+  allDayContainer.className = 'daily-allDay-container';
+
+  header.appendChild(createDayLabel({ type: 'day', date: currentView }));
+  header.appendChild(allDayContainer);
+  header.appendChild(createTodoContainer({ type: 'day' }));
+
+  return { mainComponent: header, allDayContainer };
+}
+
+function buildGridBody(currentView, dataDay) {
+  const body = document.createElement('div');
+  body.className = 'daily-main';
+
+  const timeColumn = createTimeColumn({ type: 'day' });
+  body.appendChild(timeColumn);
+
+  const dayStructure = document.createElement('div');
+  dayStructure.className = 'day-structure';
+
+  const dailyName = document.createElement('ul');
+  dailyName.className = 'daily-name';
+  dailyName.dataset.day = dataDay;
+
+  const hourColumn = createHourColumn({ type: 'day', date: currentView });
+  dailyName.appendChild(hourColumn.mainComponent);
+
+  dayStructure.appendChild(dailyName);
+  body.appendChild(dayStructure);
+
+  return { mainComponent: body, dailyName, dayBox: hourColumn.firstHourCell };
 }
 
 function initDayContainer() {

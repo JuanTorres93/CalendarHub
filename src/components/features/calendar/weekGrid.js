@@ -1,6 +1,5 @@
-import dayjs from '../../../day.js';
-import { createHourCell } from './hourCell.js';
-import { createTimeLabel } from './timeLabel.js';
+import { createTimeColumn } from './timeColumn.js';
+import { createHourColumn } from './hourColumn.js';
 import { createWeekDayLabel } from './weekDayLabel.js';
 import { createTimedEvent } from './timedEvent.js';
 import { createAllDayEvent } from './allDayEvent.js';
@@ -92,85 +91,59 @@ function reRenderMainGrid(currentView) {
 }
 
 function buildGridContent(weekStructure, currentView) {
-  const timeColumn = document.createElement('div');
-  timeColumn.className = 'ul-week-time';
-
-  const list = document.createElement('ul');
-  list.className = 'time-week';
-
-  timeColumn.appendChild(list);
-  weekStructure.appendChild(timeColumn);
-
-  for (let i = 0; i < 24; i++) {
-    const time = dayjs().hour(i).minute(0).format('HH:mm');
-
-    list.appendChild(
-      createTimeLabel({
-        type: 'week',
-        time,
-        extraClasses: i === 0 ? ['midnight'] : [],
-      }),
-    );
-  }
+  weekStructure.appendChild(createTimeColumn({ type: 'week' }));
 
   const weekWrapper = document.createElement('div');
   weekWrapper.className = 'week-wrapper';
 
-  const weekHeaderRow = document.createElement('div');
-  weekHeaderRow.className = 'week-header-row';
+  const headerRow = document.createElement('div');
+  headerRow.className = 'week-header-row';
 
-  const weekDaysRow = document.createElement('div');
-  weekDaysRow.className = 'week-days-row';
+  const daysRow = document.createElement('div');
+  daysRow.className = 'week-days-row';
 
-  weekWrapper.appendChild(weekHeaderRow);
-  weekWrapper.appendChild(weekDaysRow);
+  weekWrapper.appendChild(headerRow);
+  weekWrapper.appendChild(daysRow);
   weekStructure.appendChild(weekWrapper);
 
-  for (let j = 0; j < 7; j++) {
-    const weekDay = currentView.weekday(j);
-    const dataDay = weekDay.format('YYYY-MM-DD');
-    const dayClass =
-      dataDay === currentView.format('YYYY-MM-DD') ? 'is-today' : 'normal-week';
+  for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+    const day = currentView.weekday(dayIndex);
+    const dataDay = day.format('YYYY-MM-DD');
 
-    const weekDayLabel = createWeekDayLabel({ date: weekDay });
-    weekHeaderRow.appendChild(weekDayLabel.mainComponent);
+    const dayLabel = createWeekDayLabel({ date: day });
+    headerRow.appendChild(dayLabel.mainComponent);
 
-    const dayColumn = document.createElement('div');
-    dayColumn.className = 'week-structure';
-
-    const dayName = document.createElement('ul');
-
-    dayName.className = `day-name ${dayClass}`;
-    dayName.dataset.day = dataDay;
-
-    dayColumn.appendChild(dayName);
-    weekDaysRow.appendChild(dayColumn);
-
-    let weeklyBox = null;
-
-    for (let k = 0; k < 24; k++) {
-      const hour = weekDay.hour(k).minute(0).format('HH:mm');
-      const halfHour = weekDay.hour(k).minute(30).format('HH:mm');
-
-      const hourCell = createHourCell({
-        type: 'week',
-        time: hour,
-        halfTime: halfHour,
-      });
-
-      if (k === 0) weeklyBox = hourCell.internalDomElements.hourCell;
-
-      dayName.appendChild(hourCell.mainComponent);
-    }
+    const dayColumn = buildDayColumn(day, dataDay, currentView);
+    daysRow.appendChild(dayColumn.mainComponent);
 
     mainWeekDays.push({
       dataDay,
-      dayName,
-      allDayContainer: weekDayLabel.internalDomElements.allDayContainer,
-      weeklyBox,
+      dayName: dayColumn.dayName,
+      allDayContainer: dayLabel.internalDomElements.allDayContainer,
+      weeklyBox: dayColumn.firstHourCell,
       eventElements: [],
     });
   }
+}
+
+function buildDayColumn(day, dataDay, currentView) {
+  const dayColumn = document.createElement('div');
+  dayColumn.className = 'week-structure';
+
+  const dayName = document.createElement('ul');
+  dayName.className = `day-name ${getDayClass(dataDay, currentView)}`;
+  dayName.dataset.day = dataDay;
+
+  const hourColumn = createHourColumn({ type: 'week', date: day });
+  dayName.appendChild(hourColumn.mainComponent);
+
+  dayColumn.appendChild(dayName);
+
+  return { mainComponent: dayColumn, dayName, firstHourCell: hourColumn.firstHourCell };
+}
+
+function getDayClass(dataDay, currentView) {
+  return dataDay === currentView.format('YYYY-MM-DD') ? 'is-today' : 'normal-week';
 }
 
 function initWeekContainer() {

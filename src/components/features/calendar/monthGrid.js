@@ -5,6 +5,9 @@ import { createMonthlyEvent } from "./monthlyEvent.js";
 import { bindEventInfoClick } from "./eventInfoClick.js";
 import { timeToMinutes } from "../../../utils/helpers/timeHelper.js";
 
+const WEEKDAYS = 7;
+const MONTH_GRID_CELLS = 42;
+
 let existingMainMonthGrid = null;
 let existingMainMonthStructure = null;
 let mainMonthDayCells = [];
@@ -38,14 +41,9 @@ export function renderMonthEvents(allEvents) {
       eventElements.forEach((element) => element.remove());
       eventElements.length = 0;
 
-      const eventOfDay = allEvents.filter((event) => event.date === dataDay);
-
-      eventOfDay.sort((a, b) => {
-        const aTotal = timeToMinutes(a.from);
-        const bTotal = timeToMinutes(b.from);
-
-        return aTotal - bTotal;
-      });
+      const eventOfDay = allEvents
+        .filter((event) => event.date === dataDay)
+        .sort((a, b) => timeToMinutes(a.from) - timeToMinutes(b.from));
 
       eventOfDay.forEach((event) => {
         const eventElement = createMonthlyEvent({ event });
@@ -80,71 +78,118 @@ function reRenderMainGrid(currentView) {
 function buildGridContent(monthStructureContainer, currentView, isMini) {
   const gridConfig = isMini ? config.mini : config.main;
 
-  const giorniMese = currentView.daysInMonth();
-  const primoGiorno = currentView.date(1);
-  const firstDayIndex = currentView.startOf("month").weekday();
-  const ultimoGiorno = currentView.endOf("month");
-  const lastDayPrevMonth = primoGiorno.subtract(1, "day");
-  const firstDayNextMonth = ultimoGiorno.add(1, "day");
+  monthStructureContainer.appendChild(buildWeekdayHeader(currentView, gridConfig));
+  monthStructureContainer.appendChild(buildDayCellsGrid(currentView, gridConfig, isMini));
+}
 
-  const firstRow = document.createElement("div");
-  firstRow.classList.add("day-grid");
+function buildWeekdayHeader(currentView, gridConfig) {
+  const weekdayHeader = document.createElement("div");
+  weekdayHeader.classList.add("day-grid");
 
-  monthStructureContainer.appendChild(firstRow);
-
-  for (let j = 0; j < 7; j++) {
-    firstRow.appendChild(
+  for (let dayIndex = 0; dayIndex < WEEKDAYS; dayIndex++) {
+    weekdayHeader.appendChild(
       createDayLabel({
         type: "month",
-        date: currentView.weekday(j),
+        date: currentView.weekday(dayIndex),
         className: gridConfig.dailybox,
       }),
     );
   }
-  const secondRow = document.createElement("article");
-  secondRow.classList.add(`${gridConfig.boxesContainer}`);
 
-  monthStructureContainer.appendChild(secondRow);
+  return weekdayHeader;
+}
 
-  for (let i = 0; i < 42; i++) {
-    let dataDayID, dayNumber, dayClass;
-    if (i < firstDayIndex) {
-      dayNumber = lastDayPrevMonth.date() - (firstDayIndex - 1 - i);
-      dataDayID = lastDayPrevMonth.date(dayNumber).format("YYYY-MM-DD");
-      dayClass = `${gridConfig.colorOffset}`;
-    } else if (i >= giorniMese + firstDayIndex) {
-      dayNumber = i - (firstDayIndex + giorniMese - 1);
-      dataDayID = firstDayNextMonth.date(dayNumber).format("YYYY-MM-DD");
-      dayClass = `${gridConfig.colorOffset}`;
-    } else {
-      dayNumber = i - firstDayIndex + 1;
-      dataDayID = primoGiorno.date(dayNumber).format("YYYY-MM-DD");
-      if (dataDayID === currentView.format("YYYY-MM-DD")) {
-        dayClass = `${gridConfig.today} ${gridConfig.colorBox}`;
-        if (!isMini) {
-          dayClass += ` selected`;
-        }
-      } else {
-        dayClass = `${gridConfig.colorBox}`;
-      }
+function buildDayCellsGrid(currentView, gridConfig, isMini) {
+  const dayCellsGrid = document.createElement("article");
+  dayCellsGrid.classList.add(gridConfig.boxesContainer);
+
+  const monthDates = getMonthDates(currentView);
+
+  for (let cellIndex = 0; cellIndex < MONTH_GRID_CELLS; cellIndex++) {
+    const dayCellData = getDayCellData(currentView, monthDates, cellIndex, gridConfig);
+
+    const extraClasses = [gridConfig.boxGrid, dayCellData.className];
+
+    if (!isMini && dayCellData.isSelectedDay) {
+      extraClasses.push("selected");
     }
 
     const dayCell = createDayCell({
-      dataDayID,
-      extraClasses: [gridConfig.boxGrid, dayClass],
+      dataDayID: dayCellData.date,
+      extraClasses,
       isMini,
     });
 
     if (!isMini) {
       mainMonthDayCells.push({
-        dataDay: dataDayID,
+        dataDay: dayCellData.date,
         ...dayCell.internalDomElements,
         eventElements: [],
       });
     }
 
-    secondRow.appendChild(dayCell.mainComponent);
+    dayCellsGrid.appendChild(dayCell.mainComponent);
   }
+
+  return dayCellsGrid;
+}
+
+function getMonthDates(currentView) {
+  return {
+    firstDayIndex: currentView.startOf("month").weekday(),
+    daysInMonth: currentView.daysInMonth(),
+    lastDayPrevMonth: currentView.date(1).subtract(1, "day"),
+    firstDayNextMonth: currentView.endOf("month").add(1, "day"),
+  };
+}
+
+function getDayCellData(currentView, monthDates, cellIndex, gridConfig) {
+  const { firstDayIndex, daysInMonth } = monthDates;
+
+  if (cellIndex < firstDayIndex) {
+    return getPreviousMonthDay(monthDates, cellIndex, gridConfig);
+  }
+
+  if (cellIndex >= daysInMonth + firstDayIndex) {
+    return getNextMonthDay(monthDates, cellIndex, gridConfig);
+  }
+
+  return getCurrentMonthDay(currentView, monthDates, cellIndex, gridConfig);
+}
+
+function getPreviousMonthDay(monthDates, cellIndex, gridConfig) {
+  const dayNumber =
+    monthDates.lastDayPrevMonth.date() - (monthDates.firstDayIndex - 1 - cellIndex);
+  const date = monthDates.lastDayPrevMonth.date(dayNumber);
+
+  return {
+    date: date.format("YYYY-MM-DD"),
+    className: gridConfig.colorOffset,
+  };
+}
+
+function getNextMonthDay(monthDates, cellIndex, gridConfig) {
+  const dayNumber = cellIndex - (monthDates.firstDayIndex + monthDates.daysInMonth - 1);
+  const date = monthDates.firstDayNextMonth.date(dayNumber);
+
+  return {
+    date: date.format("YYYY-MM-DD"),
+    className: gridConfig.colorOffset,
+  };
+}
+
+function getCurrentMonthDay(currentView, monthDates, cellIndex, gridConfig) {
+  const dayNumber = cellIndex - monthDates.firstDayIndex + 1;
+  const date = currentView.date(1).date(dayNumber);
+  const isSelectedDay = date.format("YYYY-MM-DD") === currentView.format("YYYY-MM-DD");
+
+  return {
+    date: date.format("YYYY-MM-DD"),
+    isSelectedDay,
+    className: isSelectedDay
+      ? `${gridConfig.today} ${gridConfig.colorBox}`
+      : gridConfig.colorBox,
+  };
 }
 
 function initMonthContainer(isMini) {
