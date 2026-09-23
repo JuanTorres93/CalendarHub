@@ -6,6 +6,12 @@ import {
   renderDailyEvents,
 } from '../../utils/events/renderEvents.js';
 import { isNow } from '../../utils/isNow.js';
+import { getDayHourCells } from '../features/calendar/dayGrid.js';
+import {
+  getWeekHourCells,
+  getTodayWeekDay,
+  getWeekStructure,
+} from '../features/calendar/weekGrid.js';
 
 export default function createTimeframeSwitcher() {
   const container = document.createElement('div');
@@ -41,7 +47,12 @@ function switchTimeframeView(timeframe) {
 
   if (timeframe === TIMEFRAMES.day) renderDailyEvents(allEvents);
 
-  isNow();
+  isNow({
+    dayHourCells: getDayHourCells(),
+    weekHourCells: getWeekHourCells(),
+    todayWeekDay: getTodayWeekDay(),
+    weekStructure: getWeekStructure(),
+  });
 }
 
 const timeframes = {

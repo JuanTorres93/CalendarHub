@@ -2,8 +2,7 @@ import { createHourCell } from './hourCell.js';
 
 export function createHourColumn({ type, date }) {
   const column = document.createDocumentFragment();
-
-  let firstHourCell = null;
+  const hourCells = [];
 
   for (let hour = 0; hour < 24; hour++) {
     const currentHour = date.hour(hour);
@@ -14,10 +13,9 @@ export function createHourColumn({ type, date }) {
       extraClasses: type === 'day' && hour === 0 ? ['first'] : [],
     });
 
-    if (hour === 0) firstHourCell = hourCell.internalDomElements.hourCell;
-
+    hourCells.push(hourCell.internalDomElements.hourCell);
     column.appendChild(hourCell.mainComponent);
   }
 
-  return { mainComponent: column, firstHourCell };
+  return { mainComponent: column, hourCells };
 }

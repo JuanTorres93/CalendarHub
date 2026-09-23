@@ -20,26 +20,21 @@ export function nowTarget(target, type, nowType, targetTime) {
   return targetHour;
 }
 
-export function isNow() {
-  const selectHourDaily = document.querySelectorAll(".day-box");
-  const selectHourWeek = document.querySelectorAll(".week-box");
-
-  const weekTargetBox = document.querySelector(".week-box");
-  const targetWeekDay = document.querySelector(".day-name.is-today");
-  const container = document.querySelector("#full-week-view");
-
-  const targetDay = nowTarget(selectHourDaily, "day", "currentTime");
-  const targetHourWeek = nowTarget(selectHourWeek, "week", "cellTime", "08:00");
+export function isNow({ dayHourCells, weekHourCells, todayWeekDay, weekStructure }) {
+  const targetDay = nowTarget(dayHourCells, "day", "currentTime");
+  const targetHourWeek = nowTarget(weekHourCells, "week", "cellTime", "08:00");
 
   if (targetDay) {
     targetDay.scrollIntoView({ block: "center", behavior: "smooth" });
   }
 
-  if (container && targetWeekDay && targetHourWeek) {
-    container.scrollTo({
+  if (weekStructure && todayWeekDay && targetHourWeek) {
+    const weekTargetBox = todayWeekDay.weekHourCells[0];
+
+    weekStructure.scrollTo({
       left:
-        targetWeekDay.closest(".week-structure").offsetLeft -
-        container.clientWidth / 2 +
+        todayWeekDay.dayName.closest(".week-structure").offsetLeft -
+        weekStructure.clientWidth / 2 +
         weekTargetBox.clientWidth / 2,
       top: targetHourWeek.offsetTop,
       behavior: "smooth",

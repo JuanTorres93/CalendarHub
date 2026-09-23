@@ -34,6 +34,14 @@ export function getWeekStructure() {
   return existingMainWeekStructure;
 }
 
+export function getWeekHourCells() {
+  return mainWeekDays.flatMap((day) => day.weekHourCells);
+}
+
+export function getTodayWeekDay() {
+  return mainWeekDays.find((day) => day.dayName.classList.contains('is-today'));
+}
+
 export function renderWeekEvents(allEvents) {
   mainWeekDays.forEach(
     ({ dataDay, dayName, allDayContainer, weeklyBox, eventElements }) => {
@@ -128,7 +136,8 @@ function buildGridContent(weekStructure, currentView) {
       dataDay,
       dayName: dayColumn.dayName,
       allDayContainer: dayLabel.internalDomElements.allDayContainer,
-      weeklyBox: dayColumn.firstHourCell,
+      weeklyBox: dayColumn.hourCells[0],
+      weekHourCells: dayColumn.hourCells,
       eventElements: [],
     });
   }
@@ -147,7 +156,7 @@ function buildDayColumn(day, dataDay, currentView) {
 
   dayColumn.appendChild(dayName);
 
-  return { mainComponent: dayColumn, dayName, firstHourCell: hourColumn.firstHourCell };
+  return { mainComponent: dayColumn, dayName, hourCells: hourColumn.hourCells };
 }
 
 function getDayClass(dataDay, currentView) {

@@ -35,6 +35,10 @@ export function getDayStructure() {
   return existingMainDayStructure;
 }
 
+export function getDayHourCells() {
+  return mainDayInfo?.dayHourCells ?? [];
+}
+
 export function renderDayEvents(allEvents) {
   if (!mainDayInfo) return;
 
@@ -113,6 +117,7 @@ function buildGridContent(dayStructure, currentView) {
     mainComponent: body,
     dailyName,
     dayBox,
+    dayHourCells,
   } = buildGridBody(currentView, dataDay);
   dayStructure.appendChild(body);
 
@@ -121,6 +126,7 @@ function buildGridContent(dayStructure, currentView) {
     dailyName,
     allDayContainer,
     dayBox,
+    dayHourCells,
     eventElements: [],
   };
 }
@@ -160,7 +166,12 @@ function buildGridBody(currentView, dataDay) {
   dayStructure.appendChild(dailyName);
   body.appendChild(dayStructure);
 
-  return { mainComponent: body, dailyName, dayBox: hourColumn.firstHourCell };
+  return {
+    mainComponent: body,
+    dailyName,
+    dayBox: hourColumn.hourCells[0],
+    dayHourCells: hourColumn.hourCells,
+  };
 }
 
 function initDayContainer() {
