@@ -1,9 +1,10 @@
 import { getTodoListsFromLocalStorage } from './toDoStorage.js';
 import getDropDownPosition from '../utils/helpers/dropDownPositioner.js';
-import { monthGrid } from '../utils/helpers/dom/mainCalendarDom.js';
+import { getMonthStructure } from '../components/features/calendar/monthGrid.js';
 import { createTodoContextualMenu } from '../components/features/todo/todoContextualMenu.js';
 
 let todoMenuContext;
+const monthGrid = getMonthStructure();
 
 export function openContextualMenu(
   date,

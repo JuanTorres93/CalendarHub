@@ -29,6 +29,10 @@ export function getDayView() {
   return existingMainDayGrid;
 }
 
+export function getDayStructure() {
+  return existingMainDayStructure;
+}
+
 export function renderDayEvents(allEvents) {
   if (!mainDayInfo) return;
 

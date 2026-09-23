@@ -35,6 +35,10 @@ export function getMonthView() {
   return existingMainMonthGrid;
 }
 
+export function getMonthStructure() {
+  return existingMainMonthStructure;
+}
+
 export function renderMonthEvents(allEvents) {
   mainMonthDayCells.forEach(
     ({ dataDay, eventAllDayContainer, eventsContainer, eventElements }) => {

@@ -1,8 +1,6 @@
-import {
-  monthGrid,
-  weekGrid,
-  dayGrid,
-} from '../utils/helpers/dom/mainCalendarDom.js';
+import { getMonthStructure } from '../components/features/calendar/monthGrid.js';
+import { getWeekStructure } from '../components/features/calendar/weekGrid.js';
+import { getDayStructure } from '../components/features/calendar/dayGrid.js';
 import { getTodoListsFromLocalStorage } from './toDoStorage.js';
 import { openContextualMenu } from './todoBadgeActions.js';
 import { createTodoBadge } from '../components/features/todo/todoBadge.js';
@@ -24,6 +22,7 @@ function renderBadgeHelper(allTodo, dataDay, container, grid, dayCell) {
 }
 
 function renderBadgeInMonth(allTodo) {
+  const monthGrid = getMonthStructure();
   const todoContainer = monthGrid.querySelectorAll('.todo-container-month');
 
   todoContainer.forEach((container) => {
@@ -35,6 +34,7 @@ function renderBadgeInMonth(allTodo) {
 }
 
 function renderBadgeInWeek(allTodo) {
+  const weekGrid = getWeekStructure();
   const todoContainer = weekGrid.querySelectorAll('.week-todo-container');
 
   todoContainer.forEach((container) => {
@@ -45,6 +45,7 @@ function renderBadgeInWeek(allTodo) {
 }
 
 function renderBadgeDaily(allTodo) {
+  const dayGrid = getDayStructure();
   const todoContainer = dayGrid.querySelector('.daily-todo-container');
   const dataDay = dayGrid.querySelector('.daily-header').dataset.day;
 

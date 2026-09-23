@@ -28,6 +28,10 @@ export function getWeekView() {
   return existingMainWeekGrid;
 }
 
+export function getWeekStructure() {
+  return existingMainWeekStructure;
+}
+
 export function renderWeekEvents(allEvents) {
   mainWeekDays.forEach(
     ({ dataDay, dayName, allDayContainer, weeklyBox, eventElements }) => {
