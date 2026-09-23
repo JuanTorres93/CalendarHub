@@ -1,8 +1,4 @@
 import dayjs from "../day.js";
-import {
-  prevThemeImage as prev,
-  nextThemeImage as next,
-} from "./helpers/dom/mainCalendarDom.js";
 
 const backgroundImage = (fileName) => {
   return `${import.meta.env.BASE_URL}images/background/${fileName}`;
@@ -50,11 +46,11 @@ function getSeason(date) {
   return seasonLoadMap.winter;
 }
 
-export const theme = (date) => {
-  const season = getSeason(date);
-  document.body.style.backgroundImage = `url(${seasonalBackgrounds[season.active]})`;
-  prev.style.backgroundImage = `url(${seasonalBackgrounds[season.prev]})`;
-  next.style.backgroundImage = `url(${seasonalBackgrounds[season.next]})`;
-};
-
-//non serve importare theme nell'index, perchè lo chiama syncAll, che viene già passato nell'index
+export function createTheme({ prevThemeImage, nextThemeImage }) {
+  return (date) => {
+    const season = getSeason(date);
+    document.body.style.backgroundImage = `url(${seasonalBackgrounds[season.active]})`;
+    prevThemeImage.style.backgroundImage = `url(${seasonalBackgrounds[season.prev]})`;
+    nextThemeImage.style.backgroundImage = `url(${seasonalBackgrounds[season.next]})`;
+  };
+}

@@ -1,13 +1,10 @@
-import createElement from "../helpers/createElement.js";
-import { loader } from "../helpers/dom/mainCalendarDom.js";
+export function appready(loaderElement) {
+  loaderElement.classList.add("loader-hide");
 
-export function appready() {
-  loader.classList.add("loader-hide");
-
-  loader.addEventListener(
+  loaderElement.addEventListener(
     "animationend",
     () => {
-      loader.remove();
+      loaderElement.remove();
     },
     { once: true },
   );

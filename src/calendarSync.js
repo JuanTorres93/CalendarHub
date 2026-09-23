@@ -3,11 +3,12 @@ import createWeekGrid, { getWeekView } from './components/features/calendar/week
 import createDailyGrid, { getDayView } from './components/features/calendar/dayGrid.js';
 
 import { navbarDomElements, navbarRenderDisplays } from './navbarBootstrap.js';
+import { themeLayersDomElements } from './loaderAndThemeBootstrap.js';
 
 import { calendarPresenter } from './calendarPresenter.js';
 import { initRenderBadge } from './to-do-list/toDoBadgeRendering.js';
 import { renderEvents } from './utils/events/renderEvents.js';
-import { theme } from './utils/theme.js';
+import { createTheme } from './utils/theme.js';
 import { viewSwitcher } from './utils/helpers/viewSwitcher.js';
 import { initMiniCalendarDeps } from './miniCalendar/miniCalendarLogic.js';
 
@@ -25,7 +26,7 @@ calendarPresenter.init({
   createMonthGrid,
   createWeekGrid,
   createDailyGrid,
-  theme,
+  theme: createTheme(themeLayersDomElements),
   renderEvents,
   initRenderBadge,
 

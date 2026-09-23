@@ -2,6 +2,7 @@
 import "./components/componentInjector.js";
 import { eventModalDomElements } from "./eventModalBootstrap.js";
 import { miniCalendarDomElements } from "./miniCalendarBootstrap.js";
+import { loaderDomElements } from "./loaderAndThemeBootstrap.js";
 
 import { initNavbar } from "./navbar.js";
 import initCalendar from "./calendarSync.js";
@@ -28,6 +29,6 @@ export function injectJavascriptToMainHtml() {
   initiMiniCalendarInputs();
   initToDobinds();
 
-  appready();
+  appready(loaderDomElements.loader);
   initNotifications();
 }
