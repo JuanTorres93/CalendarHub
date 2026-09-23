@@ -7,7 +7,7 @@ import createCurrentYearDisplay from './components/navbar/currentYearDisplay.js'
 
 import { calendarPresenter } from './calendarPresenter.js';
 import { initRenderBadge } from './to-do-list/toDoBadgeRendering.js';
-import { renderEvents } from './utils/events/eventRendering.js';
+import { renderEvents } from './utils/events/renderEvents.js';
 import { theme } from './utils/theme.js';
 import { viewSwitcher } from './utils/helpers/viewSwitcher.js';
 import { initMiniCalendarDeps } from './miniCalendar/miniCalendar.js';

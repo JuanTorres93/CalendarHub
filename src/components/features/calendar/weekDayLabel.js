@@ -29,5 +29,8 @@ export function createWeekDayLabel({ date }) {
 
   weekDayLabel.appendChild(headerContent);
 
-  return weekDayLabel;
+  return {
+    mainComponent: weekDayLabel,
+    internalDomElements: { allDayContainer },
+  };
 }

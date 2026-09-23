@@ -32,7 +32,10 @@ export function createDayCell({
     dayContainer.addEventListener("click", (e) => e.stopPropagation());
   }
 
-  return dayCell;
+  return {
+    mainComponent: dayCell,
+    internalDomElements: { eventAllDayContainer, eventsContainer },
+  };
 }
 
 async function openCreateEvent(e) {

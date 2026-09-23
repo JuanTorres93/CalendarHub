@@ -1429,7 +1429,7 @@ function createSeriesEvent(repeatOverrides = {}) {
 async function seedAndRender(events) {
   localStorage.setItem('calendarEvents', JSON.stringify(events));
 
-  const { renderEvents } = await import('../utils/events/eventRendering.js');
+  const { renderEvents } = await import('../utils/events/renderEvents.js');
   renderEvents();
 }
 

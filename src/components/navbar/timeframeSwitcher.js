@@ -1,10 +1,10 @@
 import { TIMEFRAMES, ITALIAN_WORDS } from '../../utils/config/config.js';
 import { viewSwitcher } from '../../utils/helpers/viewSwitcher.js';
+import { getAllRenderableEvents } from '../../utils/events/getAllRenderableEvents.js';
 import {
-  getAllRenderableEvents,
   renderWeeklyEvents,
-} from '../../utils/events/eventRendering.js';
-import { renderDailyEvents } from '../../utils/events/eventRendering.js';
+  renderDailyEvents,
+} from '../../utils/events/renderEvents.js';
 import { isNow } from '../../utils/isNow.js';
 
 export default function createTimeframeSwitcher() {

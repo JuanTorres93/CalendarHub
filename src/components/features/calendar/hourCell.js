@@ -24,7 +24,10 @@ export function createHourCell({ type, time, halfTime, extraClasses = [] }) {
   fragment.appendChild(hourCell);
   fragment.appendChild(halfHourCell);
 
-  return fragment;
+  return {
+    mainComponent: fragment,
+    internalDomElements: { hourCell },
+  };
 }
 
 async function handleWeekCellClick(e) {

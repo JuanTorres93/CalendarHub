@@ -1,9 +1,13 @@
 import { createDayCell } from "./dayCell.js";
 import { createDayLabel } from "./dayLabel.js";
 import { config } from "../../../utils/config/config.js";
+import { createMonthlyEvent } from "./monthlyEvent.js";
+import { bindEventInfoClick } from "./eventInfoClick.js";
+import { timeToMinutes } from "../../../utils/helpers/timeHelper.js";
 
 let existingMainMonthGrid = null;
 let existingMainMonthStructure = null;
+let mainMonthDayCells = [];
 
 function createMonthGrid(currentView, isMini = false) {
   if (!isMini) {
@@ -28,6 +32,34 @@ export function getMonthView() {
   return existingMainMonthGrid;
 }
 
+export function renderMonthEvents(allEvents) {
+  mainMonthDayCells.forEach(
+    ({ dataDay, eventAllDayContainer, eventsContainer, eventElements }) => {
+      eventElements.forEach((element) => element.remove());
+      eventElements.length = 0;
+
+      const eventOfDay = allEvents.filter((event) => event.date === dataDay);
+
+      eventOfDay.sort((a, b) => {
+        const aTotal = timeToMinutes(a.from);
+        const bTotal = timeToMinutes(b.from);
+
+        return aTotal - bTotal;
+      });
+
+      eventOfDay.forEach((event) => {
+        const eventElement = createMonthlyEvent({ event });
+        bindEventInfoClick(eventElement);
+
+        if (event.allDay) eventAllDayContainer.appendChild(eventElement);
+        else eventsContainer.appendChild(eventElement);
+
+        eventElements.push(eventElement);
+      });
+    },
+  );
+}
+
 function buildMonthGrid(currentView, isMini) {
   const monthContainer = initMonthContainer(isMini);
   const monthStructureContainer = initMonthStructure();
@@ -40,6 +72,7 @@ function buildMonthGrid(currentView, isMini) {
 
 function reRenderMainGrid(currentView) {
   existingMainMonthStructure.innerHTML = "";
+  mainMonthDayCells = [];
 
   buildGridContent(existingMainMonthStructure, currentView, false);
 }
@@ -96,13 +129,21 @@ function buildGridContent(monthStructureContainer, currentView, isMini) {
       }
     }
 
-    secondRow.appendChild(
-      createDayCell({
-        dataDayID,
-        extraClasses: [gridConfig.boxGrid, dayClass],
-        isMini,
-      }),
-    );
+    const dayCell = createDayCell({
+      dataDayID,
+      extraClasses: [gridConfig.boxGrid, dayClass],
+      isMini,
+    });
+
+    if (!isMini) {
+      mainMonthDayCells.push({
+        dataDay: dataDayID,
+        ...dayCell.internalDomElements,
+        eventElements: [],
+      });
+    }
+
+    secondRow.appendChild(dayCell.mainComponent);
   }
 }
 

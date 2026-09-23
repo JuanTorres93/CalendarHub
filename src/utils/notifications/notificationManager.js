@@ -1,4 +1,4 @@
-import { getAllRenderableEvents } from '../events/eventRendering.js';
+import { getAllRenderableEvents } from '../events/getAllRenderableEvents.js';
 import dayjs from '../../day.js';
 
 const NOTIFICATION_CHECK_INTERVAL = 30_000;

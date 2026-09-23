@@ -3,8 +3,8 @@ import { AppDeleteEventByIdUsecase } from '../interface-adapters/use-cases/AppDe
 import { AppGetEventByIdUsecase } from '../interface-adapters/use-cases/AppGetEventByIdUsecase.js';
 import {
   getAllRenderableEvents,
-  renderEvents,
-} from '../utils/events/eventRendering.js';
+} from '../utils/events/getAllRenderableEvents.js';
+import { renderEvents } from '../utils/events/renderEvents.js';
 import { createMessage } from '../utils/helpers/createElement.js';
 import getFloatingPosition from '../utils/helpers/floatingPositioner.js';
 import { preCompilerEdit } from './eventLogic.js';

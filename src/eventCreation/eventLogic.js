@@ -11,7 +11,7 @@ import { handleKnownErrors } from '../interface-adapters/other/handleKnownErrors
 import { AppCreateEventUsecase } from '../interface-adapters/use-cases/AppCreateEventUsecase.js';
 import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
 import { eventFormState } from '../utils/events/eventFormState.js';
-import { renderEvents } from '../utils/events/eventRendering.js';
+import { renderEvents } from '../utils/events/renderEvents.js';
 import { formatDate } from '../utils/helpers/timeHelper.js';
 import { createMessage } from '../utils/helpers/createElement.js';
 import {
