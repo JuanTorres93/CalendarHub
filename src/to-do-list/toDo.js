@@ -17,14 +17,6 @@ import {
 } from '../utils/helpers/dom/toDoDom.js';
 
 import {
-  toDoDraft,
-  initTodoDraft,
-  resetStates,
-  toDoItems,
-  resetToDoItemsValues,
-} from './toDoDraft.js';
-
-import {
   getTodoListsFromLocalStorage,
   deleteTodoFromList,
   deleteTodoListFromLocalStorage,
@@ -48,6 +40,10 @@ function cleanActiveTodoUi() {
   toDoItemsContainer.innerHTML = '';
   toDoProgress.classList.remove('show-modal');
   toDoProgress.innerText = EMPTY_TODO_MESSAGE;
+}
+
+function resetTodoForm() {
+  headerTitle.value = '';
 }
 
 export function openTodo(date) {
@@ -88,8 +84,6 @@ function rehydrateTodoList(todo) {
   todo.items.forEach((item) => {
     renderTodoItem(item);
   });
-  // Sync draft date so "New" creates another list for the same rehydrated day.
-  initTodoDraft(todo.date);
 
   updateToDoCounter();
 }
@@ -109,19 +103,11 @@ function renderTodoHeader(fullDate) {
 }
 
 function initHeader() {
-  const currentDay = todoContextDate;
-
-  renderTodoHeader(currentDay);
-  initTodoDraft(currentDay);
-}
-
-function titleValidator(title) {
-  if (!title.value.trim()) return false;
-  return true;
+  renderTodoHeader(todoContextDate);
 }
 
 function closeToDoList() {
-  resetStates('close');
+  resetTodoForm();
   toDoHeader.classList.remove('show-title-header');
   todoLayer.classList.remove('show-modal');
   createList.classList.remove('show-modal');
@@ -135,14 +121,14 @@ function handleCreateTodoList() {
     if (!activeTodoList) {
       return initHeader();
     } else {
-      resetStates('delete');
+      resetTodoForm();
       cleanActiveTodoUi();
       activeTodoList = null;
     }
   });
 
   headerTitle.addEventListener('change', () => {
-    const date = toDoDraft.date;
+    const date = todoContextDate;
     const title = headerTitle.value.trim();
 
     if (!activeTodoList) {
@@ -202,7 +188,7 @@ function deleteAndCleanTodoList() {
 
   deleteTodoListFromLocalStorage(activeTodoList);
   initRenderBadge();
-  resetStates('delete');
+  resetTodoForm();
   cleanActiveTodoUi();
   activeTodoList = null;
 }
@@ -232,29 +218,23 @@ function renderTodoItem(todoItem) {
 }
 
 function handleCreateItems() {
-  itemInput.addEventListener('change', () => {
-    const isValid = titleValidator(itemInput);
-    if (!isValid) return;
-    toDoItems.title = itemInput.value.trim();
-  });
-
   addItemBtn.addEventListener('click', () => {
-    if (!toDoItems.title) {
+    const title = itemInput.value.trim();
+    if (!title) {
       createMessage('Aggiungi un titolo', itemInput, addNewItemContainer);
       return;
-    } else {
-      // toDoItems.id = crypto.randomUUID()
-      const newItem = {
-        ...toDoItems,
-        id: crypto.randomUUID(),
-      };
-      //add "checked" to the check-btn
-      renderTodoItem(newItem);
-
-      addTodoToList(activeTodoList, newItem.title);
-      updateToDoCounter();
     }
-    resetToDoItemsValues();
+
+    const newItem = {
+      title,
+      completed: false,
+    };
+    renderTodoItem(newItem);
+
+    addTodoToList(activeTodoList, title);
+    updateToDoCounter();
+
+    itemInput.value = '';
   });
 }
 
