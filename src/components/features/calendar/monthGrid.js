@@ -8,6 +8,7 @@ import { timeToMinutes } from "../../../utils/helpers/timeHelper.js";
 const WEEKDAYS = 7;
 const MONTH_GRID_CELLS = 42;
 
+let existingMainMonthSection = null;
 let existingMainMonthGrid = null;
 let existingMainMonthStructure = null;
 let mainMonthDayCells = [];
@@ -17,15 +18,16 @@ function createMonthGrid(currentView, isMini = false) {
     if (existingMainMonthStructure) {
       reRenderMainGrid(currentView);
 
-      return existingMainMonthGrid;
+      return existingMainMonthSection;
     }
 
     const grid = buildMonthGrid(currentView, isMini);
 
+    existingMainMonthSection = grid.monthSection;
     existingMainMonthGrid = grid.monthContainer;
     existingMainMonthStructure = grid.monthStructureContainer;
 
-    return existingMainMonthGrid;
+    return existingMainMonthSection;
   }
 
   return buildMonthGrid(currentView, isMini).monthContainer;
@@ -63,13 +65,15 @@ export function renderMonthEvents(allEvents) {
 }
 
 function buildMonthGrid(currentView, isMini) {
+  const monthSection = initMonthSection(isMini);
   const monthContainer = initMonthContainer(isMini);
   const monthStructureContainer = initMonthStructure();
 
   monthContainer.appendChild(monthStructureContainer);
+  monthSection.appendChild(monthContainer);
   buildGridContent(monthStructureContainer, currentView, isMini);
 
-  return { monthContainer, monthStructureContainer };
+  return { monthSection, monthContainer, monthStructureContainer };
 }
 
 function reRenderMainGrid(currentView) {
@@ -206,6 +210,17 @@ function initMonthContainer(isMini) {
   }
 
   return monthContainer;
+}
+
+function initMonthSection(isMini) {
+  const monthSection = document.createElement("section");
+
+  if (!isMini) {
+    monthSection.id = "month-carousel";
+    monthSection.setAttribute("aria-label", "Vista mensile del calendario");
+  }
+
+  return monthSection;
 }
 
 function initMonthStructure() {

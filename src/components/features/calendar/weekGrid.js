@@ -6,6 +6,7 @@ import { createAllDayEvent } from './allDayEvent.js';
 import { bindEventInfoClick } from './eventInfoClick.js';
 import { computeEventLayout } from '../../../utils/events/eventLayout.js';
 
+let existingMainWeekSection = null;
 let existingMainWeekGrid = null;
 let existingMainWeekStructure = null;
 let mainWeekDays = [];
@@ -13,15 +14,16 @@ let mainWeekDays = [];
 function createWeekGrid(currentView) {
   if (existingMainWeekStructure) {
     reRenderMainGrid(currentView);
-    return existingMainWeekGrid;
+    return existingMainWeekSection;
   }
 
   const grid = buildWeekGrid(currentView);
 
+  existingMainWeekSection = grid.weekSection;
   existingMainWeekGrid = grid.weekContainer;
   existingMainWeekStructure = grid.weekStructure;
 
-  return existingMainWeekGrid;
+  return existingMainWeekSection;
 }
 
 export function getWeekView() {
@@ -78,13 +80,15 @@ export function renderWeekEvents(allEvents) {
 }
 
 function buildWeekGrid(currentView) {
+  const weekSection = initWeekSection();
   const { weekContainer, list } = initWeekContainer();
   const weekStructure = initWeekStructure();
 
   list.appendChild(weekStructure);
+  weekSection.appendChild(weekContainer);
   buildGridContent(weekStructure, currentView);
 
-  return { weekContainer, weekStructure };
+  return { weekSection, weekContainer, weekStructure };
 }
 
 function reRenderMainGrid(currentView) {
@@ -162,6 +166,14 @@ function initWeekContainer() {
   weekContainer.appendChild(list);
 
   return { weekContainer, list };
+}
+
+function initWeekSection() {
+  const weekSection = document.createElement('section');
+  weekSection.className = 'week-carousel';
+  weekSection.setAttribute('aria-label', 'Vista settimanale del calendario');
+
+  return weekSection;
 }
 
 function initWeekStructure() {

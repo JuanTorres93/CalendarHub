@@ -1,5 +1,5 @@
 // TODO delete when refactor is complete
-import "./components/componentInjector.js";
+import "./calendarGridsBootstrap.js";
 import { eventModalDomElements } from "./eventModalBootstrap.js";
 import { miniCalendarDomElements } from "./miniCalendarBootstrap.js";
 import { loaderDomElements } from "./loaderAndThemeBootstrap.js";

@@ -7,6 +7,7 @@ import { createAllDayEvent } from './allDayEvent.js';
 import { bindEventInfoClick } from './eventInfoClick.js';
 import { computeEventLayout } from '../../../utils/events/eventLayout.js';
 
+let existingMainDaySection = null;
 let existingMainDayGrid = null;
 let existingMainDayStructure = null;
 let mainDayInfo = null;
@@ -14,15 +15,16 @@ let mainDayInfo = null;
 function createDayGrid(currentView) {
   if (existingMainDayStructure) {
     reRenderMainGrid(currentView);
-    return existingMainDayGrid;
+    return existingMainDaySection;
   }
 
   const grid = buildDayGrid(currentView);
 
+  existingMainDaySection = grid.daySection;
   existingMainDayGrid = grid.dayContainer;
   existingMainDayStructure = grid.dayStructure;
 
-  return existingMainDayGrid;
+  return existingMainDaySection;
 }
 
 export function getDayView() {
@@ -80,13 +82,15 @@ export function renderDayEvents(allEvents) {
 }
 
 function buildDayGrid(currentView) {
+  const daySection = initDaySection();
   const { dayContainer, list } = initDayContainer();
   const dayStructure = initDayStructure();
 
   list.appendChild(dayStructure);
+  daySection.appendChild(dayContainer);
   buildGridContent(dayStructure, currentView);
 
-  return { dayContainer, dayStructure };
+  return { daySection, dayContainer, dayStructure };
 }
 
 function reRenderMainGrid(currentView) {
@@ -171,6 +175,14 @@ function initDayContainer() {
   dayContainer.appendChild(list);
 
   return { dayContainer, list };
+}
+
+function initDaySection() {
+  const daySection = document.createElement('section');
+  daySection.id = 'day-corousel';
+  daySection.setAttribute('aria-label', 'Vista giornaliera del calendario');
+
+  return daySection;
 }
 
 function initDayStructure() {
