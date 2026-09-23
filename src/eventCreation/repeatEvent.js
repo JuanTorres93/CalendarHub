@@ -3,7 +3,7 @@ import {
   handleOutSideClick,
 } from '../utils/helpers/listSelection.js';
 import { createMessage } from '../utils/helpers/createElement.js';
-import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
+import { openMiniCalendar } from '../miniCalendar/miniCalendarLogic.js';
 import {
   getStoredCustomDates,
   initCustomDateRemoval,

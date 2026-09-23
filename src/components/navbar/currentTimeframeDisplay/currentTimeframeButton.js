@@ -6,7 +6,7 @@ export default function createCurrentTimeframeButton({ timeframe }) {
 
   button.addEventListener('click', async (e) => {
     const { openMiniCalendar } = await import(
-      '../../../miniCalendar/miniCalendar.js'
+      '../../../miniCalendar/miniCalendarLogic.js'
     );
 
     openMiniCalendar('normal');

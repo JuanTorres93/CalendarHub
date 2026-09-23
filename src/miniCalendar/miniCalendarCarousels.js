@@ -10,8 +10,7 @@ function btnEventsHelper(list, targetList) {
   }
 }
 
-export function renderMonthList(currentMonthIndex) {
-  const monthCaroseul = document.querySelector(".month-lists");
+export function renderMonthList(list, currentMonthIndex) {
   const months = Array.from({ length: 12 }, (_, i) =>
     dayjs().month(i).format("MMMM"),
   );
@@ -25,7 +24,7 @@ export function renderMonthList(currentMonthIndex) {
       el.classList.add("current-month-item");
     }
 
-    monthCaroseul.appendChild(el);
+    list.appendChild(el);
   });
   return months;
 }
@@ -59,16 +58,11 @@ function yearListEvents(btn, list, onDatePartSelect) {
 }
 
 export function initMonthList(btn, list, onDatePartSelect, currentMonthIndex) {
-  const monthItems = renderMonthList(currentMonthIndex);
+  const monthItems = renderMonthList(list, currentMonthIndex);
   monthItemsEvents(btn, list, monthItems, onDatePartSelect);
 }
 
 export function initYearList(btn, list, onDatePartSelect, currentYearIndex) {
-  renderYears(
-    ".year-lists",
-    "mini-year-item",
-    currentYearIndex,
-    "current-year-item",
-  );
+  renderYears(list, "mini-year-item", currentYearIndex, "current-year-item");
   yearListEvents(btn, list, onDatePartSelect);
 }

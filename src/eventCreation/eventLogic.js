@@ -9,7 +9,7 @@ import { AppUpdateSingleEventOccurrenceUsecase } from '../interface-adapters/use
 
 import { handleKnownErrors } from '../interface-adapters/other/handleKnownErrors.js';
 import { AppCreateEventUsecase } from '../interface-adapters/use-cases/AppCreateEventUsecase.js';
-import { openMiniCalendar } from '../miniCalendar/miniCalendar.js';
+import { openMiniCalendar } from '../miniCalendar/miniCalendarLogic.js';
 import { eventFormState } from '../utils/events/eventFormState.js';
 import { renderEvents } from '../utils/events/renderEvents.js';
 import { formatDate } from '../utils/helpers/timeHelper.js';

@@ -11,14 +11,15 @@ import { preCompilerEdit } from './eventLogic.js';
 import { rehydrateRepeatModal } from './repeatEvent.js';
 
 import { openEventModal } from '../components/features/event/EventModal/EventModal.js';
-import { miniCalendarLayer as modalLayer } from '../utils/helpers/dom/miniCalendarDom.js';
 
 let selectedCurrentID = null;
 let colorClass = null;
 let eventModalDomElements = null;
+let miniCalendarDomElements = null;
 
-export function initOptionsBanner(eventModalDeps) {
+export function initOptionsBanner(eventModalDeps, miniCalendarDeps) {
   eventModalDomElements = eventModalDeps;
+  miniCalendarDomElements = miniCalendarDeps;
 
   const optionsBanner = document.createElement('div');
   optionsBanner.className = 'option-banner-container';
@@ -155,7 +156,7 @@ export function renderExtraInfo(currentEvent, e) {
   };
 
   banner.classList.add(`event-${selectedEvent.color}`);
-  modalLayer.classList.add('show-mini-calendar-layer');
+  miniCalendarDomElements.miniCalendarLayer.classList.add('show-mini-calendar-layer');
   banner.classList.add('show-option-banner');
   // aggiunto per compensare il calcolo iniziale dell'altezza dell'info banner che al primo click non è ancora stato calcolato
   requestAnimationFrame(() => {
@@ -307,7 +308,7 @@ export function closeInfoBanner() {
   banner.classList.remove(`event-${colorClass}`);
   selectedCurrentID = null;
   colorClass = null;
-  modalLayer.classList.remove('show-mini-calendar-layer');
+  miniCalendarDomElements.miniCalendarLayer.classList.remove('show-mini-calendar-layer');
   banner.classList.remove('show-option-banner');
 }
 

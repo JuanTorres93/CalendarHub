@@ -1,7 +1,6 @@
 import dayjs from "../../day.js";
 
-function renderYears(listClass, itemClass, currentYear, currentYearClass) {
-  const carousel = document.querySelector(listClass);
+function renderYears(carousel, itemClass, currentYear, currentYearClass) {
   const yearList = Array.from({ length: 201 }, (_, i) => {
     const years = dayjs().year() + i;
     const startYear = years - 100;

@@ -15,7 +15,7 @@ export default function createCurrentYearDisplay() {
     const anchorElement = e.currentTarget;
 
     const { openMiniCalendar } = await import(
-      '../../miniCalendar/miniCalendar.js'
+      '../../miniCalendar/miniCalendarLogic.js'
     );
 
     openMiniCalendar('normal', null, 'normal', anchorElement);

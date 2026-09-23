@@ -10,7 +10,7 @@ import { initRenderBadge } from './to-do-list/toDoBadgeRendering.js';
 import { renderEvents } from './utils/events/renderEvents.js';
 import { theme } from './utils/theme.js';
 import { viewSwitcher } from './utils/helpers/viewSwitcher.js';
-import { initMiniCalendarDeps } from './miniCalendar/miniCalendar.js';
+import { initMiniCalendarDeps } from './miniCalendar/miniCalendarLogic.js';
 
 const monthDisplay = createCurrentTimeframeDisplay('month');
 const weekDisplay = createCurrentTimeframeDisplay('week');
