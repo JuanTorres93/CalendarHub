@@ -1,9 +1,4 @@
-import {
-  notificationPermissionBtn,
-  actionBtns,
-  notificationIconOff,
-  notificationIconOn,
-} from "../helpers/dom/mainCalendarDom.js";
+import { navbarDomElements } from '../../navbarBootstrap.js';
 
 import {
   requestNotificationPermission,
@@ -90,13 +85,13 @@ async function handleNotificationToggle() {
     if (hasBeenDisabled) {
       createMessage(
         "Le notifiche sono state disattivate.",
-        actionBtns,
+        navbarDomElements.actionBtns,
         document.body,
       );
     } else {
       createMessage(
         "Non è stato possibile salvare la preferenza delle notifiche.",
-        actionBtns,
+        navbarDomElements.actionBtns,
         document.body,
       );
     }
@@ -109,7 +104,7 @@ async function handleNotificationToggle() {
   if (permission === "granted") {
     createMessage(
       "Le notifiche sono state attivate.",
-      actionBtns,
+      navbarDomElements.actionBtns,
       document.body,
     );
 
@@ -119,7 +114,7 @@ async function handleNotificationToggle() {
   if (permission === "denied") {
     createMessage(
       "Le notifiche sono bloccate nelle impostazioni del browser.",
-      actionBtns,
+      navbarDomElements.actionBtns,
       document.body,
     );
 
@@ -129,7 +124,7 @@ async function handleNotificationToggle() {
   if (permission === "default") {
     createMessage(
       "Il permesso per le notifiche non è stato concesso.",
-      actionBtns,
+      navbarDomElements.actionBtns,
       document.body,
     );
 
@@ -139,7 +134,7 @@ async function handleNotificationToggle() {
   if (permission === "unsupported") {
     createMessage(
       "Questo browser non supporta le notifiche native.",
-      actionBtns,
+      navbarDomElements.actionBtns,
       document.body,
     );
 
@@ -149,7 +144,7 @@ async function handleNotificationToggle() {
   if (permission === "insecure") {
     createMessage(
       "Le notifiche richiedono una connessione sicura.",
-      actionBtns,
+      navbarDomElements.actionBtns,
       document.body,
     );
 
@@ -159,7 +154,7 @@ async function handleNotificationToggle() {
   if (permission === "storage-error") {
     createMessage(
       "Non è stato possibile salvare la preferenza delle notifiche.",
-      actionBtns,
+      navbarDomElements.actionBtns,
       document.body,
     );
 
@@ -168,7 +163,7 @@ async function handleNotificationToggle() {
 
   createMessage(
     "Non è stato possibile attivare le notifiche.",
-    actionBtns,
+    navbarDomElements.actionBtns,
     document.body,
   );
 }
@@ -179,22 +174,22 @@ function updateNotificationToggle() {
     "Notification" in window &&
     Notification.permission === "granted";
 
-  notificationIconOff.classList.toggle(
+  navbarDomElements.notificationIconOff.classList.toggle(
     "notification-icon-hidden",
     notificationsAreActive,
   );
 
-  notificationIconOn.classList.toggle(
+  navbarDomElements.notificationIconOn.classList.toggle(
     "notification-icon-hidden",
     !notificationsAreActive,
   );
 
-  notificationPermissionBtn.setAttribute(
+  navbarDomElements.notificationPermissionBtn.setAttribute(
     "aria-pressed",
     String(notificationsAreActive),
   );
 
-  notificationPermissionBtn.setAttribute(
+  navbarDomElements.notificationPermissionBtn.setAttribute(
     "aria-label",
     notificationsAreActive ? "Disattiva notifiche" : "Attiva notifiche",
   );
@@ -203,5 +198,5 @@ function updateNotificationToggle() {
 export function initNotifications() {
   restoreNotifications();
 
-  notificationPermissionBtn.addEventListener("click", handleNotificationToggle);
+  navbarDomElements.notificationPermissionBtn.addEventListener("click", handleNotificationToggle);
 }

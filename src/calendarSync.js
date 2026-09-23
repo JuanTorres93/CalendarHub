@@ -2,8 +2,7 @@ import createMonthGrid, { getMonthView } from './components/features/calendar/mo
 import createWeekGrid, { getWeekView } from './components/features/calendar/weekGrid.js';
 import createDailyGrid, { getDayView } from './components/features/calendar/dayGrid.js';
 
-import createCurrentTimeframeDisplay from './components/navbar/currentTimeframeDisplay/currentTimeframeDisplay.js';
-import createCurrentYearDisplay from './components/navbar/currentYearDisplay.js';
+import { navbarDomElements, navbarRenderDisplays } from './navbarBootstrap.js';
 
 import { calendarPresenter } from './calendarPresenter.js';
 import { initRenderBadge } from './to-do-list/toDoBadgeRendering.js';
@@ -12,31 +11,15 @@ import { theme } from './utils/theme.js';
 import { viewSwitcher } from './utils/helpers/viewSwitcher.js';
 import { initMiniCalendarDeps } from './miniCalendar/miniCalendarLogic.js';
 
-const monthDisplay = createCurrentTimeframeDisplay('month');
-const weekDisplay = createCurrentTimeframeDisplay('week');
-const dayDisplay = createCurrentTimeframeDisplay('day');
-const yearDisplay = createCurrentYearDisplay();
-
-const firstLayer = document.getElementById('first-layer');
-const layer = document.getElementById('layer');
-const actionBtns = layer.querySelector('.action-btns');
-
-firstLayer.appendChild(yearDisplay.node);
-layer.insertBefore(monthDisplay.node, actionBtns);
-layer.insertBefore(weekDisplay.node, actionBtns);
-layer.insertBefore(dayDisplay.node, actionBtns);
-
-const displayOverlays = [monthDisplay.node, weekDisplay.node, dayDisplay.node];
-
 viewSwitcher.init({
   monthView: getMonthView(),
   weekView: getWeekView(),
   dayView: getDayView(),
-  displayOverlays,
-  displayOverlayMonth: monthDisplay.node,
+  displayOverlays: navbarDomElements.displayOverlays,
+  displayOverlayMonth: navbarDomElements.displayOverlayMonth,
 });
 
-initMiniCalendarDeps({ displayOverlays });
+initMiniCalendarDeps({ displayOverlays: navbarDomElements.displayOverlays });
 
 calendarPresenter.init({
   createMonthGrid,
@@ -46,12 +29,7 @@ calendarPresenter.init({
   renderEvents,
   initRenderBadge,
 
-  renderDisplays: [
-    monthDisplay.render,
-    weekDisplay.render,
-    dayDisplay.render,
-    yearDisplay.render,
-  ],
+  renderDisplays: navbarRenderDisplays,
 });
 
 export default function initCalendar() {
